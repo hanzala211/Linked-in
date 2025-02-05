@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Lunasima:wght@400;700&display=swap');
+
+body {
+	font-family: 'Lunasima', serif;
+	font-weight: 300;
+	font-style: normal;
+	overflow: auto;
+}
+
+body::-webkit-scrollbar {
+	display: none;
+}
+
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.6);
+	transition: all 0.5s ease;
+}
+
+.toaster .toast button:last-child {
+	background: transparent !important;
+	border: none;
+	padding: 6px;
+	border-radius: 9999px;
+	transition: background 0.2s ease-in-out;
+}
+
+.toaster .toast button:last-child:hover {
+	background: rgba(0, 0, 0, 0.1) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+	.toaster .toast button:last-child:hover {
+		background: rgba(255, 255, 255, 0.1) !important;
+	}
+}
