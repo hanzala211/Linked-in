@@ -1,5 +1,5 @@
 import { authService } from "@services";
-import { SearchContextTypes, SearchUser } from "@types";
+import { IUser, SearchContextTypes } from "@types";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 const SearchContext = createContext<SearchContextTypes | undefined>(undefined)
@@ -7,30 +7,44 @@ const SearchContext = createContext<SearchContextTypes | undefined>(undefined)
 export const SearchProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isFocused, setIsFocused] = useState<boolean>(false)
   const [searchValue, setSearchValue] = useState<string>("")
-  const [searchData, setSearchData] = useState<SearchUser[]>([])
+  const [searchData, setSearchData] = useState<IUser[]>([])
+  const [selectedProfile, setSelectedProfile] = useState<IUser | null>(null)
 
   useEffect(() => {
-    if (searchValue.length > 3) {
-      handleSearch()
-    } else {
-      setSearchData([])
-    }
-  }, [searchValue])
+    const controller = new AbortController();
+    const signal = controller.signal;
 
-  async function handleSearch() {
+    if (searchValue.length > 3) {
+      handleSearch(signal, searchValue);
+    } else {
+      setSearchData([]);
+    }
+
+    return () => controller.abort();
+  }, [searchValue]);
+
+  async function handleSearch(signal: AbortSignal, value: string) {
     try {
-      setSearchData([])
-      const { data } = await authService.searchUser(searchValue)
-      console.log(data)
+      setSearchData([]);
+      const { data } = await authService.searchUser(value, signal);
+
+      console.log(data);
       if (data.data.length > 0) {
-        setSearchData(data.data)
+        setSearchData(data.data);
+        return data.data;
       }
-    } catch (error) {
-      console.error(error)
+    } catch (error: any) {
+      if (error.name !== "CanceledError") {
+        console.error(error);
+      }
     }
   }
 
-  return <SearchContext.Provider value={{ isFocused, setIsFocused, searchValue, setSearchValue, searchData, setSearchData }}>{children}</SearchContext.Provider>
+  const handleClick = (item: IUser) => {
+    setSelectedProfile(item)
+  }
+
+  return <SearchContext.Provider value={{ isFocused, setIsFocused, searchValue, setSearchValue, searchData, setSearchData, selectedProfile, setSelectedProfile, handleClick, handleSearch }}>{children}</SearchContext.Provider>
 }
 
 export const useSearch = (): SearchContextTypes => {

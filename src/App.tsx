@@ -8,9 +8,9 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <SearchProvider>
-          <PostProvider>
-            <ProfileProvider>
+        <PostProvider>
+          <ProfileProvider>
+            <SearchProvider>
               <Routes>
                 {/* Route for redirecting to feed page when the route is / or to login if there is no token */}
                 <Route path="/" element={<RootRedirect />} />
@@ -26,9 +26,9 @@ const App: React.FC = () => {
                   </Route>
                 </Route>
               </Routes>
-            </ProfileProvider>
-          </PostProvider>
-        </SearchProvider>
+            </SearchProvider>
+          </ProfileProvider>
+        </PostProvider>
       </AuthProvider>
     </BrowserRouter>
   );

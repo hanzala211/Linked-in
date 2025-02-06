@@ -1,12 +1,38 @@
-import { useAuth } from "@context"
+import { useAuth, useSearch } from "@context"
 import { useEffect } from "react"
 import { titleChanger } from "@helpers"
 import { FeedSuggestions, Footer, ProfileSection } from "@components"
 import { FaLongArrowAltRight } from "react-icons/fa"
 import { DEFAULT_EXPERIENCE_PIC } from "@assets"
+import { useParams } from "react-router-dom"
 
 export const ProfilePage: React.FC = () => {
   const { userData } = useAuth()
+  const { selectedProfile, handleSearch, setSelectedProfile } = useSearch()
+  const params = useParams()
+  const isCurrentProfile = params.username === userData?.userName;
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    const fetchData = async () => {
+      if (params.username !== userData?.userName && selectedProfile === null) {
+        try {
+          const data = await handleSearch(signal, params.username);
+          console.log(data);
+          setSelectedProfile(data[0])
+        } catch (error) {
+          if (error.name !== "AbortError") {
+            console.error("Fetch error:", error);
+          }
+        }
+      }
+    };
+    fetchData();
+    return () => controller.abort();
+  }, [params.username, userData]);
+
 
   useEffect(() => {
     if (userData !== null) {
@@ -17,15 +43,15 @@ export const ProfilePage: React.FC = () => {
   return <><section className="grid md:grid-cols-[2fr_1fr] grid-cols-1 pt-20 w-full xl:max-w-[70%] gap-6 md:max-w-[95%] max-w-full mx-auto">
     {/* First Column */}
     <div className="w-full flex flex-col gap-4">
-      <ProfileSection />
+      <ProfileSection isCurrentProfile={isCurrentProfile} />
 
       <div className="w-full rounded-lg relative bg-white p-4">
         <h1 className="text-[22px]">About</h1>
-        <p className="text-[#666] text-[15px]">{userData?.headline}</p>
+        <p className="text-[#666] text-[15px]">{isCurrentProfile ? userData?.headline : selectedProfile?.headline}</p>
       </div>
 
 
-      {userData?.postsCount && userData?.postsCount > 0 &&
+      {(isCurrentProfile ? userData?.postsCount && userData?.postsCount > 0 : selectedProfile?.postsCount && selectedProfile?.postsCount > 0) &&
         <div className="w-full rounded-lg relative bg-white pt-4">
 
           <div className="px-4">
@@ -51,11 +77,11 @@ export const ProfilePage: React.FC = () => {
         </div>
       }
 
-      {userData?.experience && userData?.experience.length > 0 &&
+      {(isCurrentProfile ? userData?.experience && userData?.experience.length > 0 : selectedProfile?.experience && selectedProfile.experience.length > 0) &&
         <div className="w-full rounded-lg relative bg-white p-4">
           <h1 className="text-[22px]">Experience</h1>
-          {userData?.experience.map((item, index) => (
-            <div key={index} className={`flex gap-3 items-start ${index !== userData.experience?.length - 1 ? " border-b-[1px]" : ""} py-3`}>
+          {(isCurrentProfile ? userData?.experience : selectedProfile?.experience)?.map((item, index, arr) => (
+            <div key={index} className={`flex gap-3 items-start ${index !== arr.length - 1 ? " border-b-[1px]" : ""} py-3`}>
               <img src={item.companyImg || DEFAULT_EXPERIENCE_PIC} alt="Experiences image" className="w-12" />
               <div>
                 <h1 className="text-[14px] font-semibold">{item.employmentType}</h1>
@@ -68,11 +94,11 @@ export const ProfilePage: React.FC = () => {
         </div>
       }
 
-      {userData?.education && userData?.education.length > 0 &&
+      {(isCurrentProfile ? userData?.education && userData?.education.length > 0 : selectedProfile?.education && selectedProfile.education.length > 0) &&
         <div className="w-full rounded-lg relative bg-white p-4">
           <h1 className="text-[22px]">Education</h1>
-          {userData?.education.map((item, index) => (
-            <div key={index} className={`flex gap-3 items-start ${index !== userData.education?.length - 1 ? "border-b-[1px]" : ""} py-3`}>
+          {(isCurrentProfile ? userData?.education : selectedProfile?.education)?.map((item, index, arr) => (
+            <div key={index} className={`flex gap-3 items-start ${index !== arr.length - 1 ? "border-b-[1px]" : ""} py-3`}>
               <img src={item?.schoolImg || DEFAULT_EXPERIENCE_PIC} alt="School image" className="w-12" />
               <div>
                 <h1 className="text-[14px] font-semibold">{item.schoolName}</h1>

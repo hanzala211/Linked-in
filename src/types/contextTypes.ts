@@ -1,5 +1,5 @@
 import { PostType } from "@types";
-import { IEducation, IExperience, IUser, SearchUser } from "./userTypes";
+import { IEducation, IExperience, IUser } from "./userTypes";
 
 export interface AuthContextTypes {
     userData: IUser | null,
@@ -20,8 +20,12 @@ export interface SearchContextTypes {
     setIsFocused: React.Dispatch<React.SetStateAction<boolean>>,
     searchValue: string,
     setSearchValue: React.Dispatch<React.SetStateAction<string>>,
-    searchData: SearchUser[],
-    setSearchData: React.Dispatch<React.SetStateAction<SearchUser[]>>,
+    searchData: IUser[],
+    setSearchData: React.Dispatch<React.SetStateAction<IUser[]>>,
+    selectedProfile: IUser | null,
+    setSelectedProfile: React.Dispatch<React.SetStateAction<IUser | null>>,
+    handleClick: (item: IUser) => void,
+    handleSearch: (signal: AbortSignal, value: string) => Promise<any>
 }
 
 export interface PostContextTypes {
@@ -47,6 +51,8 @@ export interface PostContextTypes {
     setHasMore: React.Dispatch<React.SetStateAction<boolean>>,
     isFeedPostsLoading: boolean,
     setIsFeedPostsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    getComments: (postId: string, page: unknown) => unknown,
+    postComment: (postId: string, sendData: unknown) => unknown
 }
 
 export interface ProfileContextTypes {

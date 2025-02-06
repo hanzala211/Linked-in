@@ -25,4 +25,15 @@ export const postService = {
     url: `/post/dislike-post/${postId}`,
     isAuthIncluded: true
   }),
+  postComment: (postId: string, data: unknown) => sendRequest({
+    method: "POST",
+    url: `/post/post-comment/${postId}`,
+    data,
+    isAuthIncluded: true,
+  }),
+  getComments: (postId: string, page: unknown) => sendRequest({
+    method: "GET",
+    url: `/post/get-comments/${postId}?limit=2&page=${page}`,
+    isAuthIncluded: true
+  })
 }

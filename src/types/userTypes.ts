@@ -39,15 +39,6 @@ export interface IEducation {
   grade: string
 }
 
-export interface SearchUser {
-  _id: string,
-  userName: string,
-  email: string,
-  firstName?: string,
-  lastName?: string,
-  __v?: number
-}
-
 export interface FormTypes {
   text: string,
   name: string,

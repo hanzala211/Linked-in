@@ -12,6 +12,7 @@ export const EditPosition: React.FC = () => {
   const { isAddingExperience, setIsAddingExperience, setIsEditingProfile, setExperienceFormData, startYearExperience, setStartYearExperience, endYearExperience, setEndYearExperience } = useProfile();
   const { handleSubmit, register, formState: { errors }, watch, setValue, reset } = useForm<ExperienceFormScheema>();
   const [foundValue, setFoundValue] = useState<{ name: string, image: string } | null>(null)
+  const [isPresent, setIsPresent] = useState<boolean>(false)
 
   useEffect(() => {
     handleSearch()
@@ -28,6 +29,7 @@ export const EditPosition: React.FC = () => {
     setTimeout(() => {
       setIsEditingProfile(true)
     }, 300)
+    setIsPresent(false)
     reset()
   };
 
@@ -38,7 +40,7 @@ export const EditPosition: React.FC = () => {
       description: data.description,
       employmentType: data.employmentType,
       startDate: startYearExperience,
-      endDate: endYearExperience,
+      endDate: isPresent ? "Present" : endYearExperience,
       location: data.location,
     };
 
@@ -74,7 +76,7 @@ export const EditPosition: React.FC = () => {
             <p className="text-[12px] text-[#666]">* Indicates required</p>
             <div className="relative">
               {watch("companyImg") !== null && <img src={watch("companyImg")} className="w-4 absolute top-1/2 left-3" alt="Company Img" />}
-              <EditInput errors={errors} label="Company name*" register={register} name="companyName" type="text" className={` ${watch("companyImg") !== null ? "px-10" : ""}`} />
+              <EditInput errors={errors} label="Company name*" register={register} name="companyName" type="text" className={`${watch("companyImg") ? "px-9" : ""}`} />
               {foundValue !== null &&
                 <div onClick={handleClick} className="absolute items-center hover:bg-gray-100 cursor-pointer -bottom-[3.4rem] bg-white w-full border-[1px] rounded-b-lg p-2 flex gap-4">
                   <img src={foundValue?.image} alt="Found Company" className="w-10 h-10" />
@@ -87,8 +89,12 @@ export const EditPosition: React.FC = () => {
               <textarea {...register("description")} id="description" className="border-[1px] outline-none border-black rounded-sm py-1 px-2 text-[14px]" />
             </div>
             <EditInput errors={errors} label="Employment Type*" register={register} name="employmentType" type="text" />
-            <Years label="Start Year*" setSelectYear={setStartYearExperience} />
-            <Years label="End Year*" setSelectYear={setEndYearExperience} />
+            <div className="flex items-center gap-2">
+              <input type="checkbox" id="check" onChange={() => setIsPresent((prev) => !prev)} />
+              <label htmlFor="check" className="text-[#666] text-[14px]">I am currently working in this role</label>
+            </div>
+            <Years label="Start Year*" setSelectYear={setStartYearExperience} isPresent={false} />
+            <Years label="End Year*" setSelectYear={setEndYearExperience} isPresent={isPresent} />
             <EditInput errors={errors} label="Location*" register={register} name="location" type="text" />
           </div>
           <EditFooter type="submit" />

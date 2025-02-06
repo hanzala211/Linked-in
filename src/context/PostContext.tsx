@@ -87,8 +87,8 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             : item
         )
       );
+
       const { data } = await postService.likePost(postId)
-      console.log(data)
       if (data.status === "Post Liked Successfully") {
         toast.success(data.status, {
           action: {
@@ -154,8 +154,29 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }
 
+  const getComments = async (postId: string, page: unknown) => {
+    try {
+      const { data } = await postService.getComments(postId, page)
+      if (data.status === "Comments Found") {
+        return data
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading }}>{children}</PostContext.Provider>
+  const postComment = async (postId: string, senData: unknown) => {
+    try {
+      const { data } = await postService.postComment(postId, senData)
+      if (data.status === "Commented Successfully") {
+        return data
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment }}>{children}</PostContext.Provider>
 }
 
 export const usePost = (): PostContextTypes => {

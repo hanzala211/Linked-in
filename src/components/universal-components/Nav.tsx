@@ -59,10 +59,6 @@ export const Nav: React.FC = () => {
     }
   }
 
-  const handleBlur = () => {
-    setIsFocused(false)
-  }
-
   const handleSignOut = () => {
     localStorage.removeItem("token")
     setIsMainPageLoading(true)
@@ -78,7 +74,7 @@ export const Nav: React.FC = () => {
         <span ref={searchIconRef} onClick={handleExpansion}>
           <IoSearchOutline className={`absolute z-10 top-1/2 -translate-y-1/2 left-2 ${isExpanded ? "absolute top-1/2 -translate-y-1/2 left-2 z-20" : ""} text-[20px] text-gray-500 lg:text-black hover:text-black cursor-pointer lg:cursor-auto transition-all duration-200`} />
         </span>
-        <input value={searchValue} onChange={(e) => setSearchValue(e.target.value)} onFocus={() => setIsFocused(true)} onBlur={handleBlur} ref={searchInputRef} type="text" className={`lg:border-[2px] border-[#EDF3F8] lg:px-7 py-1 placeholder:text-gray-500 lg:w-72 w-0 focus-within:border-black lg:focus-within:pl-10 lg:focus-within:w-96 rounded-md lg:transition-all lg:duration-200 bg-[#EDF3F8] outline-none ${isExpanded ? "absolute w-[90vw] sm:w-[82vw] z-10 top-1/2 -translate-y-1/2 border-black py-2.5 border-[2px] px-9" : "absolute lg:relative"}`} placeholder="Search" />
+        <input value={searchValue} onChange={(e) => setSearchValue(e.target.value)} onFocus={() => setIsFocused(true)} ref={searchInputRef} type="text" className={`lg:border-[2px] border-[#EDF3F8] lg:px-7 py-1 placeholder:text-gray-500 lg:w-72 w-0 focus-within:border-black lg:focus-within:pl-10 lg:focus-within:w-96 rounded-md lg:transition-all lg:duration-200 bg-[#EDF3F8] outline-none ${isExpanded ? "absolute w-[90vw] sm:w-[82vw] z-10 top-1/2 -translate-y-1/2 border-black py-2.5 border-[2px] px-9" : "absolute lg:relative"}`} placeholder="Search" />
         {isFocused && searchData.length > 0 && <SearchBox />}
       </div>
     </div>
