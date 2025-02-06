@@ -46,10 +46,10 @@ export const ProfileSection: React.FC<{ isCurrentProfile: boolean }> = ({ isCurr
         </button>
       </div>
 
-      <div className="mt-12 px-5 pb-5">
-        <h1 className="text-[25px]">{isCurrentProfile ? userData?.firstName : selectedProfile?.firstName} {isCurrentProfile ? userData?.lastName : selectedProfile?.lastName}</h1>
-        <p className="line-clamp-1 text-[#666] text-[16px] my-1">{isCurrentProfile ? userData?.headline : selectedProfile?.headline}</p>
-        <p className="text-[#666] text-[13px]">
+      <div className="mt-12 px-5 pb-5 text-[14px] md:text-[16px]">
+        <h1 className="md:text-[25px] text-[20px]">{isCurrentProfile ? userData?.firstName : selectedProfile?.firstName} {isCurrentProfile ? userData?.lastName : selectedProfile?.lastName}</h1>
+        <p className="line-clamp-1 text-[#666] md:text-[16px] text-[14px] my-1">{isCurrentProfile ? userData?.headline : selectedProfile?.headline}</p>
+        <p className="text-[#666] md:text-[13px] text-[12px]">
           {isCurrentProfile ? userData?.region : selectedProfile?.region} {isCurrentProfile ? userData?.country : selectedProfile?.country}
         </p>
         <div className="flex gap-2 items-center justify-end mt-4">

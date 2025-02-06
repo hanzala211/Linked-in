@@ -16,7 +16,7 @@ export const FeedPage: React.FC = () => {
     }
   }, [])
 
-  return <section className="grid lg:grid-cols-[0.9fr_2fr_1.4fr] md:grid-cols-[1fr_2fr] gap-5 lg:gap-0 grid-cols-1 pt-20 mx-auto w-full xl:max-w-[70%] md:max-w-[95%] max-w-full">
+  return <section className="grid lg:grid-cols-[0.9fr_2fr_1.4fr] md:grid-cols-[1fr_2fr] gap-5 lg:gap-0 grid-cols-1 pt-20 mx-auto w-full xl:max-w-[70%] max-w-[98%]">
     {/* First Column */}
     <FeedIdentityModule />
 

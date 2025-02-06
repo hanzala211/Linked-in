@@ -68,7 +68,7 @@ export const Nav: React.FC = () => {
 
   return <nav className="flex bg-white items-center w-full justify-evenly fixed z-20 lg:pt-2 pt-1 lg:pb-[2px] border-b-[1px]">
 
-    <div className="flex items-center sm:w-[40%] w-1/2 xl:w-[27%]">
+    <div className="flex items-center sm:w-[40%] w-[40%] xl:w-[27%]">
       <IoLogoLinkedin className="text-[50px] text-[#0A66C2]" />
       <div className="relative lg:w-full w-full">
         <span ref={searchIconRef} onClick={handleExpansion}>
@@ -79,11 +79,11 @@ export const Nav: React.FC = () => {
       </div>
     </div>
 
-    <div className="flex gap-5 xl:space-x-4 lg:space-x-1 space-x-2.5 sm:space-x-3 sm:w-[40%] w-full xl:w-[30%]">
+    <div className="flex gap-5 xl:space-x-4 lg:space-x-1 space-x-1.5 sm:space-x-3 sm:w-[40%] w-full xl:w-[30%]">
       {navLinks.map((item, index) => (
         <NavLink
           key={index} className={({ isActive }) =>
-            `flex flex-col group items-center relative before:content-[''] before:absolute lg:before:bottom-[-5px] before:bottom-[-10px] before:h-[2px] before:rounded-full before:bg-black before:left-1/2 before:-translate-x-1/2 before:transition-all before:duration-200 ${isActive ? "before:w-20" : "before:w-0"
+            `flex flex-col group items-center relative before:content-[''] before:absolute lg:before:bottom-[-5px] before:bottom-[-10px] before:h-[2px] before:rounded-full before:bg-black before:left-1/2 before:-translate-x-1/2 before:transition-all before:duration-200 ${isActive ? "md:before:w-20 before:w-14" : "before:w-0"
             }`
           } to={item.navLink} >
           {({ isActive }) => (<>
@@ -113,7 +113,7 @@ export const Nav: React.FC = () => {
                 <img src={userData?.profilePic || DEFAULT_PIC} alt="User Profile" className="w-8 h-8 rounded-full" />
                 <div>
                   <h1 className="font-semibold">{userData?.firstName} {userData?.lastName}</h1>
-                  <p className="text-[#666] text-[14px]">--</p>
+                  <p className="text-[#666] text-[14px]">{userData?.headline}</p>
                 </div>
               </div>
               <button className="w-full text-[#0A66C2] hover:bg-[#EBF4FD] border-[1px] rounded-full transition-all duration-200 mt-5 border-[#0A66C2]">View Profile</button>

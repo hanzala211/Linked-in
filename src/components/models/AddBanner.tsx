@@ -1,11 +1,17 @@
 import { EditHead } from "@components"
 import { useProfile } from "@context"
-import { useRef } from "react"
+import { overFlowHidder } from "@helpers"
+import { useEffect, useRef } from "react"
 import { SyncLoader } from "react-spinners"
 
 export const AddBanner: React.FC = () => {
   const { isAddingBanner, setIsAddingBanner, setSelectedBanner, selectedBanner, isUpdatingProfileBanner, uploadBanner, deleteProfileBanner } = useProfile()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+
+  useEffect(() => {
+    overFlowHidder(isAddingBanner)
+  }, [isAddingBanner])
+
 
   const handleClose = () => {
     setIsAddingBanner(false)
@@ -35,14 +41,14 @@ export const AddBanner: React.FC = () => {
 
   return <>
     <div onClick={handleClose} className={`transition-all duration-200 overlay z-20 ${isAddingBanner ? "opacity-100" : "opacity-0 pointer-events-none"}`}></div>
-    <div className={`fixed ${isAddingBanner ? "opacity-100" : "opacity-0 pointer-events-none"} transition-all duration-200 inset-0 rounded-lg bg-white z-50 w-full flex flex-col xl:max-w-[40%] md:max-w-[70%] max-w-full left-1/2 shadow shadow-slate-200 -translate-x-1/2 h-full max-h-[60%] top-[5%]`}>
+    <div className={`fixed ${isAddingBanner ? "opacity-100" : "opacity-0 pointer-events-none"} transition-all duration-200 inset-0 rounded-lg bg-white z-50 w-full flex flex-col xl:max-w-[40%] md:max-w-[70%] max-w-[98%] left-1/2 shadow shadow-slate-200 -translate-x-1/2 h-full max-h-[60%] top-[5%]`}>
       <EditHead heading="Add Banner" handleClose={handleClose} />
       {selectedBanner[0] === undefined ?
 
         <div className="flex flex-col items-center justify-center h-full">
-          <img src="images/imageBanner.svg" alt="Profile Creator" />
-          <h1 className="max-w-lg my-1 text-center text-[22px]">Showcase your personality, interests, team moments or notable milestones</h1>
-          <p className="text-center max-w-lg text-[#666] text-[13px]">A good background photo will help you stand out.</p>
+          <img src="images/imageBanner.svg" alt="Profile Creator" className="w-44 md:w-auto" />
+          <h1 className="max-w-lg my-1 text-center md:text-[22px] text-[15px]">Showcase your personality, interests, team moments or notable milestones</h1>
+          <p className="text-center max-w-lg text-[#666] md:text-[13px] text-[10px]">A good background photo will help you stand out.</p>
         </div>
         :
         <div className="h-[77%]">

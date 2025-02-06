@@ -38,14 +38,14 @@ export const ProfilePage: React.FC = () => {
     }
   }, [])
 
-  return <><section className="grid md:grid-cols-[2fr_1fr] grid-cols-1 pt-20 w-full xl:max-w-[70%] gap-6 md:max-w-[95%] max-w-full mx-auto">
+  return <><section className="grid md:grid-cols-[2fr_1fr] grid-cols-1 pt-20 w-full xl:max-w-[70%] gap-6 max-w-[98%] mx-auto">
     {/* First Column */}
     <div className="w-full flex flex-col gap-4">
       <ProfileSection isCurrentProfile={isCurrentProfile} />
 
       <div className="w-full rounded-lg relative bg-white p-4">
-        <h1 className="text-[22px]">About</h1>
-        <p className="text-[#666] text-[15px]">{isCurrentProfile ? userData?.headline : selectedProfile?.headline}</p>
+        <h1 className="md:text-[22px] text-[18px]">About</h1>
+        <p className="text-[#666] md:text-[15px] text-[13px]">{isCurrentProfile ? userData?.headline : selectedProfile?.headline}</p>
       </div>
 
 
@@ -53,13 +53,13 @@ export const ProfilePage: React.FC = () => {
         <div className="w-full rounded-lg relative bg-white pt-4">
 
           <div className="px-4">
-            <h1 className="text-[22px]">Activity</h1>
-            <p className="text-[#666] mt-1 text-[13px]">{(37172499).toLocaleString()} followers</p>
+            <h1 className="md:text-[22px] text-[18px]">Activity</h1>
+            <p className="text-[#666] mt-1 md:text-[13px] text-[12px]">{(37172499).toLocaleString()} followers</p>
             <div className="border-b-[1px]">
               <p className="text-[12px] text-[#666] mt-2"><span className="text-[#333] text-[13px]">You</span> posted this • 1d</p>
               <div className="flex gap-3 items-start mt-2">
                 <img src="https://media.licdn.com/dms/image/v2/D5605AQGoMXy-sz3Q4w/feedshare-thumbnail_720_1280/B56ZTCxLZpGoBA-/0/1738434459992?e=1739206800&v=beta&t=fZiABA-sflsui2gS9Qi6le3AtBT88FeukGGuA16mcvI" className="w-14 h-14 object-cover rounded-lg" alt="" />
-                <p className="text-[13px] text-[#666]">My new memoir Source Code is the story of my life before Microsoft. Of my earliest successes and failures. And of not fitting in, playing cards, sneaking out, hiking mountains, and forming friendships that changed my life. I hope you enjoy it:</p>
+                <p className="md:text-[13px] text-[12px] text-[#666]">My new memoir Source Code is the story of my life before Microsoft. Of my earliest successes and failures. And of not fitting in, playing cards, sneaking out, hiking mountains, and forming friendships that changed my life. I hope you enjoy it:</p>
               </div>
               <div className="my-3 flex justify-between">
                 <div className="flex gap-1 items-center">
@@ -77,7 +77,7 @@ export const ProfilePage: React.FC = () => {
 
       {(isCurrentProfile ? userData?.experience && userData?.experience.length > 0 : selectedProfile?.experience && selectedProfile.experience.length > 0) &&
         <div className="w-full rounded-lg relative bg-white p-4">
-          <h1 className="text-[22px]">Experience</h1>
+          <h1 className="md:text-[22px] text-[18px]">Experience</h1>
           {(isCurrentProfile ? userData?.experience : selectedProfile?.experience)?.map((item, index, arr) => (
             <div key={index} className={`flex gap-3 items-start ${index !== arr.length - 1 ? " border-b-[1px]" : ""} py-3`}>
               <img src={item.companyImg || DEFAULT_EXPERIENCE_PIC} alt="Experiences image" className="w-12" />
@@ -94,7 +94,7 @@ export const ProfilePage: React.FC = () => {
 
       {(isCurrentProfile ? userData?.education && userData?.education.length > 0 : selectedProfile?.education && selectedProfile.education.length > 0) &&
         <div className="w-full rounded-lg relative bg-white p-4">
-          <h1 className="text-[22px]">Education</h1>
+          <h1 className="md:text-[22px] text-[18px]">Education</h1>
           {(isCurrentProfile ? userData?.education : selectedProfile?.education)?.map((item, index, arr) => (
             <div key={index} className={`flex gap-3 items-start ${index !== arr.length - 1 ? "border-b-[1px]" : ""} py-3`}>
               <img src={item?.schoolImg || DEFAULT_EXPERIENCE_PIC} alt="School image" className="w-12" />

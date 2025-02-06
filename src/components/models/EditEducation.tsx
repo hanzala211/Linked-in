@@ -72,7 +72,7 @@ export const EditEducation: React.FC = () => {
   return (
     <>
       <div onClick={handleClose} className={`transition-all duration-200 overlay z-20 ${isAddingEducation ? "opacity-100" : "opacity-0 pointer-events-none"}`}></div>
-      <div className={`fixed ${isAddingEducation ? "opacity-100" : "opacity-0 pointer-events-none"} transition-all duration-200 inset-0 rounded-lg bg-white z-50 w-full flex flex-col justify-between xl:max-w-[40%] md:max-w-[70%] max-w-full left-1/2 shadow shadow-slate-200 -translate-x-1/2 h-full max-h-[90%] top-[5%]`}>
+      <div className={`fixed ${isAddingEducation ? "opacity-100" : "opacity-0 pointer-events-none"} transition-all duration-200 inset-0 rounded-lg bg-white z-50 w-full flex flex-col justify-between xl:max-w-[40%] md:max-w-[70%] max-w-[98%] left-1/2 shadow shadow-slate-200 -translate-x-1/2 h-full max-h-[90%] top-[5%]`}>
         <EditHead heading="Add education" handleClose={handleClose} />
         <form onSubmit={handleSubmit(onSubmit)} className="h-full flex flex-col justify-between overflow-y-auto w-full">
           <div className="flex flex-col gap-4 py-4 px-6">
@@ -107,7 +107,9 @@ export const EditEducation: React.FC = () => {
             <Years label="End Year*" setSelectYear={setEndYearEducation} isPresent={isPresent} />
             <EditInput errors={errors} label="Location*" register={register} name="location" type="text" />
           </div>
-          <EditFooter type="submit" />
+          <div className="sticky bottom-0 w-full bg-white shadow-md z-10">
+            <EditFooter type="submit" />
+          </div>
         </form>
       </div>
     </>
