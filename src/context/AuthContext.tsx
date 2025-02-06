@@ -16,6 +16,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const token = localStorage.getItem("token")
         if (token && userData === null) {
             me()
+        } else {
+            setIsMainPageLoading(false)
         }
     }, [])
 
