@@ -17,22 +17,25 @@ export const ImageCreator: React.FC = () => {
   }, [isImageCreatorOpen])
 
 
-  const handleFileChange = (event: any) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+
     const files = Array.from(event.target.files);
     const imageUrls = files
-      .filter((file) => file.type.startsWith('image/'))
+      .filter((file) => file.type.startsWith("image/"))
       .map((file) => URL.createObjectURL(file));
+
     if (imageUrls.length > 0) {
-      setSelectedImage((prev) => [...prev, ...imageUrls]);
-      setIsSelectingImage(false)
+      setSelectedImage((prev: string[]) => [...prev, ...imageUrls]);
+      setIsSelectingImage(false);
     } else {
-      alert('Please select an image file');
+      alert("Please select an image file");
     }
-  }
+  };
 
   const handleFile = () => {
-    fileInputRef.current.click();
-  }
+    fileInputRef.current?.click();
+  };
 
   const handleClose = () => {
     setIsImageCreatorOpen(false)

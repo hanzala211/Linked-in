@@ -1,7 +1,7 @@
-export function formatDate(dateString: Date) {
+export function formatDate(dateString: number) {
   const now = new Date();
   const targetDate = new Date(dateString);
-  const diffInMilliseconds = Math.abs(targetDate - now);
+  const diffInMilliseconds = Math.abs(targetDate.getTime() - now.getTime());
   const MINUTE = 60 * 1000;
   const HOUR = 60 * MINUTE;
   const DAY = 24 * HOUR;
@@ -19,7 +19,7 @@ export function formatDate(dateString: Date) {
     const minutes = Math.floor((diffInMilliseconds % HOUR) / MINUTE);
     return minutes > 0
       ? `${hours} h ${minutes} m`
-      : `${hours} hour${hours > 1 ? 's' : ''}`;
+      : `${hours} hour${hours > 1 ? "s" : ""}`;
   } else {
     const minutes = Math.floor(diffInMilliseconds / MINUTE);
     return `${minutes} m`;

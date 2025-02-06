@@ -1,4 +1,4 @@
-import { PostType } from "@types";
+import { CompleteComment, PostType } from "@types";
 import { IEducation, IExperience, IUser } from "./userTypes";
 
 export interface AuthContextTypes {
@@ -25,7 +25,7 @@ export interface SearchContextTypes {
     selectedProfile: IUser | null,
     setSelectedProfile: React.Dispatch<React.SetStateAction<IUser | null>>,
     handleClick: (item: IUser) => void,
-    handleSearch: (signal: AbortSignal, value: string) => Promise<any>
+    handleSearch: (signal: AbortSignal, value: string) => Promise<IUser[]>
 }
 
 export interface PostContextTypes {
@@ -51,7 +51,7 @@ export interface PostContextTypes {
     setHasMore: React.Dispatch<React.SetStateAction<boolean>>,
     isFeedPostsLoading: boolean,
     setIsFeedPostsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    getComments: (postId: string, page: unknown) => unknown,
+    getComments: (postId: string, page: unknown) => Promise<CompleteComment>,
     postComment: (postId: string, sendData: unknown) => unknown
 }
 

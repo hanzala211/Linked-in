@@ -19,13 +19,11 @@ export const ProfilePage: React.FC = () => {
     const fetchData = async () => {
       if (params.username !== userData?.userName && selectedProfile === null) {
         try {
-          const data = await handleSearch(signal, params.username);
+          const data = await handleSearch(signal, params.username || "");
           console.log(data);
           setSelectedProfile(data[0])
         } catch (error) {
-          if (error.name !== "AbortError") {
-            console.error("Fetch error:", error);
-          }
+          console.log(error)
         }
       }
     };

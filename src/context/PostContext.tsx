@@ -64,12 +64,16 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const { data } = await postService.getFeedPosts();
       console.log(data);
 
-      setFeedPosts((prev: any) => {
-        const newPosts = data.data.filter((post: PostType) => !prev.some((existingPost) => existingPost._id === post._id));
+      setFeedPosts((prev: PostType[]) => {
+        const newPosts: PostType[] = data.data.filter((post: PostType) =>
+          !prev.some((existingPost: PostType) => existingPost._id === post._id)
+        );
+
         if (newPosts.length === 0) {
           setHasMore(false);
         }
-        return [...prev, ...newPosts]
+
+        return [...prev, ...newPosts];
       });
       setIsFeedPostsLoading(false)
     } catch (error) {
@@ -80,14 +84,17 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const likePost = async (postId: string) => {
     try {
-      setFeedPosts((prev: any) =>
-        prev.map((item: PostType) =>
+      setFeedPosts((prev: PostType[]) =>
+        prev.map((item) =>
           item._id === postId
-            ? { ...item, likeCount: item.likeCount + 1, likes: [...item.likes, userData?._id] }
+            ? {
+              ...item,
+              likeCount: item.likeCount + 1,
+              likes: [...item.likes, userData?._id].filter((id): id is string => Boolean(id))
+            }
             : item
         )
       );
-
       const { data } = await postService.likePost(postId)
       if (data.status === "Post Liked Successfully") {
         toast.success(data.status, {
@@ -141,10 +148,14 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             onClick: () => null,
           },
         })
-        setFeedPosts((prev: any) =>
-          prev.map((item: PostType) =>
+        setFeedPosts((prev: PostType[]) =>
+          prev.map((item) =>
             item._id === postId
-              ? { ...item, likeCount: item.likeCount + 1, likes: [...item.likes, userData?._id] }
+              ? {
+                ...item,
+                likeCount: item.likeCount + 1,
+                likes: [...item.likes, userData?._id].filter(Boolean) as string[]
+              }
               : item
           )
         );

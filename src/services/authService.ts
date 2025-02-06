@@ -24,7 +24,7 @@ export const authService = {
         url: "/auth/me",
         isAuthIncluded: true
     }),
-    searchUser: (data: string, signal?: AbortSignal) => sendRequest({
+    searchUser: (data?: string, signal?: AbortSignal) => sendRequest({
         method: "GET",
         url: `/auth/search?search=${data}`,
         isAuthIncluded: false,

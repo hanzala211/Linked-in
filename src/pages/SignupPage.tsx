@@ -10,7 +10,6 @@ import { titleChanger } from "@helpers"
 export const SignupPage: React.FC = () => {
     const { signup, setErrorMessage } = useAuth()
 
-
     useEffect(() => {
         titleChanger("Signup")
     }, [])

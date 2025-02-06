@@ -46,14 +46,14 @@ export const Post: React.FC<PostProps> = ({ item }) => {
     }
   }, [])
 
-  function handleClick(e: any) {
-    if (emojiIconRef.current && emojiPickerRef.current && !emojiIconRef.current.contains(e.target) && !emojiPickerRef.current.contains(e.target)) {
+  function handleClick(e: MouseEvent) {
+    if (emojiIconRef.current && emojiPickerRef.current && !emojiIconRef.current.contains(e.target as Node) && !emojiPickerRef.current.contains(e.target as Node)) {
       setIsEmojiPicker(false)
     }
   }
 
   const handleLikes = () => {
-    if (item.likes.includes(userData?._id)) {
+    if (item.likes.includes(userData?._id || "")) {
       disLikePost(item._id)
     } else {
       likePost(item._id)
@@ -89,7 +89,7 @@ export const Post: React.FC<PostProps> = ({ item }) => {
       await postComment(postId, {
         comment: commentValue
       })
-      setComments((prev: unknown) => [{
+      setComments((prev: CommentType[]) => [{
         comment: commentValue,
         user: userData,
         createdAt: Date.now()
@@ -161,7 +161,7 @@ export const Post: React.FC<PostProps> = ({ item }) => {
     </div>
 
     <div className="mx-5 py-2 flex gap-4 justify-between">
-      <button onClick={handleLikes} className={`flex gap-2 items-center text-[15px] justify-center hover:bg-slate-100 w-full max-w-lg rounded-lg px-4 py-2 ${item.likes.includes(userData?._id) ? "text-[#0A66C2]" : ""}`}>{!item.likes.includes(userData?._id) ? <BiLike className="text-[17px]" /> : <img src="images/likeSVG.svg" alt="likes SVG" className="w-5" />
+      <button onClick={handleLikes} className={`flex gap-2 items-center text-[15px] justify-center hover:bg-slate-100 w-full max-w-lg rounded-lg px-4 py-2 ${item.likes.includes(userData?._id || "") ? "text-[#0A66C2]" : ""}`}>{!item.likes.includes(userData?._id || "") ? <BiLike className="text-[17px]" /> : <img src="images/likeSVG.svg" alt="likes SVG" className="w-5" />
       } Like</button>
       <button className="flex gap-2 items-center text-[15px] justify-center hover:bg-slate-100 w-full max-w-lg rounded-lg px-4 py-2" onClick={() => handleComments(item._id)}><BiMessageRoundedMinus /> Comment</button>
       <button className="flex gap-2 items-center text-[15px] justify-center hover:bg-slate-100 w-full max-w-lg rounded-lg px-4 py-2"><RiSendPlaneFill /> Send</button>
@@ -189,11 +189,11 @@ export const Post: React.FC<PostProps> = ({ item }) => {
             <div className="flex justify-between items-center">
               <Link to="#" className="flex gap-2 items-center">
                 <img
-                  src={comment.user.profilePic || DEFAULT_PIC}
-                  alt={`${comment.user.firstName} profilePic`}
+                  src={comment.user?.profilePic || DEFAULT_PIC}
+                  alt={`${comment.user?.firstName} profilePic`}
                   className="w-8 h-8 rounded-full"
                 />
-                <p className="text-[#111] hover:underline transition-all duration-200 text-[15px]">{comment.user.firstName} {comment.user.lastName}</p>
+                <p className="text-[#111] hover:underline transition-all duration-200 text-[15px]">{comment.user?.firstName} {comment.user?.lastName}</p>
               </Link>
               <p className="text-[#666] text-[14px]">{formatDate(comment?.createdAt)}</p>
             </div>

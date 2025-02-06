@@ -45,8 +45,8 @@ export const Nav: React.FC = () => {
     return () => window.removeEventListener("click", handleClickOutside)
   }, [])
 
-  function handleClickOutside(event: any) {
-    if (searchInputRef.current && searchIconRef.current && !searchInputRef.current.contains(event.target) && !searchIconRef.current.contains(event.target)) {
+  function handleClickOutside(event: MouseEvent) {
+    if (searchInputRef.current && searchIconRef.current && !searchInputRef.current.contains(event.target as Node) && !searchIconRef.current.contains(event.target as Node)) {
       setIsExpanded(false);
       setIsFocused(false)
     }

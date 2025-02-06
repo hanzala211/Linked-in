@@ -3,18 +3,25 @@ import { IUser } from "@types"
 export interface PostType {
   _id: string,
   caption: string,
-  postBy: string,
+  postBy: IUser,
   imageUrls: string[],
   likes: string[],
   likeCount: number,
   commentCount: number,
-  createdAt: Date,
+  createdAt: number,
   comments: CommentType[],
   __v: number
 }
 
 export interface CommentType {
-  user: IUser,
+  user: IUser | null,
   comment: string,
-  createdAt: Date
+  createdAt: number
+}
+
+export interface CompleteComment {
+  page: number,
+  totalPages: number,
+  comments: CommentType[],
+  status: string
 }

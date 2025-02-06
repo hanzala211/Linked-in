@@ -25,9 +25,9 @@ export const PostCreator: React.FC = () => {
     }
   }, [isPostCreatorOpen])
 
-  function handleClick(e: any) {
-    if (emojiIconRef.current && emojiPickerRef.current && !emojiIconRef.current.contains(e.target) && !emojiPickerRef.current.contains(e.target)) {
-      setIsEmojiPicker(false)
+  function handleClick(e: MouseEvent) {
+    if (emojiIconRef.current && emojiPickerRef.current && !emojiIconRef.current.contains(e.target as Node) && !emojiPickerRef.current.contains(e.target as Node)) {
+      setIsEmojiPicker(false);
     }
   }
 

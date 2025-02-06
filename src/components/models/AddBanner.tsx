@@ -14,22 +14,24 @@ export const AddBanner: React.FC = () => {
     }, 200)
   }
 
-  const handleFileChange = (event: any) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+
     const files = Array.from(event.target.files);
     const imageUrls = files
-      .filter((file) => file.type.startsWith('image/'))
+      .filter((file) => file.type.startsWith("image/"))
       .map((file) => URL.createObjectURL(file));
+
     if (imageUrls.length > 0) {
-      setSelectedBanner((prev) => [...prev, ...imageUrls]);
+      setSelectedBanner((prev: string[]) => [...prev, ...imageUrls]);
     } else {
-      alert('Please select an image file');
+      alert("Please select an image file");
     }
-  }
+  };
 
   const handleFile = () => {
-    fileInputRef.current.click();
-  }
-
+    fileInputRef.current?.click();
+  };
 
   return <>
     <div onClick={handleClose} className={`transition-all duration-200 overlay z-20 ${isAddingBanner ? "opacity-100" : "opacity-0 pointer-events-none"}`}></div>

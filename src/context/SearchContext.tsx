@@ -23,7 +23,7 @@ export const SearchProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     return () => controller.abort();
   }, [searchValue]);
 
-  async function handleSearch(signal: AbortSignal, value: string) {
+  async function handleSearch(signal: AbortSignal, value?: string) {
     try {
       setSearchData([]);
       const { data } = await authService.searchUser(value, signal);
@@ -33,10 +33,8 @@ export const SearchProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         setSearchData(data.data);
         return data.data;
       }
-    } catch (error: any) {
-      if (error.name !== "CanceledError") {
-        console.error(error);
-      }
+    } catch (error) {
+      console.log(error)
     }
   }
 

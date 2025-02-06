@@ -133,7 +133,7 @@ const Carousel = React.forwardRef<
         <div
           ref={ref}
           onKeyDownCapture={handleKeyDown}
-          className={("relative", className)}
+          className={`relative ${className}`}
           role="region"
           aria-roledescription="carousel"
           {...props}
@@ -156,11 +156,9 @@ const CarouselContent = React.forwardRef<
     <div ref={carouselRef} className="overflow-hidden">
       <div
         ref={ref}
-        className={(
-          "flex",
-          orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
-          className
-        )}
+        className={`flex,
+          ${orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col"}
+          ${className}`}
         {...props}
       />
     </div>
@@ -179,11 +177,9 @@ const CarouselItem = React.forwardRef<
       ref={ref}
       role="group"
       aria-roledescription="slide"
-      className={(
-        "min-w-0 shrink-0 grow-0 basis-full",
-        orientation === "horizontal" ? "pl-4" : "pt-4",
-        className
-      )}
+      className={`min-w-0 shrink-0 grow-0 basis-full
+        ${orientation === "horizontal" ? "pl-4" : "pt-4"}
+        ${className}`}
       {...props}
     />
   )
@@ -193,14 +189,12 @@ CarouselItem.displayName = "CarouselItem"
 const CarouselPrevious = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
->(({ className, variant = "outline", size = "icon", ...props }, ref) => {
-  const { orientation, scrollPrev, canScrollPrev } = useCarousel()
+>(({ className, ...props }, ref) => {
+  const { scrollPrev, canScrollPrev } = useCarousel()
 
   return (
     <button
       ref={ref}
-      variant={variant}
-      size={size}
       className={(
         className
       )}
@@ -218,14 +212,12 @@ CarouselPrevious.displayName = "CarouselPrevious"
 const CarouselNext = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
->(({ className, variant = "outline", size = "icon", ...props }, ref) => {
-  const { orientation, scrollNext, canScrollNext } = useCarousel()
+>(({ className, ...props }, ref) => {
+  const { scrollNext, canScrollNext } = useCarousel()
 
   return (
     <button
       ref={ref}
-      variant={variant}
-      size={size}
       className={className}
       disabled={!canScrollNext}
       onClick={scrollNext}
