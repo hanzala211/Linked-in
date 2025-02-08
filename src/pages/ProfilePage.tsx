@@ -55,12 +55,12 @@ export const ProfilePage: React.FC = () => {
       {(isCurrentProfile ? userData?.postsCount && userData?.postsCount > 0 : selectedProfile?.postsCount && selectedProfile?.postsCount > 0) && (
         <div className="w-full px-3 rounded-lg relative bg-white pt-4">
           <h1 className="md:text-[22px] text-[18px]">Activity</h1>
-          <div className="w-full max-w-[90vw] sm:max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] xl:max-w-[850px] mx-auto overflow-hidden">
+          <div className="w-full max-w-[100vw] sm:max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] xl:max-w-[850px] mx-auto overflow-hidden">
             <Carousel className="relative w-full">
               <CarouselContent className="flex w-full">
                 {!isPostsLoading ? (
                   firstPosts.map((item, index) => (
-                    <CarouselItem key={index} className="md:basis-1/2 basis-full">
+                    <CarouselItem key={index} className="md:basis-1/2 pl-2 basis-full">
                       <ProfilePost isCurrentProfile={isCurrentProfile} item={item} />
                     </CarouselItem>
                   ))
@@ -72,8 +72,8 @@ export const ProfilePage: React.FC = () => {
                   ))
                 )}
               </CarouselContent>
-              <CarouselPrevious className="absolute left-5 top-1/2 -translate-y-1/2 bg-black text-white p-1 text-[20px] rounded-full" />
-              <CarouselNext className="absolute right-5 top-1/2 -translate-y-1/2 bg-black p-1 text-[20px] text-white rounded-full" />
+              <CarouselPrevious className="absolute md:left-5 left-0 top-1/2 -translate-y-1/2 bg-black text-white p-1 text-[20px] rounded-full" />
+              <CarouselNext className="absolute md:right-5 right-0 top-1/2 -translate-y-1/2 bg-black p-1 text-[20px] text-white rounded-full" />
             </Carousel>
           </div>
           <button className="w-full py-2.5 flex text-[#666] transition-all border-t-[1px] mt-4 duration-200 items-center justify-center gap-2 hover:bg-gray-50 rounded-b-lg">
