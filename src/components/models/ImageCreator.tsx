@@ -101,7 +101,7 @@ export const ImageCreator: React.FC = () => {
             multiple={true} />
         </div>
         :
-        <div className="bg-[#F8FAFD] md:h-screen h-[85%] flex md:flex-row flex-col items-center md:items-start md:gap-0 gap-4 justify-between">
+        <div className="bg-[#F8FAFD] md:h-screen sm:h-[85%] h-[81%] flex md:flex-row flex-col items-center md:items-start md:gap-0 gap-4 justify-between">
           <div className="md:w-[65%] w-[75%] mt-2 md:mt-0 h-1/2 md:h-full flex justify-center">
             <img
               src={selectedImage[currentIndex]}
