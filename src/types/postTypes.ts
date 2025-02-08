@@ -3,7 +3,7 @@ import { IUser } from "@types"
 export interface PostType {
   _id: string,
   caption: string,
-  postBy: IUser,
+  postBy: IUser | string,
   imageUrls: string[],
   likes: string[],
   likeCount: number,

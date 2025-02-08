@@ -1,18 +1,31 @@
 import { BANNER_PIC, DEFAULT_PIC } from "@assets"
 import { useAuth, useProfile, useSearch } from "@context"
-import { FaCamera } from "react-icons/fa"
+import { FaCamera, FaCheck } from "react-icons/fa"
 import { HiPlus } from "react-icons/hi"
 import { LuPlus } from "react-icons/lu"
 import { MdOutlineFileDownload, MdOutlineModeEdit } from "react-icons/md"
 
 export const ProfileSection: React.FC<{ isCurrentProfile: boolean }> = ({ isCurrentProfile }) => {
-  const { setIsEditingProfile, setIsAddingProfile, setIsAddingBanner } = useProfile()
-  const { selectedProfile } = useSearch()
+  const { setIsEditingProfile, setIsAddingProfile, setIsAddingBanner, handleDownloadPDF } = useProfile()
+  const { selectedProfile, handleFollow, handleUnfollow } = useSearch()
   const { userData } = useAuth()
+  const isFollowing = selectedProfile !== null ? userData?.following.includes(selectedProfile._id) : false
 
   const handleAddingProfile = () => {
     if (isCurrentProfile) {
       setIsAddingProfile(true)
+    }
+  }
+
+  const handleDownload = () => {
+    handleDownloadPDF(isCurrentProfile ? userData?._id : selectedProfile?._id)
+  }
+
+  const handleFollowing = () => {
+    if (isFollowing) {
+      handleUnfollow(selectedProfile?._id || "")
+    } else {
+      handleFollow(selectedProfile?._id || "")
     }
   }
 
@@ -59,9 +72,9 @@ export const ProfileSection: React.FC<{ isCurrentProfile: boolean }> = ({ isCurr
             </button>
           }
           {!isCurrentProfile &&
-            <button className="bg-[#0A66C2] text-white flex p-2 items-center rounded-full px-4 hover:bg-blue-900 transition-all duration-200"><LuPlus className="text-[20px]" />Follow</button>
+            <button onClick={handleFollowing} className={`${isFollowing ? "border-[1px] border-black hover:bg-gray-100" : "bg-[#0A66C2] text-white hover:bg-blue-900"} flex p-2 items-center rounded-full px-4 gap-2 transition-all duration-200`}>{isFollowing ? <FaCheck className="text-[18px]" /> : <LuPlus className="text-[20px]" />}{isFollowing ? "Following" : "Follow"}</button>
           }
-          <button className="flex items-center gap-2 w-fit p-2 border hover:bg-[#f3f3f3] border-black rounded-full transition-all duration-200"><MdOutlineFileDownload className="text-[20px]" />Save to PDF</button>
+          <button onClick={handleDownload} className="flex items-center gap-2 w-fit p-2 border hover:bg-[#f3f3f3] border-black rounded-full transition-all duration-200"><MdOutlineFileDownload className="text-[20px]" />Save to PDF</button>
         </div>
       </div>
     </div>

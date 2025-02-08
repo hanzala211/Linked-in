@@ -1,6 +1,6 @@
 import { useAuth } from "@context";
-import { profileService } from "@services";
-import { IEducation, IExperience, ProfileContextTypes } from "@types";
+import { postService, profileService } from "@services";
+import { IEducation, IExperience, PostType, ProfileContextTypes } from "@types";
 import { createContext, ReactNode, useContext, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { toast } from "sonner";
@@ -25,7 +25,8 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [endYearExperience, setEndYearExperience] = useState<string>("")
   const [startYearEducation, setStartYearEducation] = useState<string>("")
   const [endYearEducation, setEndYearEducation] = useState<string>("")
-
+  const [firstPosts, setFirstPosts] = useState<PostType[]>([])
+  const [isPostsLoading, setIsPostsLoading] = useState<boolean>(true)
 
   const editProfile = async (sendData: unknown) => {
     try {
@@ -177,6 +178,49 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   }
 
+  const handleDownloadPDF = async (id: string | undefined) => {
+    try {
+      if (!id) return;
+
+      toast.info("Preparing Profile PDF", {
+        action: {
+          label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
+          onClick: () => null,
+        },
+      });
+
+      const res = await profileService.downloadPDF(id);
+
+      const blob = new Blob([res.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Resume.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to download PDF");
+    }
+  };
+
+  const getSixPosts = async (userId: string) => {
+    if (firstPosts.length > 0 && firstPosts[0].postBy === userId) return
+    try {
+      setIsPostsLoading(true)
+      const { data } = await postService.getSixPosts(userId)
+      if (data.status === "Posts Found") {
+        console.log(data)
+        setFirstPosts(data.posts)
+      }
+      setIsPostsLoading(false)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleDeleteEducation = (i: number) => {
     setEducationFormData((prev) => prev.filter((_, index) => index !== i))
   }
@@ -199,7 +243,8 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     }, 300)
   }
 
-  return <ProfileContext.Provider value={{ isEditingProfile, setIsEditingProfile, isAddingExperience, setIsAddingExperience, isAddingEducation, setIsAddingEducation, isAddingProfile, setIsAddingProfile, isAddingBanner, setIsAddingBanner, selectedBanner, setSelectedBanner, selectedProfilePic, setSelectedProfilePic, editProfile, isEditProfileLoading, setIsEditProfileLoading, updateProfilePic, isUpdatingProfilePic, setIsUpdatingProfilePic, isUpdatingProfileBanner, setIsUpdatingProfileBanner, uploadBanner, deleteProfilePic, deleteProfileBanner, experienceFormData, setExperienceFormData, educationFormData, setEducationFormData, handleDeleteEducation, handleDeleteExperience, handleEducation, handlePosition, startYearEducation, setStartYearEducation, startYearExperience, setStartYearExperience, endYearEducation, setEndYearEducation, endYearExperience, setEndYearExperience }}>{children}</ProfileContext.Provider>
+
+  return <ProfileContext.Provider value={{ isEditingProfile, setIsEditingProfile, isAddingExperience, setIsAddingExperience, isAddingEducation, setIsAddingEducation, isAddingProfile, setIsAddingProfile, isAddingBanner, setIsAddingBanner, selectedBanner, setSelectedBanner, selectedProfilePic, setSelectedProfilePic, editProfile, isEditProfileLoading, setIsEditProfileLoading, updateProfilePic, isUpdatingProfilePic, setIsUpdatingProfilePic, isUpdatingProfileBanner, setIsUpdatingProfileBanner, uploadBanner, deleteProfilePic, deleteProfileBanner, experienceFormData, setExperienceFormData, educationFormData, setEducationFormData, handleDeleteEducation, handleDeleteExperience, handleEducation, handlePosition, startYearEducation, setStartYearEducation, startYearExperience, setStartYearExperience, endYearEducation, setEndYearEducation, endYearExperience, setEndYearExperience, handleDownloadPDF, getSixPosts, firstPosts, setFirstPosts, isPostsLoading }}>{children}</ProfileContext.Provider>
 }
 
 export const useProfile = (): ProfileContextTypes => {

@@ -16,6 +16,10 @@ export interface IUser {
   headline: string,
   industry: string | null,
   postsCount: number,
+  followers: string[],
+  followerCount: number,
+  following: string[],
+  followingCount: number,
 }
 
 export interface IExperience {

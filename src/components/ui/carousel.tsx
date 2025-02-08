@@ -195,9 +195,7 @@ const CarouselPrevious = React.forwardRef<
   return (
     <button
       ref={ref}
-      className={(
-        className
-      )}
+      className={`${className} ${canScrollPrev ? "block" : "hidden"}`}
       disabled={!canScrollPrev}
       onClick={scrollPrev}
       {...props}
@@ -218,7 +216,7 @@ const CarouselNext = React.forwardRef<
   return (
     <button
       ref={ref}
-      className={className}
+      className={`${className} ${canScrollNext ? "block" : "hidden"}`}
       disabled={!canScrollNext}
       onClick={scrollNext}
       {...props}

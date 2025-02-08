@@ -1,6 +1,6 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@components"
 import { useEffect, useRef, useState } from "react"
-import { FaPlus } from "react-icons/fa"
+import { FaCheck, FaPlus } from "react-icons/fa"
 import { BiLike, BiMessageRoundedMinus } from "react-icons/bi"
 import { IoEarth } from "react-icons/io5"
 import { Link } from "react-router-dom"
@@ -10,7 +10,7 @@ import { TbArrowsDiagonal2 } from "react-icons/tb"
 import EmojiPicker from "emoji-picker-react"
 import { CommentType, PostType } from "@types"
 import { formatDate } from "@helpers"
-import { useAuth, usePost } from "@context"
+import { useAuth, usePost, useSearch } from "@context"
 
 interface PostProps {
   item: PostType
@@ -19,6 +19,7 @@ interface PostProps {
 export const Post: React.FC<PostProps> = ({ item }) => {
   const { likePost, disLikePost, getComments, postComment } = usePost()
   const { userData } = useAuth()
+  const { handleClick: handleProfile, handleFollow, handleUnfollow } = useSearch()
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
   const [isTextOverflowing, setIsTextOverflowing] = useState<boolean>(false);
   const [isCommentExpanded, setIsCommentExpanded] = useState<boolean>(false)
@@ -30,6 +31,7 @@ export const Post: React.FC<PostProps> = ({ item }) => {
   const textRef = useRef<HTMLPreElement | null>(null);
   const emojiIconRef = useRef<HTMLButtonElement | null>(null)
   const emojiPickerRef = useRef<HTMLDivElement | null>(null)
+  const isFollowing = userData?.following.includes(item.postBy._id)
 
   useEffect(() => {
     if (textRef.current && textRef.current.scrollHeight > textRef.current.clientHeight) {
@@ -100,6 +102,14 @@ export const Post: React.FC<PostProps> = ({ item }) => {
     }
   }
 
+  const handleFollowing = (id: string) => {
+    if (isFollowing) {
+      handleUnfollow(id)
+    } else {
+      handleFollow(id)
+    }
+  }
+
   return <div className="bg-white rounded-lg overflow-hidden border border-gray-200">
     <div className="px-4 py-3 flex items-start gap-3">
       <img
@@ -108,14 +118,14 @@ export const Post: React.FC<PostProps> = ({ item }) => {
         className="w-12 h-12 rounded-full"
       />
       <div className="flex-1">
-        <Link to="#" className="font-semibold hover:text-[#0a66c2] hover:underline transition-all duration-200">{item.postBy.firstName} {item.postBy.lastName}</Link>
+        <Link to={`/${item.postBy.userName}`} onClick={() => handleProfile(item.postBy)} className="font-semibold hover:text-[#0a66c2] hover:underline transition-all duration-200">{item.postBy.firstName} {item.postBy.lastName}</Link>
         <p className="text-[#666] text-[13px] text-ellipsis max-w-[30rem] line-clamp-1">{item.postBy?.headline}</p>
         <p className="text-[#666] flex items-center text-[12px]">
           {formatDate(item.createdAt)} • <IoEarth />
         </p>
       </div>
-      <button className="flex items-center gap-2 active:bg-transparent hover:bg-[#EBF4FD] px-2 py-1 rounded-md text-[#0A66C2]">
-        <FaPlus /> Follow
+      <button onClick={() => handleFollowing(item.postBy._id)} className={`flex items-center gap-2 active:bg-transparent px-2 py-1 rounded-md transition-all duration-200 ${isFollowing ? "text-gray-600 hover:bg-gray-50" : "text-[#0A66C2] hover:bg-[#EBF4FD]"}`}>
+        {isFollowing ? <FaCheck /> : <FaPlus />} {isFollowing ? "Following" : "Follow"}
       </button>
     </div>
 

@@ -25,7 +25,9 @@ export interface SearchContextTypes {
     selectedProfile: IUser | null,
     setSelectedProfile: React.Dispatch<React.SetStateAction<IUser | null>>,
     handleClick: (item: IUser) => void,
-    handleSearch: (signal: AbortSignal, value: string) => Promise<IUser[]>
+    handleSearch: (signal: AbortSignal, value: string) => Promise<IUser[]>,
+    handleFollow: (id: string) => void,
+    handleUnfollow: (id: string) => void,
 }
 
 export interface PostContextTypes {
@@ -52,7 +54,7 @@ export interface PostContextTypes {
     isFeedPostsLoading: boolean,
     setIsFeedPostsLoading: React.Dispatch<React.SetStateAction<boolean>>,
     getComments: (postId: string, page: unknown) => Promise<CompleteComment>,
-    postComment: (postId: string, sendData: unknown) => unknown
+    postComment: (postId: string, sendData: unknown) => unknown,
 }
 
 export interface ProfileContextTypes {
@@ -97,4 +99,19 @@ export interface ProfileContextTypes {
     setEndYearEducation: React.Dispatch<React.SetStateAction<string>>,
     endYearExperience: string,
     setEndYearExperience: React.Dispatch<React.SetStateAction<string>>,
+    handleDownloadPDF: (id: string | undefined) => void,
+    getSixPosts: (userId: string) => void,
+    firstPosts: PostType[],
+    setFirstPosts: React.Dispatch<React.SetStateAction<PostType[]>>,
+    isPostsLoading: boolean
+}
+
+export interface NetworkContextType {
+    suggestions: IUser[],
+    setSuggestions: React.Dispatch<React.SetStateAction<IUser[]>>,
+    randomUsers: () => void,
+    isSuggestionLoading: boolean,
+    setIsSuggestionsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    handleUnfollow: (id: string) => void,
+    handleFollow: (id: string) => void,
 }

@@ -1,13 +1,14 @@
-import { useAuth, useSearch } from "@context"
+import { useAuth, useProfile, useSearch } from "@context"
 import { useEffect } from "react"
 import { titleChanger } from "@helpers"
-import { FeedSuggestions, Footer, ProfileSection } from "@components"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, FeedSuggestions, Footer, PostLoader, ProfilePost, ProfileSection } from "@components"
 import { FaLongArrowAltRight } from "react-icons/fa"
 import { DEFAULT_EXPERIENCE_PIC } from "@assets"
 import { useParams } from "react-router-dom"
 
 export const ProfilePage: React.FC = () => {
   const { userData } = useAuth()
+  const { getSixPosts, firstPosts, isPostsLoading } = useProfile()
   const { selectedProfile, handleSearch, setSelectedProfile } = useSearch()
   const params = useParams()
   const isCurrentProfile = params.username === userData?.userName;
@@ -36,7 +37,8 @@ export const ProfilePage: React.FC = () => {
     if (userData !== null) {
       titleChanger(`${userData?.firstName} ${userData?.lastName}`)
     }
-  }, [])
+    getSixPosts((isCurrentProfile ? userData?._id : selectedProfile?._id) || "")
+  }, [userData?._id, selectedProfile?._id, params.username])
 
   return <><section className="grid md:grid-cols-[2fr_1fr] grid-cols-1 pt-20 w-full xl:max-w-[70%] gap-6 max-w-[98%] mx-auto">
     {/* First Column */}
@@ -49,31 +51,30 @@ export const ProfilePage: React.FC = () => {
       </div>
 
 
-      {(isCurrentProfile ? userData?.postsCount && userData?.postsCount > 0 : selectedProfile?.postsCount && selectedProfile?.postsCount > 0) &&
-        <div className="w-full rounded-lg relative bg-white pt-4">
-
-          <div className="px-4">
-            <h1 className="md:text-[22px] text-[18px]">Activity</h1>
-            <p className="text-[#666] mt-1 md:text-[13px] text-[12px]">{(37172499).toLocaleString()} followers</p>
-            <div className="border-b-[1px]">
-              <p className="text-[12px] text-[#666] mt-2"><span className="text-[#333] text-[13px]">You</span> posted this • 1d</p>
-              <div className="flex gap-3 items-start mt-2">
-                <img src="https://media.licdn.com/dms/image/v2/D5605AQGoMXy-sz3Q4w/feedshare-thumbnail_720_1280/B56ZTCxLZpGoBA-/0/1738434459992?e=1739206800&v=beta&t=fZiABA-sflsui2gS9Qi6le3AtBT88FeukGGuA16mcvI" className="w-14 h-14 object-cover rounded-lg" alt="" />
-                <p className="md:text-[13px] text-[12px] text-[#666]">My new memoir Source Code is the story of my life before Microsoft. Of my earliest successes and failures. And of not fitting in, playing cards, sneaking out, hiking mountains, and forming friendships that changed my life. I hope you enjoy it:</p>
-              </div>
-              <div className="my-3 flex justify-between">
-                <div className="flex gap-1 items-center">
-                  <img src="images/likeSVG.svg" className="w-4" alt="" />
-                  <p className="text-[13px] text-[#666]">{(5143).toLocaleString()}</p>
-                </div>
-                <p className="text-[13px] text-[#666]">{(4132).toLocaleString()} comments</p>
-              </div>
-            </div>
+      {(isCurrentProfile ? userData?.postsCount && userData?.postsCount > 0 : selectedProfile?.postsCount && selectedProfile?.postsCount > 0) && (
+        <div className="w-full px-3 rounded-lg relative bg-white pt-4">
+          <h1 className="md:text-[22px] text-[18px]">Activity</h1>
+          <div style={{ maxWidth: '850px', margin: '0 auto' }}>
+            <Carousel className="relative">
+              <CarouselContent className="flex">
+                {!isPostsLoading ? firstPosts.map((item, index, arr) => (
+                  <CarouselItem key={index} className={`${arr.length > 1 ? "lg:basis-1/2" : "lg:basis-2/3"}`}>
+                    <ProfilePost isCurrentProfile={isCurrentProfile} item={item} />
+                  </CarouselItem>
+                )) : Array.from({ length: 4 }, (_, i) => (
+                  <CarouselItem className="lg:basis-2/3 ">
+                    <PostLoader key={i} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="absolute left-5 top-1/2 -translate-y-1/2 bg-black text-white p-1 text-[20px] rounded-full" />
+              <CarouselNext className="absolute right-5 top-1/2 -translate-y-1/2 bg-black p-1 text-[20px] text-white rounded-full" />
+            </Carousel>
           </div>
 
-          <button className="w-full py-2.5 flex text-[#666] transition-all duration-200 items-center justify-center gap-2 hover:bg-gray-50 rounded-b-lg">Show all posts <FaLongArrowAltRight /></button>
+          <button className="w-full py-2.5 flex text-[#666] transition-all border-t-[1px] mt-4 duration-200 items-center justify-center gap-2 hover:bg-gray-50 rounded-b-lg">Show all posts <FaLongArrowAltRight /></button>
         </div>
-      }
+      )}
 
       {(isCurrentProfile ? userData?.experience && userData?.experience.length > 0 : selectedProfile?.experience && selectedProfile.experience.length > 0) &&
         <div className="w-full rounded-lg relative bg-white p-4">
@@ -85,6 +86,7 @@ export const ProfilePage: React.FC = () => {
                 <h1 className="text-[14px] font-semibold">{item.employmentType}</h1>
                 <p className="text-[13px] text-[#666]">{item.companyName}</p>
                 <p className="text-[12px] text-[#666]">{item.startDate} - {item.endDate}</p>
+                <p className="text-[12px] text-[#666]">{item.location}</p>
               </div>
             </div>
           ))
@@ -100,7 +102,9 @@ export const ProfilePage: React.FC = () => {
               <img src={item?.schoolImg || DEFAULT_EXPERIENCE_PIC} alt="School image" className="w-12" />
               <div>
                 <h1 className="text-[14px] font-semibold">{item.schoolName}</h1>
+                <p className="text-[12px] text-[#666]">{item.degree}</p>
                 <p className="text-[12px] text-[#666]">{item.startDate} - {item.endDate}</p>
+                <p className="text-[12px] text-[#666]">{item.location}</p>
               </div>
             </div>
           ))

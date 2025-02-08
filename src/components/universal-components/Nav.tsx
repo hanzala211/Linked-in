@@ -113,7 +113,7 @@ export const Nav: React.FC = () => {
                 <img src={userData?.profilePic || DEFAULT_PIC} alt="User Profile" className="w-8 h-8 rounded-full" />
                 <div>
                   <h1 className="font-semibold">{userData?.firstName} {userData?.lastName}</h1>
-                  <p className="text-[#666] text-[14px]">{userData?.headline}</p>
+                  <p className="text-[#666] text-[14px] line-clamp-1">{userData?.headline}</p>
                 </div>
               </div>
               <button className="w-full text-[#0A66C2] hover:bg-[#EBF4FD] border-[1px] rounded-full transition-all duration-200 mt-5 border-[#0A66C2]">View Profile</button>

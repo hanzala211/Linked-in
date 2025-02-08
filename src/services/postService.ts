@@ -35,5 +35,10 @@ export const postService = {
     method: "GET",
     url: `/post/get-comments/${postId}?limit=2&page=${page}`,
     isAuthIncluded: true
+  }),
+  getSixPosts: (userId: string) => sendRequest({
+    method: "GET",
+    url: `/post/get-six-posts/${userId}`,
+    isAuthIncluded: true
   })
 }

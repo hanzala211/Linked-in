@@ -11,7 +11,7 @@ export const FeedIdentityModule: React.FC = () => {
     <Link to={`/${userData?.userName}`} className="flex flex-col items-center relative -top-6">
       <img src={userData?.profilePic || DEFAULT_PIC} alt="User" className="w-20 h-20 border-4 border-white rounded-full" />
       <h1 className="hover:underline transition-all font-semibold duration-200 pt-5">{userData?.firstName} {userData?.lastName}</h1>
-      <p className="text-sm text-gray-600">{userData?.headline}</p>
+      <p className="text-sm text-gray-600 text-center">{userData?.headline}</p>
     </Link>
 
     <Link to="#" className="flex items-center gap-3 p-3 border-t group border-gray-300 hover:bg-gray-100 rounded-b-lg transition-all duration-200">

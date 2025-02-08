@@ -17,7 +17,7 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [currentIndex, setCurrentIndex] = useState<number>(0)
   const [hasMore, setHasMore] = useState<boolean>(false)
   const [feedPosts, setFeedPosts] = useState<PostType[]>([])
-  const [isFeedPostsLoading, setIsFeedPostsLoading] = useState<boolean>(false)
+  const [isFeedPostsLoading, setIsFeedPostsLoading] = useState<boolean>(true)
 
   const createPost = async () => {
     try {
@@ -186,6 +186,8 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.log(error)
     }
   }
+
+
 
   return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment }}>{children}</PostContext.Provider>
 }
