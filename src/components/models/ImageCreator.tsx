@@ -101,8 +101,8 @@ export const ImageCreator: React.FC = () => {
             multiple={true} />
         </div>
         :
-        <div className="bg-[#F8FAFD] h-screen flex lg:flex-row flex-col items-center lg:items-start lg:gap-0 gap-4 lg:justify-between justify-between">
-          <div className="lg:w-[65%] w-[75%] mt-2 lg:mt-0 h-1/2 lg:h-full flex justify-center">
+        <div className="bg-[#F8FAFD] md:h-screen h-[85%] flex md:flex-row flex-col items-center md:items-start md:gap-0 gap-4 justify-between">
+          <div className="md:w-[65%] w-[75%] mt-2 md:mt-0 h-1/2 md:h-full flex justify-center">
             <img
               src={selectedImage[currentIndex]}
               alt="Selected Image"
@@ -110,7 +110,7 @@ export const ImageCreator: React.FC = () => {
             />
           </div>
 
-          <div className="lg:w-[34%] flex justify-between flex-col overflow-y-auto h-[15rem] lg:h-[46rem] w-full bg-white center p-6">
+          <div className="md:w-[34%] flex justify-between flex-col overflow-y-auto h-[15rem] md:h-[46rem] w-full bg-white center p-6">
             <div>
               <p className="text-[13px] text-[#666]">{currentIndex + 1} of {selectedImage.length}</p>
               <div className="grid grid-cols-2 mt-4 gap-2">

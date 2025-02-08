@@ -31,7 +31,7 @@ export const Post: React.FC<PostProps> = ({ item }) => {
   const textRef = useRef<HTMLPreElement | null>(null);
   const emojiIconRef = useRef<HTMLButtonElement | null>(null)
   const emojiPickerRef = useRef<HTMLDivElement | null>(null)
-  const isFollowing = userData?.following.includes(item.postBy._id)
+  const isFollowing = userData?.following.includes(item.postBy?._id)
 
   useEffect(() => {
     if (textRef.current && textRef.current.scrollHeight > textRef.current.clientHeight) {

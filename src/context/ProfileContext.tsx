@@ -42,7 +42,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
         });
         setUserData(data.data)
       } else {
-        toast.error(data.status, {
+        toast.error(data.message, {
           action: {
             label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
             onClick: () => null,
@@ -207,8 +207,8 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const getSixPosts = async (userId: string) => {
-    if (firstPosts.length > 0 && firstPosts[0].postBy === userId) return
     try {
+      setFirstPosts([])
       setIsPostsLoading(true)
       const { data } = await postService.getSixPosts(userId)
       if (data.status === "Posts Found") {

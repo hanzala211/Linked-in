@@ -1,7 +1,7 @@
 import { useAuth, useProfile, useSearch } from "@context"
 import { useEffect } from "react"
 import { titleChanger } from "@helpers"
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, FeedSuggestions, Footer, PostLoader, ProfilePost, ProfileSection } from "@components"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, FeedSuggestions, Footer, ProfilePost, ProfilePostLoader, ProfileSection } from "@components"
 import { FaLongArrowAltRight } from "react-icons/fa"
 import { DEFAULT_EXPERIENCE_PIC } from "@assets"
 import { useParams } from "react-router-dom"
@@ -14,33 +14,35 @@ export const ProfilePage: React.FC = () => {
   const isCurrentProfile = params.username === userData?.userName;
 
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
+    if (!params.username || params.username === userData?.userName) return;
 
-    const fetchData = async () => {
-      if (params.username !== userData?.userName && selectedProfile === null) {
+    const controller = new AbortController();
+    const fetchProfile = async () => {
+      if (!selectedProfile) {
         try {
-          const data = await handleSearch(signal, params.username || "");
-          console.log(data);
-          setSelectedProfile(data[0])
+          const data = await handleSearch(controller.signal, params.username || "");
+          setSelectedProfile(data[0] || null);
         } catch (error) {
-          console.log(error)
+          console.error("Error fetching profile:", error);
         }
       }
     };
-    fetchData();
-    return () => controller.abort();
-  }, [params.username, userData]);
 
+    fetchProfile();
+    return () => controller.abort();
+  }, [params.username]);
 
   useEffect(() => {
     if (userData !== null) {
       titleChanger(`${userData?.firstName} ${userData?.lastName}`)
     }
-    getSixPosts((isCurrentProfile ? userData?._id : selectedProfile?._id) || "")
+    const userId = isCurrentProfile ? userData?._id : selectedProfile?._id;
+    if (!userId) return;
+
+    getSixPosts(userId)
   }, [userData?._id, selectedProfile?._id, params.username])
 
-  return <><section className="grid md:grid-cols-[2fr_1fr] grid-cols-1 pt-20 w-full xl:max-w-[70%] gap-6 max-w-[98%] mx-auto">
+  return <><section className="grid md:grid-cols-[2fr_1fr] grid-cols-1 pt-20 w-full xl:max-w-[70%] lg:gap-6 md:max-w-full max-w-[98%] mx-auto">
     {/* First Column */}
     <div className="w-full flex flex-col gap-4">
       <ProfileSection isCurrentProfile={isCurrentProfile} />
@@ -50,29 +52,33 @@ export const ProfilePage: React.FC = () => {
         <p className="text-[#666] md:text-[15px] text-[13px]">{isCurrentProfile ? userData?.headline : selectedProfile?.headline}</p>
       </div>
 
-
       {(isCurrentProfile ? userData?.postsCount && userData?.postsCount > 0 : selectedProfile?.postsCount && selectedProfile?.postsCount > 0) && (
         <div className="w-full px-3 rounded-lg relative bg-white pt-4">
           <h1 className="md:text-[22px] text-[18px]">Activity</h1>
-          <div style={{ maxWidth: '850px', margin: '0 auto' }}>
-            <Carousel className="relative">
-              <CarouselContent className="flex">
-                {!isPostsLoading ? firstPosts.map((item, index, arr) => (
-                  <CarouselItem key={index} className={`${arr.length > 1 ? "lg:basis-1/2" : "lg:basis-2/3"}`}>
-                    <ProfilePost isCurrentProfile={isCurrentProfile} item={item} />
-                  </CarouselItem>
-                )) : Array.from({ length: 4 }, (_, i) => (
-                  <CarouselItem className="lg:basis-2/3 ">
-                    <PostLoader key={i} />
-                  </CarouselItem>
-                ))}
+          <div className="w-full max-w-[90vw] sm:max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] xl:max-w-[850px] mx-auto overflow-hidden">
+            <Carousel className="relative w-full">
+              <CarouselContent className="flex w-full">
+                {!isPostsLoading ? (
+                  firstPosts.map((item, index) => (
+                    <CarouselItem key={index} className="md:basis-1/2 basis-full">
+                      <ProfilePost isCurrentProfile={isCurrentProfile} item={item} />
+                    </CarouselItem>
+                  ))
+                ) : (
+                  Array.from({ length: 5 }, (_, i) => (
+                    <CarouselItem key={i} className="md:basis-1/2 basis-full">
+                      <ProfilePostLoader />
+                    </CarouselItem>
+                  ))
+                )}
               </CarouselContent>
               <CarouselPrevious className="absolute left-5 top-1/2 -translate-y-1/2 bg-black text-white p-1 text-[20px] rounded-full" />
               <CarouselNext className="absolute right-5 top-1/2 -translate-y-1/2 bg-black p-1 text-[20px] text-white rounded-full" />
             </Carousel>
           </div>
-
-          <button className="w-full py-2.5 flex text-[#666] transition-all border-t-[1px] mt-4 duration-200 items-center justify-center gap-2 hover:bg-gray-50 rounded-b-lg">Show all posts <FaLongArrowAltRight /></button>
+          <button className="w-full py-2.5 flex text-[#666] transition-all border-t-[1px] mt-4 duration-200 items-center justify-center gap-2 hover:bg-gray-50 rounded-b-lg">
+            Show all posts <FaLongArrowAltRight />
+          </button>
         </div>
       )}
 
@@ -114,17 +120,18 @@ export const ProfilePage: React.FC = () => {
     </div>
 
     <div className="w-full md:flex flex-col hidden gap-4">
-      <div className="bg-white w-full xl:max-w-[65%] max-w-[90%] rounded-lg p-3">
+      <div className="bg-white w-full xl:max-w-[75%] lg:max-w-[70%] rounded-lg p-3">
         <div className="border-b-[1px] py-2 space-y-2">
           <h1 className="text-[20px]">Profile language</h1>
           <p className="text-[#666] text-[13px]">English</p>
         </div>
         <div className="py-2 space-y-2">
           <h1 className="text-[18px]">Public profile & URL</h1>
-          <p className="text-[#666] text-[13px]">{document.URL}</p>
+          <p className="text-[#666] text-[13px] break-words whitespace-pre-wrap w-full">
+            {document.URL}</p>
         </div>
       </div>
-      <FeedSuggestions className="w-full xl:max-w-[65%] max-w-[90%]" />
+      <FeedSuggestions className="w-full xl:max-w-[75%] lg:max-w-[70%]" />
     </div>
 
   </section>
