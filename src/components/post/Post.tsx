@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { FaCheck, FaPlus } from "react-icons/fa"
 import { BiLike, BiMessageRoundedMinus } from "react-icons/bi"
 import { IoEarth } from "react-icons/io5"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { RiSendPlaneFill } from "react-icons/ri"
 import { DEFAULT_PIC, EmojiIcon } from "@assets"
 import { TbArrowsDiagonal2 } from "react-icons/tb"
@@ -31,6 +31,7 @@ export const Post: React.FC<PostProps> = ({ item }) => {
   const textRef = useRef<HTMLPreElement | null>(null);
   const emojiIconRef = useRef<HTMLButtonElement | null>(null)
   const emojiPickerRef = useRef<HTMLDivElement | null>(null)
+  const params = useParams()
   const isFollowing = userData?.following.includes(item.postBy?._id)
 
   useEffect(() => {
@@ -124,9 +125,11 @@ export const Post: React.FC<PostProps> = ({ item }) => {
           {formatDate(item.createdAt)} • <IoEarth />
         </p>
       </div>
-      <button onClick={() => handleFollowing(item.postBy._id)} className={`flex items-center gap-2 active:bg-transparent px-2 py-1 rounded-md transition-all duration-200 ${isFollowing ? "text-gray-600 hover:bg-gray-50" : "text-[#0A66C2] hover:bg-[#EBF4FD]"}`}>
-        {isFollowing ? <FaCheck /> : <FaPlus />} {isFollowing ? "Following" : "Follow"}
-      </button>
+      {params.username !== userData?.userName &&
+        <button onClick={() => handleFollowing(item.postBy._id)} className={`flex items-center gap-2 active:bg-transparent px-2 py-1 rounded-md transition-all duration-200 ${isFollowing ? "text-gray-600 hover:bg-gray-50" : "text-[#0A66C2] hover:bg-[#EBF4FD]"}`}>
+          {isFollowing ? <FaCheck /> : <FaPlus />} {isFollowing ? "Following" : "Follow"}
+        </button>
+      }
     </div>
 
     <div className="p-4">
@@ -164,14 +167,14 @@ export const Post: React.FC<PostProps> = ({ item }) => {
 
     <div className="mx-5 border-b-[1px] py-3 flex justify-between">
       <div className="flex gap-2">
-        <img src="images/likeSVG.svg" alt="likes SVG" className="w-5" />
+        <img src="/images/likeSVG.svg" alt="likes SVG" className="w-5" />
         <p className="text-[#666] text-[14px]">{item.likeCount}</p>
       </div>
       <p className="text-[#666] text-[14px] hover:underline cursor-pointer">{item.commentCount > 1 ? item.commentCount + " comments" : item.commentCount + " comment"}</p>
     </div>
 
     <div className="mx-5 py-2 flex gap-4 justify-between">
-      <button onClick={handleLikes} className={`flex gap-2 items-center text-[15px] justify-center hover:bg-slate-100 w-full max-w-lg rounded-lg px-4 py-2 ${item.likes.includes(userData?._id || "") ? "text-[#0A66C2]" : ""}`}>{!item.likes.includes(userData?._id || "") ? <BiLike className="text-[17px]" /> : <img src="images/likeSVG.svg" alt="likes SVG" className="w-5" />
+      <button onClick={handleLikes} className={`flex gap-2 items-center text-[15px] justify-center hover:bg-slate-100 w-full max-w-lg rounded-lg px-4 py-2 ${item.likes.includes(userData?._id || "") ? "text-[#0A66C2]" : ""}`}>{!item.likes.includes(userData?._id || "") ? <BiLike className="text-[17px]" /> : <img src="/images/likeSVG.svg" alt="likes SVG" className="w-5" />
       } Like</button>
       <button className="flex gap-2 items-center text-[15px] justify-center hover:bg-slate-100 w-full max-w-lg rounded-lg px-4 py-2" onClick={() => handleComments(item._id)}><BiMessageRoundedMinus /> Comment</button>
       <button className="flex gap-2 items-center text-[15px] justify-center hover:bg-slate-100 w-full max-w-lg rounded-lg px-4 py-2"><RiSendPlaneFill /> Send</button>

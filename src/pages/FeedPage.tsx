@@ -1,13 +1,14 @@
 import { CreatePostFeed, FeedIdentityModule, FeedSuggestions, Post, PostLoader } from "@components"
 import { useEffect } from "react"
 import { titleChanger } from "@helpers"
-import { usePost } from "@context"
+import { useAuth, usePost } from "@context"
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { FadeLoader } from "react-spinners";
 
 
 export const FeedPage: React.FC = () => {
   const { getFeedPosts, feedPosts, hasMore, isFeedPostsLoading } = usePost()
+  const { userData } = useAuth()
 
   useEffect(() => {
     titleChanger("Feed")
@@ -18,7 +19,7 @@ export const FeedPage: React.FC = () => {
 
   return <section className="grid lg:grid-cols-[0.9fr_2fr_1.4fr] md:grid-cols-[1fr_2fr] gap-5 lg:gap-0 grid-cols-1 pt-20 mx-auto w-full xl:max-w-[70%] max-w-[98%]">
     {/* First Column */}
-    <FeedIdentityModule />
+    <FeedIdentityModule data={userData} />
 
     {/* Second Column */}
     <div className="w-full md:max-w-[97%] relative space-y-2 max-w-full">

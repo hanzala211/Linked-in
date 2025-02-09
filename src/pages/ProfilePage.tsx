@@ -4,7 +4,7 @@ import { titleChanger } from "@helpers"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, FeedSuggestions, Footer, ProfilePost, ProfilePostLoader, ProfileSection } from "@components"
 import { FaLongArrowAltRight } from "react-icons/fa"
 import { DEFAULT_EXPERIENCE_PIC } from "@assets"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 
 export const ProfilePage: React.FC = () => {
   const { userData } = useAuth()
@@ -30,7 +30,7 @@ export const ProfilePage: React.FC = () => {
 
     fetchProfile();
     return () => controller.abort();
-  }, [params.username]);
+  }, [params.username])
 
   useEffect(() => {
     if (userData !== null) {
@@ -76,9 +76,9 @@ export const ProfilePage: React.FC = () => {
               <CarouselNext className="absolute md:right-5 right-0 top-1/2 -translate-y-1/2 bg-black p-1 text-[20px] text-white rounded-full" />
             </Carousel>
           </div>
-          <button className="w-full py-2.5 flex text-[#666] transition-all border-t-[1px] mt-4 duration-200 items-center justify-center gap-2 hover:bg-gray-50 rounded-b-lg">
+          <Link to={`/${isCurrentProfile ? userData?.userName : selectedProfile?.userName}/recent-activity/all`} className="w-full py-2.5 flex text-[#666] transition-all border-t-[1px] mt-4 duration-200 items-center justify-center gap-2 hover:bg-gray-50 rounded-b-lg">
             Show all posts <FaLongArrowAltRight />
-          </button>
+          </Link>
         </div>
       )}
 

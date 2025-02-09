@@ -18,6 +18,8 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [hasMore, setHasMore] = useState<boolean>(false)
   const [feedPosts, setFeedPosts] = useState<PostType[]>([])
   const [isFeedPostsLoading, setIsFeedPostsLoading] = useState<boolean>(true)
+  const [allPosts, setAllPosts] = useState<PostType[]>([])
+  const [isAllPostsLoading, setIsAllPostsLoading] = useState<boolean>(true)
 
   const createPost = async () => {
     try {
@@ -95,6 +97,17 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             : item
         )
       );
+      setAllPosts((prev: PostType[]) =>
+        prev.map((item) =>
+          item._id === postId
+            ? {
+              ...item,
+              likeCount: item.likeCount + 1,
+              likes: [...item.likes, userData?._id].filter((id): id is string => Boolean(id))
+            }
+            : item
+        )
+      );
       const { data } = await postService.likePost(postId)
       if (data.status === "Post Liked Successfully") {
         toast.success(data.status, {
@@ -117,6 +130,13 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               : item
           )
         );
+        setAllPosts((prev) =>
+          prev.map((item) =>
+            item._id === postId
+              ? { ...item, likeCount: item.likeCount - 1, likes: item.likes.filter((like) => like !== userData?._id) }
+              : item
+          )
+        );
       }
     } catch (error) {
       console.log(error)
@@ -127,6 +147,13 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const disLikePost = async (postId: string) => {
     try {
       setFeedPosts((prev) =>
+        prev.map((item) =>
+          item._id === postId
+            ? { ...item, likeCount: item.likeCount - 1, likes: item.likes.filter((like) => like !== userData?._id) }
+            : item
+        )
+      );
+      setAllPosts((prev) =>
         prev.map((item) =>
           item._id === postId
             ? { ...item, likeCount: item.likeCount - 1, likes: item.likes.filter((like) => like !== userData?._id) }
@@ -149,6 +176,17 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           },
         })
         setFeedPosts((prev: PostType[]) =>
+          prev.map((item) =>
+            item._id === postId
+              ? {
+                ...item,
+                likeCount: item.likeCount + 1,
+                likes: [...item.likes, userData?._id].filter(Boolean) as string[]
+              }
+              : item
+          )
+        );
+        setAllPosts((prev: PostType[]) =>
           prev.map((item) =>
             item._id === postId
               ? {
@@ -187,9 +225,38 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }
 
+  const getAllPosts = async (userId: string) => {
+    try {
+      setIsAllPostsLoading(true)
+      const { data } = await postService.getPosts(userId)
+      console.log(data)
+      if (data.status === "Post Retrieved Successfully") {
+        setAllPosts(data.data)
+      }
+      setIsAllPostsLoading(false)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
+  const getPost = async (postId: string) => {
+    try {
+      setIsAllPostsLoading(true)
+      const { data } = await postService.getPost(postId)
+      if (data.status === "Post Retrieved Successfully") {
+        setAllPosts([data.post])
+      }
+      setIsAllPostsLoading(false)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment }}>{children}</PostContext.Provider>
+  const handleSelectPost = (item: PostType) => {
+    setAllPosts([item])
+  }
+
+  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment, allPosts, setAllPosts, getAllPosts, isAllPostsLoading, setIsAllPostsLoading, handleSelectPost, getPost }}>{children}</PostContext.Provider>
 }
 
 export const usePost = (): PostContextTypes => {

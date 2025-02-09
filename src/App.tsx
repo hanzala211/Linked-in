@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { FeedPage, LoginPage, ProfilePage, SignupPage, UpdateNamePage } from "@pages";
+import { FeedPage, LoginPage, PostPage, ProfilePage, SignupPage, UpdateNamePage } from "@pages";
 import { AuthProvider, SearchProvider, PostProvider, ProfileProvider, NetworkProvider } from "@context";
 import { ProtectedLayout, RootRedirect, AppLayout } from "@layouts";
 
@@ -24,6 +24,8 @@ const App: React.FC = () => {
                     <Route element={<AppLayout />}>
                       <Route path="/:username" element={<ProfilePage />} />
                       <Route path="/feed" element={<FeedPage />} />
+                      <Route path="/:username/recent-activity/all/" element={<PostPage />} />
+                      <Route path="/:username/update/urn:li:activity/:id" element={<PostPage />} />
                     </Route>
                   </Route>
                 </Routes>

@@ -1,5 +1,5 @@
 import { DEFAULT_PIC } from "@assets"
-import { useAuth, useSearch } from "@context"
+import { useAuth, usePost, useSearch } from "@context"
 import { formatDate } from "@helpers"
 import { PostType } from "@types"
 import { BiLike, BiMessageRoundedMinus } from "react-icons/bi"
@@ -15,8 +15,10 @@ interface ProfliePostProps {
 export const ProfilePost: React.FC<ProfliePostProps> = ({ isCurrentProfile, item }) => {
   const { userData } = useAuth()
   const { selectedProfile } = useSearch()
+  const { handleSelectPost } = usePost()
+
   return <div className="bg-white border-[1px] w-full md:w-fit mt-3 border-gray-200 p-3 rounded-lg">
-    <Link to="#" className="flex gap-3">
+    <Link to={`/${isCurrentProfile ? userData?.userName : selectedProfile?.userName}`} className="flex gap-3">
       <img src={(isCurrentProfile ? userData?.profilePic : selectedProfile?.profilePic) || DEFAULT_PIC} alt={`${isCurrentProfile ? userData?.firstName : selectedProfile?.firstName} Profile Pic`} className="w-12 h-12 rounded-full" />
       <div className="space-y-0.5">
         <h1 className="text-[17px] hover:text-[#0A66C2] transition-all duration-200 hover:underline">{isCurrentProfile ? userData?.firstName : selectedProfile?.firstName} {isCurrentProfile ? userData?.lastName : selectedProfile?.lastName}</h1>
@@ -25,7 +27,7 @@ export const ProfilePost: React.FC<ProfliePostProps> = ({ isCurrentProfile, item
     </Link>
     <p className="mx-[3.7rem] text-[13px] flex items-center gap-0.5 text-[#666]">{formatDate(item.createdAt)} • <IoEarth /> </p>
     <p className="line-clamp-3 text-[14px] text-gray-700">{item.caption}</p>
-    <Link to="#">
+    <Link onClick={() => handleSelectPost(item)} to={`/${isCurrentProfile ? userData?.userName : selectedProfile?.userName}/update/urn:li:activity/${item._id}`}>
       <img src={item.imageUrls.length > 0 ? item.imageUrls[0] : ""} alt={`${item.postBy} Post`} className="md:w-96 mt-1 h-96 w-full object-contain" />
     </Link>
     <div className="px-3 py-2">

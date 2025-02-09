@@ -55,6 +55,13 @@ export interface PostContextTypes {
     setIsFeedPostsLoading: React.Dispatch<React.SetStateAction<boolean>>,
     getComments: (postId: string, page: unknown) => Promise<CompleteComment>,
     postComment: (postId: string, sendData: unknown) => unknown,
+    allPosts: PostType[],
+    setAllPosts: React.Dispatch<React.SetStateAction<PostType[]>>,
+    getAllPosts: (userId: string) => void,
+    isAllPostsLoading: boolean,
+    setIsAllPostsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    handleSelectPost: (item: PostType) => void,
+    getPost: (postId: string) => void
 }
 
 export interface ProfileContextTypes {

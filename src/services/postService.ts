@@ -40,5 +40,15 @@ export const postService = {
     method: "GET",
     url: `/post/get-six-posts/${userId}`,
     isAuthIncluded: true
+  }),
+  getPosts: (userId: string) => sendRequest({
+    method: "GET",
+    url: `/post/get-posts/${userId}`,
+    isAuthIncluded: true
+  }),
+  getPost: (postId: string) => sendRequest({
+    method: "GET",
+    url: `/post/get-post/${postId}`,
+    isAuthIncluded: true
   })
 }

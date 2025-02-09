@@ -129,7 +129,7 @@ export const ImageCreator: React.FC = () => {
                     <Tooltip>
                       <TooltipTrigger><item.icon /></TooltipTrigger>
                       <TooltipContent className="bg-white border-[1px] shadow-sm shadow-slate-400 text-black">
-                        <p>{item.text}</p>
+                        <p className="text-black">{item.text}</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
