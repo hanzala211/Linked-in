@@ -48,7 +48,7 @@ export const PostPage: React.FC = () => {
     <div className="lg:block hidden">
       <FeedIdentityModule data={isCurrentProfile ? userData : selectedProfile} />
     </div>
-    <div className="bg-white rounded-lg p-4 w-full xl:max-w-[93%]">
+    <div className={`bg-white rounded-lg ${!params.id ? "p-4" : "p-0"} w-full xl:max-w-[93%]`}>
       {!params.id && <h1 className="text-[20px] mb-2">All activity</h1>}
       <div className="space-y-2">
         {isAllPostsLoading ? Array.from({ length: 6 }, (_, i) => (
