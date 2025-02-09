@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 setUserData(data.user)
                 navigate(`/feed`)
             } else if (data !== undefined) {
-                setErrorMessage(data?.status)
+                setErrorMessage(data?.message)
             } else {
                 setErrorMessage("Server Error")
             }
@@ -56,7 +56,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 setUserData(data.user)
                 navigate("/login-step")
             } else if (data !== undefined) {
-                setErrorMessage(data?.status)
+                setErrorMessage(data?.message)
             } else {
                 setErrorMessage("Server Error")
             }
