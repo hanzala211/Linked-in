@@ -1,10 +1,11 @@
 import { EditHead, FeedIdentityModule } from "@components";
 import { useAuth, useNetwork, useProfile } from "@context";
-import InfiniteScroll from "react-infinite-scroll-component";
+import InfiniteScroll from 'react-infinite-scroller';
+import { FadeLoader } from "react-spinners";
 
 export const NetworkModel: React.FC = () => {
   const { userData } = useAuth()
-  const { suggestions, industrySuggestions, randomUsers, randomIndustryUsers } = useProfile()
+  const { suggestions, industrySuggestions, randomUsers, randomIndustryUsers, hasMore } = useProfile()
   const { isIndustryModalOpen, isSuggestionsModalOpen, setIsSuggestionsModalOpen, setIsIndustryModalOpen } = useNetwork()
 
   const handleClose = () => {
@@ -27,14 +28,14 @@ export const NetworkModel: React.FC = () => {
         <EditHead heading={isSuggestionsModalOpen ? "People you may know based on your recent activity" : `People who are in the ${userData?.industry} industry also follow these people`} handleClose={handleClose} />
         <div className="overflow-y-auto h-full">
           <InfiniteScroll
-            dataLength={isSuggestionsModalOpen ? suggestions.length : industrySuggestions.length}
-            next={handleMore}
-            hasMore={true}
-            loader={null}
-            className="grid md:grid-cols-3 grid-cols-2 md:gap-y-2 gap-y-1 md:gap-0 gap-2 p-3"
+            pageStart={0}
+            loadMore={handleMore}
+            hasMore={hasMore}
+            loader={<div className="absolute -bottom-20 left-1/2 -translate-x-1/2" key={0}><FadeLoader color="gray" /></div>}
+            className="grid md:grid-cols-3 grid-cols-2 md:gap-y-2 gap-y-1 md:gap-0 gap-2 p-3 relative"
           >
             {(isSuggestionsModalOpen ? suggestions : industrySuggestions).map((item, index) => (
-              <FeedIdentityModule data={item} key={index} />
+              <FeedIdentityModule data={item} key={index} isIndustry={isSuggestionsModalOpen ? false : true} isNetwork={true} />
             ))
             }
           </InfiniteScroll>

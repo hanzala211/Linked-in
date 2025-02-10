@@ -2,7 +2,7 @@ import { CreatePostFeed, FeedIdentityModule, FeedSuggestions, Post, PostLoader }
 import { useEffect } from "react"
 import { titleChanger } from "@helpers"
 import { useAuth, usePost } from "@context"
-import InfiniteScroll from 'react-infinite-scroll-component';
+import InfiniteScroll from 'react-infinite-scroller';
 import { FadeLoader } from "react-spinners";
 
 
@@ -24,11 +24,11 @@ export const FeedPage: React.FC = () => {
     {/* Second Column */}
     <div className="w-full md:max-w-[97%] relative space-y-2 max-w-full">
       <InfiniteScroll
-        dataLength={feedPosts.length}
-        next={getFeedPosts}
+        pageStart={0}
+        loadMore={getFeedPosts}
         hasMore={hasMore}
-        loader={<div className="w-full flex absolute -bottom-24 justify-center mt-3"><FadeLoader color="gray" /></div>}
-        className="flex flex-col gap-2"
+        loader={<div className="absolute -bottom-20 left-1/2 -translate-x-1/2" key={0}><FadeLoader color="gray" /></div>}
+        className="flex flex-col gap-2 relative"
       >
         <CreatePostFeed />
         {!isFeedPostsLoading ? feedPosts.map((item, index) => (

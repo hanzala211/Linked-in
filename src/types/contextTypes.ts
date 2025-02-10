@@ -122,7 +122,10 @@ export interface ProfileContextTypes {
     setSelectedProfile: React.Dispatch<React.SetStateAction<IUser | null>>,
     handleClick: (item: IUser) => void,
     randomUsers: (limit: string) => void,
-    randomIndustryUsers: (limit: string) => void
+    randomIndustryUsers: (limit: string) => void,
+    hasMore: boolean,
+    setHasMore: React.Dispatch<React.SetStateAction<boolean>>,
+    handleRemoveSuggestions: (id: string, isIndustry: boolean) => void
 }
 
 export interface NetworkContextTypes {

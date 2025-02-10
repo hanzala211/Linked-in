@@ -31,6 +31,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [isIndustryLoading, setIsIndustryLoading] = useState<boolean>(true)
   const [isSuggestionLoading, setIsSuggestionsLoading] = useState<boolean>(true)
   const [selectedProfile, setSelectedProfile] = useState<IUser | null>(null)
+  const [hasMore, setHasMore] = useState<boolean>(true)
 
   useEffect(() => {
     if (suggestions.length === 0 && window.innerWidth > 768) {
@@ -227,14 +228,23 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const randomUsers = async (limit: string) => {
     try {
-      setIsSuggestionsLoading(true)
       const { data } = await suggestionsService.randomUsers(limit)
       if (data.status === "Users Found") {
         console.log(data)
         if (limit === "3") {
           setSuggestions(data.data)
         } else {
-          setNetworkSuggestions((prev) => [...prev, ...data.data.filter((item: IUser) => !prev.some((suug) => suug._id === item._id)),]);
+          setNetworkSuggestions((prev: IUser[]) => {
+            const newPosts: IUser[] = data.data.filter((post: IUser) =>
+              !prev.some((existingPost: IUser) => existingPost._id === post._id)
+            );
+
+            if (newPosts.length === 0) {
+              setHasMore(false);
+            }
+
+            return [...prev, ...newPosts];
+          });
         }
       }
       setIsSuggestionsLoading(false)
@@ -317,11 +327,20 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const randomIndustryUsers = async (limit: string) => {
     try {
-      setIsIndustryLoading(true)
       const { data } = await suggestionsService.randomIndustryUsers(limit)
       if (data.status === "Users Found") {
         console.log(data)
-        setIndustrySuggestions((prev) => [...prev, ...data.data.filter((item: IUser) => !prev.some((suug) => suug._id === item._id)),]);
+        setIndustrySuggestions((prev: IUser[]) => {
+          const newPosts: IUser[] = data.data.filter((post: IUser) =>
+            !prev.some((existingPost: IUser) => existingPost._id === post._id)
+          );
+
+          if (newPosts.length === 0) {
+            setHasMore(false);
+          }
+
+          return [...prev, ...newPosts];
+        });
       }
       setIsIndustryLoading(false)
     } catch (error) {
@@ -355,8 +374,16 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     setSelectedProfile(item)
   }
 
+  const handleRemoveSuggestions = (id: string, isIndustry: boolean) => {
+    if (!isIndustry) {
+      setNetworkSuggestions((prev) => prev.filter((item) => item._id !== id))
+    } else {
+      setIndustrySuggestions((prev) => prev.filter((item) => item._id !== id))
+    }
+  }
 
-  return <ProfileContext.Provider value={{ isEditingProfile, setIsEditingProfile, isAddingExperience, setIsAddingExperience, isAddingEducation, setIsAddingEducation, isAddingProfile, setIsAddingProfile, isAddingBanner, setIsAddingBanner, selectedBanner, setSelectedBanner, selectedProfilePic, setSelectedProfilePic, editProfile, isEditProfileLoading, setIsEditProfileLoading, updateProfilePic, isUpdatingProfilePic, setIsUpdatingProfilePic, isUpdatingProfileBanner, setIsUpdatingProfileBanner, uploadBanner, deleteProfilePic, deleteProfileBanner, experienceFormData, setExperienceFormData, educationFormData, setEducationFormData, handleDeleteEducation, handleDeleteExperience, handleEducation, handlePosition, startYearEducation, setStartYearEducation, startYearExperience, setStartYearExperience, endYearEducation, setEndYearEducation, endYearExperience, setEndYearExperience, handleDownloadPDF, suggestions, setSuggestions, networkSuggestions, setNetworkSuggestions, industrySuggestions, setIndustrySuggestions, isSuggestionLoading, setIsSuggestionsLoading, isIndustryLoading, setIsIndustryLoading, handleFollow, handleUnfollow, handleClick, selectedProfile, setSelectedProfile, randomUsers, randomIndustryUsers }}>{children}</ProfileContext.Provider>
+
+  return <ProfileContext.Provider value={{ isEditingProfile, setIsEditingProfile, isAddingExperience, setIsAddingExperience, isAddingEducation, setIsAddingEducation, isAddingProfile, setIsAddingProfile, isAddingBanner, setIsAddingBanner, selectedBanner, setSelectedBanner, selectedProfilePic, setSelectedProfilePic, editProfile, isEditProfileLoading, setIsEditProfileLoading, updateProfilePic, isUpdatingProfilePic, setIsUpdatingProfilePic, isUpdatingProfileBanner, setIsUpdatingProfileBanner, uploadBanner, deleteProfilePic, deleteProfileBanner, experienceFormData, setExperienceFormData, educationFormData, setEducationFormData, handleDeleteEducation, handleDeleteExperience, handleEducation, handlePosition, startYearEducation, setStartYearEducation, startYearExperience, setStartYearExperience, endYearEducation, setEndYearEducation, endYearExperience, setEndYearExperience, handleDownloadPDF, suggestions, setSuggestions, networkSuggestions, setNetworkSuggestions, industrySuggestions, setIndustrySuggestions, isSuggestionLoading, setIsSuggestionsLoading, isIndustryLoading, setIsIndustryLoading, handleFollow, handleUnfollow, handleClick, selectedProfile, setSelectedProfile, randomUsers, randomIndustryUsers, hasMore, setHasMore, handleRemoveSuggestions }}>{children}</ProfileContext.Provider>
 }
 
 export const useProfile = (): ProfileContextTypes => {

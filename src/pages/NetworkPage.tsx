@@ -14,9 +14,9 @@ export const NetworkPage: React.FC = () => {
 
     {/* Second Column */}
     <div className="w-full lg:max-w-[95%] max-w-full flex flex-col gap-4">
-      <NetworkContainers heading="People you may know based on your recent activity" handleClick={() => setIsSuggestionsModalOpen(true)} data={networkSuggestions.slice(0, 7)} isLoading={isSuggestionLoading} />
+      <NetworkContainers heading="People you may know based on your recent activity" isIndustry={false} handleClick={() => setIsSuggestionsModalOpen(true)} data={networkSuggestions.slice(0, 7)} isLoading={isSuggestionLoading} />
       {userData?.industry &&
-        <NetworkContainers heading={`People who are in the ${userData?.industry} industry also follow these people`} handleClick={() => setIsIndustryModalOpen(true)} data={industrySuggestions.slice(0, 7)} isLoading={isIndustryLoading} />
+        <NetworkContainers heading={`People who are in the ${userData?.industry} industry also follow these people`} isIndustry={true} handleClick={() => setIsIndustryModalOpen(true)} data={industrySuggestions.slice(0, 7)} isLoading={isIndustryLoading} />
       }
     </div>
   </section>

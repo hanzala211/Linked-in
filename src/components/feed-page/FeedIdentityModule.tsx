@@ -1,12 +1,12 @@
 import { BANNER_PIC, DEFAULT_PIC } from "@assets"
 import { useAuth, useProfile } from "@context"
 import { IUser } from "@types"
-import { IoIosBookmark } from "react-icons/io"
+import { IoIosBookmark, IoMdClose } from "react-icons/io"
 import { Link, useParams } from "react-router-dom"
 
-export const FeedIdentityModule: React.FC<{ data: IUser | null }> = ({ data }) => {
+export const FeedIdentityModule: React.FC<{ data: IUser | null, isNetwork?: boolean, isIndustry?: boolean }> = ({ data, isNetwork, isIndustry }) => {
   const { userData } = useAuth()
-  const { handleFollow, handleUnfollow } = useProfile()
+  const { handleFollow, handleUnfollow, handleRemoveSuggestions } = useProfile()
   const params = useParams()
   const isCurrentProfile = (params.username || data?.userName) === userData?.userName;
   const isFollowing = !isCurrentProfile && userData?.following.includes(data?._id || "");
@@ -28,6 +28,8 @@ export const FeedIdentityModule: React.FC<{ data: IUser | null }> = ({ data }) =
       <h1 className="hover:underline transition-all font-semibold duration-200 pt-5">{data?.firstName} {data?.lastName}</h1>
       <p className="text-sm text-gray-600 text-center">{data?.headline}</p>
     </Link>
+
+    {isNetwork && <button onClick={() => handleRemoveSuggestions(data?._id || "", isIndustry || false)} className="absolute top-2 right-2 text-white bg-black p-1 rounded-full"><IoMdClose /></button>}
 
     {isCurrentProfile ?
       <Link to="#" className="flex items-center gap-3 p-3 border-t group border-gray-300 hover:bg-gray-100 rounded-b-lg transition-all duration-200">

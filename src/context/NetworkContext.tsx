@@ -6,6 +6,8 @@ const NetworkContext = createContext<NetworkContextTypes | undefined>(undefined)
 export const NetworkProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
   const [isSuggestionsModalOpen, setIsSuggestionsModalOpen] = useState<boolean>(false)
   const [isIndustryModalOpen, setIsIndustryModalOpen] = useState<boolean>(false)
+
+
   return <NetworkContext.Provider value={{ isSuggestionsModalOpen, setIsSuggestionsModalOpen, isIndustryModalOpen, setIsIndustryModalOpen }}>{children}</NetworkContext.Provider>
 }
 
