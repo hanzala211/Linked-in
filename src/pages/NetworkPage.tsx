@@ -1,10 +1,16 @@
 import { FeedIdentityModule, NetworkContainers } from "@components"
 import { useAuth, useNetwork, useProfile } from "@context"
+import { titleChanger } from "@helpers"
+import { useEffect } from "react"
 
 export const NetworkPage: React.FC = () => {
   const { userData } = useAuth()
   const { networkSuggestions, industrySuggestions, isSuggestionLoading, isIndustryLoading } = useProfile()
   const { setIsIndustryModalOpen, setIsSuggestionsModalOpen } = useNetwork()
+
+  useEffect(() => {
+    titleChanger("Network")
+  }, [])
 
   return <section className="grid md:grid-cols-[0.5fr_2fr] gap-5 lg:gap-0 grid-cols-1 pt-20 mx-auto w-full xl:max-w-[70%] max-w-[98%]">
     {/* First Column */}

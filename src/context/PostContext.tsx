@@ -71,6 +71,7 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const newPosts: PostType[] = data.data.filter((post: PostType) =>
           !prev.some((existingPost: PostType) => existingPost._id === post._id)
         );
+        console.log(newPosts)
 
         if (newPosts.length === 0) {
           setHasMore(false);
