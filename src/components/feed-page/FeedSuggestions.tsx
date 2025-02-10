@@ -1,13 +1,12 @@
 import { DEFAULT_PIC } from "@assets"
 import { Skeleton } from "@components"
-import { useAuth, useNetwork, useSearch } from "@context"
+import { useAuth, useProfile } from "@context"
 import { FaCheck, FaPlus } from "react-icons/fa"
 import { FaArrowRightLong } from "react-icons/fa6"
 import { Link } from "react-router-dom"
 
 export const FeedSuggestions: React.FC<{ className?: string }> = ({ className }) => {
-  const { suggestions, isSuggestionLoading, handleFollow, handleUnfollow } = useNetwork()
-  const { handleClick } = useSearch()
+  const { suggestions, isSuggestionLoading, handleFollow, handleUnfollow, handleClick } = useProfile()
   const { userData } = useAuth()
 
   const handleFollowing = (id: string) => {

@@ -1,11 +1,12 @@
 import { FeedIdentityModule, Post, PostLoader } from "@components"
-import { useAuth, usePost, useSearch } from "@context"
+import { useAuth, usePost, useProfile, useSearch } from "@context"
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 
 export const PostPage: React.FC = () => {
   const { userData } = useAuth()
-  const { selectedProfile, handleSearch, setSelectedProfile } = useSearch()
+  const { selectedProfile, setSelectedProfile } = useProfile()
+  const { handleSearch } = useSearch()
   const { isAllPostsLoading, getAllPosts, allPosts, setIsAllPostsLoading, getPost } = usePost()
   const params = useParams()
   const isCurrentProfile = params.username === userData?.userName;
@@ -48,8 +49,8 @@ export const PostPage: React.FC = () => {
     <div className="lg:block hidden">
       <FeedIdentityModule data={isCurrentProfile ? userData : selectedProfile} />
     </div>
-    <div className={`bg-white rounded-lg ${!params.id ? "p-4" : "p-0"} w-full xl:max-w-[93%]`}>
-      {!params.id && <h1 className="text-[20px] mb-2">All activity</h1>}
+    <div className={`bg-white rounded-lg ${!params.id ? "md:p-4" : "p-0"} w-full xl:max-w-[93%]`}>
+      {!params.id && <h1 className="text-[20px] p-3 md:p-0 mb-2">All activity</h1>}
       <div className="space-y-2">
         {isAllPostsLoading ? Array.from({ length: 6 }, (_, i) => (
           <PostLoader key={i} />

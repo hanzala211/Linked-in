@@ -1,4 +1,4 @@
-import { useAuth, useProfile, useSearch } from "@context"
+import { useAuth, usePost, useProfile, useSearch } from "@context"
 import { useEffect } from "react"
 import { titleChanger } from "@helpers"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, FeedSuggestions, Footer, ProfilePost, ProfilePostLoader, ProfileSection } from "@components"
@@ -8,8 +8,9 @@ import { Link, useParams } from "react-router-dom"
 
 export const ProfilePage: React.FC = () => {
   const { userData } = useAuth()
-  const { getSixPosts, firstPosts, isPostsLoading } = useProfile()
-  const { selectedProfile, handleSearch, setSelectedProfile } = useSearch()
+  const { selectedProfile, setSelectedProfile } = useProfile()
+  const { handleSearch } = useSearch()
+  const { firstPosts, isPostsLoading, getSixPosts } = usePost()
   const params = useParams()
   const isCurrentProfile = params.username === userData?.userName;
 
@@ -52,7 +53,7 @@ export const ProfilePage: React.FC = () => {
         <p className="text-[#666] md:text-[15px] text-[13px]">{isCurrentProfile ? userData?.headline : selectedProfile?.headline}</p>
       </div>
 
-      {(isCurrentProfile ? userData?.postsCount && userData?.postsCount > 0 : selectedProfile?.postsCount && selectedProfile?.postsCount > 0) && (
+      {(isCurrentProfile ? (userData?.postsCount ?? 0) > 0 : (selectedProfile?.postsCount ?? 0) > 0) && (
         <div className="w-full px-3 rounded-lg relative bg-white pt-4">
           <h1 className="md:text-[22px] text-[18px]">Activity</h1>
           <div className="w-full max-w-[100vw] sm:max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] xl:max-w-[850px] mx-auto overflow-hidden">
@@ -66,7 +67,7 @@ export const ProfilePage: React.FC = () => {
                   ))
                 ) : (
                   Array.from({ length: 5 }, (_, i) => (
-                    <CarouselItem key={i} className="md:basis-1/2 basis-full">
+                    <CarouselItem key={i} className="md:basis-1/2 mt-2 basis-full">
                       <ProfilePostLoader />
                     </CarouselItem>
                   ))

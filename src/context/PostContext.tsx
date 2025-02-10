@@ -20,6 +20,8 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isFeedPostsLoading, setIsFeedPostsLoading] = useState<boolean>(true)
   const [allPosts, setAllPosts] = useState<PostType[]>([])
   const [isAllPostsLoading, setIsAllPostsLoading] = useState<boolean>(true)
+  const [firstPosts, setFirstPosts] = useState<PostType[]>([])
+  const [isPostsLoading, setIsPostsLoading] = useState<boolean>(true)
 
   const createPost = async () => {
     try {
@@ -84,6 +86,22 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
 
+  const getSixPosts = async (userId: string) => {
+    try {
+      setFirstPosts([])
+      setIsPostsLoading(true)
+      const { data } = await postService.getSixPosts(userId)
+      if (data.status === "Posts Found") {
+        console.log(data)
+        setFirstPosts(data.posts)
+      }
+      setIsPostsLoading(false)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
   const likePost = async (postId: string) => {
     try {
       setFeedPosts((prev: PostType[]) =>
@@ -98,6 +116,17 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         )
       );
       setAllPosts((prev: PostType[]) =>
+        prev.map((item) =>
+          item._id === postId
+            ? {
+              ...item,
+              likeCount: item.likeCount + 1,
+              likes: [...item.likes, userData?._id].filter((id): id is string => Boolean(id))
+            }
+            : item
+        )
+      );
+      setFirstPosts((prev: PostType[]) =>
         prev.map((item) =>
           item._id === postId
             ? {
@@ -137,6 +166,14 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               : item
           )
         );
+        setFirstPosts((prev) =>
+          prev.map((item) =>
+            item._id === postId
+              ? { ...item, likeCount: item.likeCount - 1, likes: item.likes.filter((like) => like !== userData?._id) }
+              : item
+          )
+        );
+
       }
     } catch (error) {
       console.log(error)
@@ -147,6 +184,13 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const disLikePost = async (postId: string) => {
     try {
       setFeedPosts((prev) =>
+        prev.map((item) =>
+          item._id === postId
+            ? { ...item, likeCount: item.likeCount - 1, likes: item.likes.filter((like) => like !== userData?._id) }
+            : item
+        )
+      );
+      setFirstPosts((prev) =>
         prev.map((item) =>
           item._id === postId
             ? { ...item, likeCount: item.likeCount - 1, likes: item.likes.filter((like) => like !== userData?._id) }
@@ -187,6 +231,17 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           )
         );
         setAllPosts((prev: PostType[]) =>
+          prev.map((item) =>
+            item._id === postId
+              ? {
+                ...item,
+                likeCount: item.likeCount + 1,
+                likes: [...item.likes, userData?._id].filter(Boolean) as string[]
+              }
+              : item
+          )
+        );
+        setFirstPosts((prev: PostType[]) =>
           prev.map((item) =>
             item._id === postId
               ? {
@@ -256,7 +311,7 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setAllPosts([item])
   }
 
-  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment, allPosts, setAllPosts, getAllPosts, isAllPostsLoading, setIsAllPostsLoading, handleSelectPost, getPost }}>{children}</PostContext.Provider>
+  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment, allPosts, setAllPosts, getAllPosts, isAllPostsLoading, setIsAllPostsLoading, handleSelectPost, getPost, firstPosts, setFirstPosts, isPostsLoading, getSixPosts }}>{children}</PostContext.Provider>
 }
 
 export const usePost = (): PostContextTypes => {

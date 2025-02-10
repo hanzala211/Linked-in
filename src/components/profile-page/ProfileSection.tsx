@@ -1,13 +1,12 @@
 import { BANNER_PIC, DEFAULT_PIC } from "@assets"
-import { useAuth, useProfile, useSearch } from "@context"
+import { useAuth, useProfile } from "@context"
 import { FaCamera, FaCheck } from "react-icons/fa"
 import { HiPlus } from "react-icons/hi"
 import { LuPlus } from "react-icons/lu"
 import { MdOutlineFileDownload, MdOutlineModeEdit } from "react-icons/md"
 
 export const ProfileSection: React.FC<{ isCurrentProfile: boolean }> = ({ isCurrentProfile }) => {
-  const { setIsEditingProfile, setIsAddingProfile, setIsAddingBanner, handleDownloadPDF } = useProfile()
-  const { selectedProfile, handleFollow, handleUnfollow } = useSearch()
+  const { setIsEditingProfile, setIsAddingProfile, setIsAddingBanner, handleDownloadPDF, selectedProfile, handleFollow, handleUnfollow } = useProfile()
   const { userData } = useAuth()
   const isFollowing = selectedProfile !== null ? userData?.following.includes(selectedProfile._id) : false
 

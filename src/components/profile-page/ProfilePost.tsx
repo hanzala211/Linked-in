@@ -1,11 +1,11 @@
 import { DEFAULT_PIC } from "@assets"
-import { useAuth, usePost, useSearch } from "@context"
+import { useAuth, usePost, useProfile } from "@context"
 import { formatDate } from "@helpers"
 import { PostType } from "@types"
 import { BiLike, BiMessageRoundedMinus } from "react-icons/bi"
 import { IoEarth } from "react-icons/io5"
 import { RiSendPlaneFill } from "react-icons/ri"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 interface ProfliePostProps {
   isCurrentProfile: boolean,
@@ -14,8 +14,23 @@ interface ProfliePostProps {
 
 export const ProfilePost: React.FC<ProfliePostProps> = ({ isCurrentProfile, item }) => {
   const { userData } = useAuth()
-  const { selectedProfile } = useSearch()
-  const { handleSelectPost } = usePost()
+  const { handleSelectPost, likePost, disLikePost, } = usePost()
+  const { selectedProfile } = useProfile()
+  const navigate = useNavigate()
+  const isLiked = item.likes.includes(userData?._id || "");
+
+  const handleClick = () => {
+    navigate(`/${isCurrentProfile ? userData?.userName : selectedProfile?.userName}/update/urn:li:activity/${item._id}`)
+    handleSelectPost(item)
+  }
+
+  const handleLike = () => {
+    if (isLiked) {
+      disLikePost(item._id)
+    } else {
+      likePost(item._id)
+    }
+  }
 
   return <div className="bg-white border-[1px] w-full md:w-fit mt-3 border-gray-200 p-3 rounded-lg">
     <Link to={`/${isCurrentProfile ? userData?.userName : selectedProfile?.userName}`} className="flex gap-3">
@@ -36,8 +51,8 @@ export const ProfilePost: React.FC<ProfliePostProps> = ({ isCurrentProfile, item
         {item.likeCount} • {item.commentCount} comments
       </div>
       <div className="flex justify-between">
-        <button className={`flex gap-2 items-center text-[13px] hover:bg-slate-100 w-fit rounded-lg p-2`}><BiLike className="text-[17px]" /> Like</button>
-        <button className="flex gap-2 items-center text-[13px] hover:bg-slate-100 w-fit rounded-lg p-2"><BiMessageRoundedMinus /> Comment</button>
+        <button onClick={handleLike} className={`flex gap-2 items-center text-[13px] ${isLiked ? "text-[#0A66C2]" : ""} hover:bg-slate-100 w-fit rounded-lg p-2`}>{isLiked ? <img src="/images/likeSVG.svg" srcSet="like SVG" className="w-4" /> : <BiLike className="text-[17px]" />} Like</button>
+        <button onClick={handleClick} className="flex gap-2 items-center text-[13px] hover:bg-slate-100 w-fit rounded-lg p-2"><BiMessageRoundedMinus /> Comment</button>
         <button className="flex gap-2 items-center text-[13px] hover:bg-slate-100 w-fit rounded-lg p-2"><RiSendPlaneFill /> Send</button>
       </div>
     </div>

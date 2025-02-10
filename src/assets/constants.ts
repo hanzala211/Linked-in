@@ -1,6 +1,6 @@
 export const DEFAULT_PIC = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiMobM3dnjg-13GqCOo9EtioNfZ-FXLiU-Ag&s"
-export const BANNER_PIC = "images/homePageContainer.svg"
-export const DEFAULT_EXPERIENCE_PIC = "images/defaultPicForExpAndUni.svg"
+export const BANNER_PIC = "/images/homePageContainer.svg"
+export const DEFAULT_EXPERIENCE_PIC = "/images/defaultPicForExpAndUni.svg"
 
 export const universities = [
   {

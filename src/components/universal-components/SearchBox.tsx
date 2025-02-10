@@ -1,10 +1,11 @@
 import { DEFAULT_PIC } from "@assets"
-import { useSearch } from "@context"
+import { useProfile, useSearch } from "@context"
 import { IoSearchOutline } from "react-icons/io5"
 import { Link } from "react-router-dom"
 
 export const SearchBox: React.FC = () => {
-  const { searchData, handleClick } = useSearch()
+  const { handleClick } = useProfile()
+  const { searchData } = useSearch()
 
   return <div className="fixed bg-white rounded-lg border-[1px] lg:w-96 sm:w-[82vw] w-[90vw] h-fit top-14 lg:top-auto">
     {searchData.map((item, index) => (

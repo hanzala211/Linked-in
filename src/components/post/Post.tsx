@@ -10,7 +10,7 @@ import { TbArrowsDiagonal2 } from "react-icons/tb"
 import EmojiPicker from "emoji-picker-react"
 import { CommentType, PostType } from "@types"
 import { formatDate } from "@helpers"
-import { useAuth, usePost, useSearch } from "@context"
+import { useAuth, usePost, useProfile } from "@context"
 
 interface PostProps {
   item: PostType
@@ -19,7 +19,7 @@ interface PostProps {
 export const Post: React.FC<PostProps> = ({ item }) => {
   const { likePost, disLikePost, getComments, postComment } = usePost()
   const { userData } = useAuth()
-  const { handleClick: handleProfile, handleFollow, handleUnfollow } = useSearch()
+  const { handleFollow, handleUnfollow, handleClick: handleProfile, } = useProfile()
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
   const [isTextOverflowing, setIsTextOverflowing] = useState<boolean>(false);
   const [isCommentExpanded, setIsCommentExpanded] = useState<boolean>(false)

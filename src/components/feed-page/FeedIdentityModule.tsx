@@ -1,12 +1,12 @@
 import { BANNER_PIC, DEFAULT_PIC } from "@assets"
-import { useAuth, useSearch } from "@context"
+import { useAuth, useProfile } from "@context"
 import { IUser } from "@types"
 import { IoIosBookmark } from "react-icons/io"
 import { Link, useParams } from "react-router-dom"
 
 export const FeedIdentityModule: React.FC<{ data: IUser | null }> = ({ data }) => {
   const { userData } = useAuth()
-  const { handleFollow, handleUnfollow } = useSearch()
+  const { handleFollow, handleUnfollow } = useProfile()
   const params = useParams()
   const isCurrentProfile = (params.username || data?.userName) === userData?.userName;
   const isFollowing = !isCurrentProfile && userData?.following.includes(data?._id || "");
@@ -21,7 +21,7 @@ export const FeedIdentityModule: React.FC<{ data: IUser | null }> = ({ data }) =
   }
 
   return <div className="w-full lg:max-w-[95%] max-w-full h-fit relative bg-white rounded-lg border border-gray-300">
-    <img src={userData?.banner || BANNER_PIC} alt="Feed Page Container" className="w-full rounded-t-lg" />
+    <img src={data?.banner || BANNER_PIC} alt="Feed Page Container" className="w-full rounded-t-lg" />
 
     <Link to={`/${data?.userName}`} className="flex flex-col items-center relative -top-6">
       <img src={data?.profilePic || DEFAULT_PIC} alt="User" className="w-20 h-20 border-4 border-white rounded-full" />

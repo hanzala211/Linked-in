@@ -22,12 +22,7 @@ export interface SearchContextTypes {
     setSearchValue: React.Dispatch<React.SetStateAction<string>>,
     searchData: IUser[],
     setSearchData: React.Dispatch<React.SetStateAction<IUser[]>>,
-    selectedProfile: IUser | null,
-    setSelectedProfile: React.Dispatch<React.SetStateAction<IUser | null>>,
-    handleClick: (item: IUser) => void,
     handleSearch: (signal: AbortSignal, value: string) => Promise<IUser[]>,
-    handleFollow: (id: string) => void,
-    handleUnfollow: (id: string) => void,
 }
 
 export interface PostContextTypes {
@@ -61,7 +56,11 @@ export interface PostContextTypes {
     isAllPostsLoading: boolean,
     setIsAllPostsLoading: React.Dispatch<React.SetStateAction<boolean>>,
     handleSelectPost: (item: PostType) => void,
-    getPost: (postId: string) => void
+    getPost: (postId: string) => void,
+    firstPosts: PostType[],
+    setFirstPosts: React.Dispatch<React.SetStateAction<PostType[]>>,
+    isPostsLoading: boolean,
+    getSixPosts: (userId: string) => void,
 }
 
 export interface ProfileContextTypes {
@@ -107,18 +106,28 @@ export interface ProfileContextTypes {
     endYearExperience: string,
     setEndYearExperience: React.Dispatch<React.SetStateAction<string>>,
     handleDownloadPDF: (id: string | undefined) => void,
-    getSixPosts: (userId: string) => void,
-    firstPosts: PostType[],
-    setFirstPosts: React.Dispatch<React.SetStateAction<PostType[]>>,
-    isPostsLoading: boolean
-}
-
-export interface NetworkContextType {
     suggestions: IUser[],
     setSuggestions: React.Dispatch<React.SetStateAction<IUser[]>>,
-    randomUsers: () => void,
+    networkSuggestions: IUser[],
+    setNetworkSuggestions: React.Dispatch<React.SetStateAction<IUser[]>>,
+    industrySuggestions: IUser[],
+    setIndustrySuggestions: React.Dispatch<React.SetStateAction<IUser[]>>,
     isSuggestionLoading: boolean,
     setIsSuggestionsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    handleUnfollow: (id: string) => void,
+    isIndustryLoading: boolean,
+    setIsIndustryLoading: React.Dispatch<React.SetStateAction<boolean>>,
     handleFollow: (id: string) => void,
+    handleUnfollow: (id: string) => void,
+    selectedProfile: IUser | null,
+    setSelectedProfile: React.Dispatch<React.SetStateAction<IUser | null>>,
+    handleClick: (item: IUser) => void,
+    randomUsers: (limit: string) => void,
+    randomIndustryUsers: (limit: string) => void
+}
+
+export interface NetworkContextTypes {
+    isSuggestionsModalOpen: boolean,
+    setIsSuggestionsModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    isIndustryModalOpen: boolean,
+    setIsIndustryModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
 }

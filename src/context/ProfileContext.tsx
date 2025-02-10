@@ -1,14 +1,14 @@
 import { useAuth } from "@context";
-import { postService, profileService } from "@services";
-import { IEducation, IExperience, PostType, ProfileContextTypes } from "@types";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { profileService, suggestionsService } from "@services";
+import { IEducation, IExperience, IUser, ProfileContextTypes } from "@types";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { toast } from "sonner";
 
 const ProfileContext = createContext<ProfileContextTypes | undefined>(undefined)
 
 export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { setUserData } = useAuth()
+  const { userData, setUserData } = useAuth()
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false)
   const [isAddingExperience, setIsAddingExperience] = useState<boolean>(false)
   const [isAddingEducation, setIsAddingEducation] = useState<boolean>(false)
@@ -25,8 +25,27 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [endYearExperience, setEndYearExperience] = useState<string>("")
   const [startYearEducation, setStartYearEducation] = useState<string>("")
   const [endYearEducation, setEndYearEducation] = useState<string>("")
-  const [firstPosts, setFirstPosts] = useState<PostType[]>([])
-  const [isPostsLoading, setIsPostsLoading] = useState<boolean>(true)
+  const [industrySuggestions, setIndustrySuggestions] = useState<IUser[]>([])
+  const [suggestions, setSuggestions] = useState<IUser[]>([])
+  const [networkSuggestions, setNetworkSuggestions] = useState<IUser[]>([])
+  const [isIndustryLoading, setIsIndustryLoading] = useState<boolean>(true)
+  const [isSuggestionLoading, setIsSuggestionsLoading] = useState<boolean>(true)
+  const [selectedProfile, setSelectedProfile] = useState<IUser | null>(null)
+
+  useEffect(() => {
+    if (suggestions.length === 0 && window.innerWidth > 768) {
+      randomUsers("3")
+    }
+    if (networkSuggestions.length === 0) {
+      randomUsers("8")
+    }
+    if (industrySuggestions.length === 0 && userData?.industry) {
+      randomIndustryUsers("8")
+    } else {
+      setIsIndustryLoading(false)
+    }
+  }, [userData?._id])
+
 
   const editProfile = async (sendData: unknown) => {
     try {
@@ -206,16 +225,105 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   };
 
-  const getSixPosts = async (userId: string) => {
+  const randomUsers = async (limit: string) => {
     try {
-      setFirstPosts([])
-      setIsPostsLoading(true)
-      const { data } = await postService.getSixPosts(userId)
-      if (data.status === "Posts Found") {
+      setIsSuggestionsLoading(true)
+      const { data } = await suggestionsService.randomUsers(limit)
+      if (data.status === "Users Found") {
         console.log(data)
-        setFirstPosts(data.posts)
+        if (limit === "3") {
+          setSuggestions(data.data)
+        } else {
+          setNetworkSuggestions((prev) => [...prev, ...data.data.filter((item: IUser) => !prev.some((suug) => suug._id === item._id)),]);
+        }
       }
-      setIsPostsLoading(false)
+      setIsSuggestionsLoading(false)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleFollow = async (id: string | undefined) => {
+    if (!id || !userData) return;
+    try {
+      const { data } = await profileService.followUser(id)
+      if (data.status === "User Followed Successfully") {
+        toast.success(data.status, {
+          action: {
+            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
+            onClick: () => null,
+          },
+        });
+        setSuggestions((prev) =>
+          prev.map((item) =>
+            item._id === id ? { ...item, followerCount: (item.followerCount || 0) + 1, followers: [...item.followers, userData?._id] } : item
+          )
+        );
+        setSelectedProfile((prev: IUser | null) =>
+          prev
+            ? {
+              ...prev,
+              followerCount: prev.followerCount + 1,
+              followers: [...prev.followers, userData?._id],
+            }
+            : null
+        );
+        setUserData((prev: IUser | null) => prev ? {
+          ...prev,
+          following: [...prev.following, id],
+          followingCount: prev.followingCount + 1
+        } : null)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleUnfollow = async (id: string | undefined) => {
+    if (!id || !userData) return;
+    try {
+      const { data } = await profileService.unFollowUser(id)
+      if (data.status === "User Unfollowed Successfully") {
+        toast.success(data.status, {
+          action: {
+            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
+            onClick: () => null,
+          },
+        });
+        setSuggestions((prev) =>
+          prev.map((item) =>
+            item._id === id ? { ...item, followerCount: (item.followerCount || 0) - 1, followers: item.followers.filter((item) => item !== userData._id) } : item
+          )
+        );
+        setSelectedProfile((prev: IUser | null) =>
+          prev
+            ? {
+              ...prev,
+              followerCount: prev.followerCount - 1,
+              followers: prev.followers.filter((item) => item !== userData?._id),
+            }
+            : null
+        );
+        setUserData((prev: IUser | null) => prev ? {
+          ...prev,
+          following: prev.following.filter((item) => item !== id),
+          followingCount: prev.followingCount - 1
+        } : null)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const randomIndustryUsers = async (limit: string) => {
+    try {
+      setIsIndustryLoading(true)
+      const { data } = await suggestionsService.randomIndustryUsers(limit)
+      if (data.status === "Users Found") {
+        console.log(data)
+        setIndustrySuggestions((prev) => [...prev, ...data.data.filter((item: IUser) => !prev.some((suug) => suug._id === item._id)),]);
+      }
+      setIsIndustryLoading(false)
     } catch (error) {
       console.log(error)
     }
@@ -243,8 +351,12 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     }, 300)
   }
 
+  const handleClick = (item: IUser) => {
+    setSelectedProfile(item)
+  }
 
-  return <ProfileContext.Provider value={{ isEditingProfile, setIsEditingProfile, isAddingExperience, setIsAddingExperience, isAddingEducation, setIsAddingEducation, isAddingProfile, setIsAddingProfile, isAddingBanner, setIsAddingBanner, selectedBanner, setSelectedBanner, selectedProfilePic, setSelectedProfilePic, editProfile, isEditProfileLoading, setIsEditProfileLoading, updateProfilePic, isUpdatingProfilePic, setIsUpdatingProfilePic, isUpdatingProfileBanner, setIsUpdatingProfileBanner, uploadBanner, deleteProfilePic, deleteProfileBanner, experienceFormData, setExperienceFormData, educationFormData, setEducationFormData, handleDeleteEducation, handleDeleteExperience, handleEducation, handlePosition, startYearEducation, setStartYearEducation, startYearExperience, setStartYearExperience, endYearEducation, setEndYearEducation, endYearExperience, setEndYearExperience, handleDownloadPDF, getSixPosts, firstPosts, setFirstPosts, isPostsLoading }}>{children}</ProfileContext.Provider>
+
+  return <ProfileContext.Provider value={{ isEditingProfile, setIsEditingProfile, isAddingExperience, setIsAddingExperience, isAddingEducation, setIsAddingEducation, isAddingProfile, setIsAddingProfile, isAddingBanner, setIsAddingBanner, selectedBanner, setSelectedBanner, selectedProfilePic, setSelectedProfilePic, editProfile, isEditProfileLoading, setIsEditProfileLoading, updateProfilePic, isUpdatingProfilePic, setIsUpdatingProfilePic, isUpdatingProfileBanner, setIsUpdatingProfileBanner, uploadBanner, deleteProfilePic, deleteProfileBanner, experienceFormData, setExperienceFormData, educationFormData, setEducationFormData, handleDeleteEducation, handleDeleteExperience, handleEducation, handlePosition, startYearEducation, setStartYearEducation, startYearExperience, setStartYearExperience, endYearEducation, setEndYearEducation, endYearExperience, setEndYearExperience, handleDownloadPDF, suggestions, setSuggestions, networkSuggestions, setNetworkSuggestions, industrySuggestions, setIndustrySuggestions, isSuggestionLoading, setIsSuggestionsLoading, isIndustryLoading, setIsIndustryLoading, handleFollow, handleUnfollow, handleClick, selectedProfile, setSelectedProfile, randomUsers, randomIndustryUsers }}>{children}</ProfileContext.Provider>
 }
 
 export const useProfile = (): ProfileContextTypes => {
