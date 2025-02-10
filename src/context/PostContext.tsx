@@ -64,7 +64,6 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const getFeedPosts = async () => {
     try {
-      setIsFeedPostsLoading(true)
       const { data } = await postService.getFeedPosts();
       console.log(data);
 
