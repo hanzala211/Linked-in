@@ -18,7 +18,6 @@ export const NetworkModel: React.FC = () => {
     } else {
       randomIndustryUsers("4")
     }
-    console.log('Check')
   }
 
   return (
@@ -31,7 +30,7 @@ export const NetworkModel: React.FC = () => {
             dataLength={isSuggestionsModalOpen ? suggestions.length : industrySuggestions.length}
             next={handleMore}
             hasMore={true}
-            loader={<h1 className="absolute bottom-0 left-1/2 -translate-x-1/2">Loading</h1>}
+            loader={null}
             className="grid md:grid-cols-3 grid-cols-2 md:gap-y-2 gap-y-1 md:gap-0 gap-2 p-3"
           >
             {(isSuggestionsModalOpen ? suggestions : industrySuggestions).map((item, index) => (
