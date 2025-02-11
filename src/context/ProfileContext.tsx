@@ -32,6 +32,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [isSuggestionLoading, setIsSuggestionsLoading] = useState<boolean>(true)
   const [selectedProfile, setSelectedProfile] = useState<IUser | null>(null)
   const [hasMore, setHasMore] = useState<boolean>(true)
+  const [followData, setFollowData] = useState<IUser[]>([])
 
   useEffect(() => {
     if (suggestions.length === 0 && window.innerWidth > 768) {
@@ -348,6 +349,17 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   }
 
+  const getFollow = async () => {
+    try {
+      const { data } = await profileService.getFollow()
+      if (data.status === "Users Found") {
+        setFollowData(data.users)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleDeleteEducation = (i: number) => {
     setEducationFormData((prev) => prev.filter((_, index) => index !== i))
   }
@@ -383,7 +395,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   }
 
 
-  return <ProfileContext.Provider value={{ isEditingProfile, setIsEditingProfile, isAddingExperience, setIsAddingExperience, isAddingEducation, setIsAddingEducation, isAddingProfile, setIsAddingProfile, isAddingBanner, setIsAddingBanner, selectedBanner, setSelectedBanner, selectedProfilePic, setSelectedProfilePic, editProfile, isEditProfileLoading, setIsEditProfileLoading, updateProfilePic, isUpdatingProfilePic, setIsUpdatingProfilePic, isUpdatingProfileBanner, setIsUpdatingProfileBanner, uploadBanner, deleteProfilePic, deleteProfileBanner, experienceFormData, setExperienceFormData, educationFormData, setEducationFormData, handleDeleteEducation, handleDeleteExperience, handleEducation, handlePosition, startYearEducation, setStartYearEducation, startYearExperience, setStartYearExperience, endYearEducation, setEndYearEducation, endYearExperience, setEndYearExperience, handleDownloadPDF, suggestions, setSuggestions, networkSuggestions, setNetworkSuggestions, industrySuggestions, setIndustrySuggestions, isSuggestionLoading, setIsSuggestionsLoading, isIndustryLoading, setIsIndustryLoading, handleFollow, handleUnfollow, handleClick, selectedProfile, setSelectedProfile, randomUsers, randomIndustryUsers, hasMore, setHasMore, handleRemoveSuggestions }}>{children}</ProfileContext.Provider>
+  return <ProfileContext.Provider value={{ isEditingProfile, setIsEditingProfile, isAddingExperience, setIsAddingExperience, isAddingEducation, setIsAddingEducation, isAddingProfile, setIsAddingProfile, isAddingBanner, setIsAddingBanner, selectedBanner, setSelectedBanner, selectedProfilePic, setSelectedProfilePic, editProfile, isEditProfileLoading, setIsEditProfileLoading, updateProfilePic, isUpdatingProfilePic, setIsUpdatingProfilePic, isUpdatingProfileBanner, setIsUpdatingProfileBanner, uploadBanner, deleteProfilePic, deleteProfileBanner, experienceFormData, setExperienceFormData, educationFormData, setEducationFormData, handleDeleteEducation, handleDeleteExperience, handleEducation, handlePosition, startYearEducation, setStartYearEducation, startYearExperience, setStartYearExperience, endYearEducation, setEndYearEducation, endYearExperience, setEndYearExperience, handleDownloadPDF, suggestions, setSuggestions, networkSuggestions, setNetworkSuggestions, industrySuggestions, setIndustrySuggestions, isSuggestionLoading, setIsSuggestionsLoading, isIndustryLoading, setIsIndustryLoading, handleFollow, handleUnfollow, handleClick, selectedProfile, setSelectedProfile, randomUsers, randomIndustryUsers, hasMore, setHasMore, handleRemoveSuggestions, getFollow, followData }}>{children}</ProfileContext.Provider>
 }
 
 export const useProfile = (): ProfileContextTypes => {

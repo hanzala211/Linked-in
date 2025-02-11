@@ -74,5 +74,11 @@ export const postService = {
     headers: {
       "Content-Type": "multipart/form-data"
     }
+  }),
+  createArticle: (data: unknown) => sendRequest({
+    method: "POST",
+    url: `/post/create-article`,
+    data,
+    isAuthIncluded: true
   })
 }

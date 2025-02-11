@@ -41,3 +41,29 @@ body::-webkit-scrollbar {
 		background: rgba(255, 255, 255, 0.1) !important;
 	}
 }
+
+.nested-heading-level-1 {
+	font-size: 2em;
+	font-weight: bold;
+	display: inline-block;
+}
+.nested-heading-level-2 {
+	font-size: 1.5em;
+	font-weight: bold;
+	display: inline-block;
+}
+.nested-heading-level-3 {
+	font-size: 1.17em;
+	font-weight: bold;
+	display: inline-block;
+}
+.nested-blockquote {
+	border-left: 3px solid #ccc;
+	padding-left: 1em;
+	margin: 0;
+	display: inline-block;
+}
+
+.ProseMirror-focused {
+	outline: none;
+}

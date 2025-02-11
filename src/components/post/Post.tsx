@@ -172,7 +172,7 @@ export const Post: React.FC<PostProps> = ({ item }) => {
       )}
     </div>
 
-    <Carousel className="w-full relative group bg-black">
+    {!item.isArticle ? <Carousel className="w-full relative group bg-black">
       <CarouselContent className="flex">
         {item.imageUrls.length > 0 ? item.imageUrls.map((item, index) => (
           <CarouselItem key={index} className="w-full shrink-0 flex items-center">
@@ -186,7 +186,15 @@ export const Post: React.FC<PostProps> = ({ item }) => {
       {item.imageUrls.length > 1 &&
         <CarouselNext className="absolute top-1/2 -translate-y-1/2 right-3 group-hover:opacity-100 opacity-0 transition-all duration-200 ease-in-out bg-black p-2 bg-opacity-80 text-white rounded-full " />
       }
-    </Carousel>
+    </Carousel> : <div className="w-full max-w-[95%] mx-auto relative">
+      <img src="/images/articleCreator.png" alt="Article Creator Image" className="w-full rounded-t-lg h-auto" />
+      <div className="bg-[#0A66C3] text-white rounded-b-lg p-2">
+        <h2 className="font-semibold text-[20px]">{item.title}</h2>
+        <div className="text-[9px] line-clamp-1"
+          dangerouslySetInnerHTML={{ __html: item.articleContent || "" }}
+        />
+      </div>
+    </div>}
 
     <div className="mx-5 border-b-[1px] py-3 flex justify-between">
       <div className="flex gap-2">

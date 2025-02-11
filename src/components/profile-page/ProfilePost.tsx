@@ -43,9 +43,17 @@ export const ProfilePost: React.FC<ProfliePostProps> = ({ isCurrentProfile, item
     <p className="mx-[3.7rem] text-[13px] flex items-center gap-0.5 text-[#666]">{formatDate(item.createdAt)} • <IoEarth /> </p>
     <Link onClick={() => handleSelectPost(item)} to={`/${isCurrentProfile ? userData?.userName : selectedProfile?.userName}/update/urn:li:activity/${item._id}`}>
       <p className="line-clamp-3 text-[14px] text-gray-700">{item.caption}</p>
-      {item.imageUrls.length > 0 &&
+      {!item.isArticle ? item.imageUrls.length > 0 &&
         <img src={item.imageUrls.length > 0 ? item.imageUrls[0] : ""} alt={`${item.postBy} Post`} className="md:w-96 mt-1 h-96 w-full object-contain" />
-      }
+        : <div className="w-full relative">
+          <img src="/images/articleCreator.png" alt="Article Creator Image" className="w-full h-auto" />
+          <div className="bg-[#0A66C3] text-white rounded-b-lg p-2">
+            <h2 className="font-semibold text-[20px]">{item.title}</h2>
+            <div className="text-[9px] line-clamp-1"
+              dangerouslySetInnerHTML={{ __html: item.articleContent || "" }}
+            />
+          </div>
+        </div>}
     </Link>
     <div className="px-3 py-2">
       <div className="text-[#666] flex gap-2 text-[13px] border-b-[1px] px-2 py-1">

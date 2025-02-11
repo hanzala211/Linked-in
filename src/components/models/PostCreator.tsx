@@ -10,7 +10,7 @@ import { SyncLoader } from "react-spinners";
 
 
 export const PostCreator: React.FC = () => {
-  const { isPostCreatorOpen, setIsPostCreatorOpen, selectedImage, setIsImageCreatorOpen, setSelectedImage, captionValue, setCaptionValue, createPost, isCreatingLoading, isEditingPost, editPost } = usePost()
+  const { isPostCreatorOpen, setIsPostCreatorOpen, selectedImage, setIsImageCreatorOpen, setSelectedImage, captionValue, setCaptionValue, createPost, isCreatingLoading, isEditingPost, editPost, isArticleCreator, setIsArticleCreator, title, createArticle } = usePost()
   const [isEmojiPicker, setIsEmojiPicker] = useState<boolean>(false)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const emojiIconRef = useRef<HTMLButtonElement | null>(null)
@@ -50,14 +50,18 @@ export const PostCreator: React.FC = () => {
     setIsPostCreatorOpen(false)
     setCaptionValue("")
     setSelectedImage([])
+    setIsArticleCreator(false)
   }
 
   const handleSubmit = () => {
-    if (!isEditingPost) {
-      createPost()
+    if (isArticleCreator && !isEditingPost) {
+      createArticle();
+    } else if (!isEditingPost) {
+      createPost();
     } else {
-      editPost()
+      editPost();
     }
+
   }
 
   return (
@@ -81,6 +85,14 @@ export const PostCreator: React.FC = () => {
             onInput={adjustHeight}
           ></textarea>
           <button ref={emojiIconRef} className="hover:opacity-50 duration-200 px-8" onClick={() => setIsEmojiPicker(true)}><EmojiIcon /></button>
+          {isArticleCreator &&
+            <div className="w-[75%] mt-2 mx-auto">
+              <img src="/images/articleCreator.png" alt="Article Creator" className="w-full rounded-t-lg" />
+              <div className="bg-[#0A66C3] text-white rounded-b-lg p-3">
+                <h2 className="font-semibold">{title}</h2>
+              </div>
+            </div>
+          }
           {isEmojiPicker &&
             <div className="absolute md:left-5 left-0" ref={emojiPickerRef}>
               <EmojiPicker width={350} height={400} onEmojiClick={(emoji) => setCaptionValue((prev) => prev + emoji.emoji)} />
@@ -96,7 +108,7 @@ export const PostCreator: React.FC = () => {
           </div>
         }
 
-        {selectedImage.length === 0 &&
+        {!isArticleCreator && selectedImage.length === 0 &&
           <button onClick={() => setIsImageCreatorOpen(true)} className="px-8 w-fit mb-5 text-left">
             <TooltipProvider>
               <Tooltip>

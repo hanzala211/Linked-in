@@ -45,4 +45,9 @@ export const profileService = {
     url: `/profile/unfollow-user/${userId}`,
     isAuthIncluded: true
   }),
+  getFollow: () => sendRequest({
+    method: "GET",
+    url: `/profile/get-follow`,
+    isAuthIncluded: true
+  })
 }

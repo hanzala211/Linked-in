@@ -72,6 +72,15 @@ export interface PostContextTypes {
     imagesToRemove: string[],
     setImagesToRemove: React.Dispatch<React.SetStateAction<string[]>>,
     editPost: () => void,
+    title: string,
+    setTitle: React.Dispatch<React.SetStateAction<string>>,
+    mentions: IUser[],
+    setMentions: React.Dispatch<React.SetStateAction<IUser[]>>,
+    editorContent: string,
+    setEditorContent: React.Dispatch<React.SetStateAction<string>>,
+    isArticleCreator: boolean,
+    setIsArticleCreator: React.Dispatch<React.SetStateAction<boolean>>,
+    createArticle: () => void
 }
 
 export interface ProfileContextTypes {
@@ -136,7 +145,9 @@ export interface ProfileContextTypes {
     randomIndustryUsers: (limit: string) => void,
     hasMore: boolean,
     setHasMore: React.Dispatch<React.SetStateAction<boolean>>,
-    handleRemoveSuggestions: (id: string, isIndustry: boolean) => void
+    handleRemoveSuggestions: (id: string, isIndustry: boolean) => void,
+    getFollow: () => void,
+    followData: IUser[]
 }
 
 export interface NetworkContextTypes {

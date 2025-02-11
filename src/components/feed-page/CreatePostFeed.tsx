@@ -2,10 +2,12 @@ import { DEFAULT_PIC } from "@assets"
 import { useAuth, usePost } from "@context"
 import { FaImage } from "react-icons/fa"
 import { RiPagesLine, RiVideoFill } from "react-icons/ri"
+import { useNavigate } from "react-router-dom"
 
 export const CreatePostFeed: React.FC = () => {
   const { userData } = useAuth()
   const { setIsPostCreatorOpen, setIsImageCreatorOpen } = usePost()
+  const navigate = useNavigate()
 
   const createPosts = [
     {
@@ -21,7 +23,7 @@ export const CreatePostFeed: React.FC = () => {
     {
       icon: <RiPagesLine className="text-[#E06847] text-[22px]" />,
       text: "Write Article",
-      onClick: () => setIsPostCreatorOpen(true)
+      onClick: () => navigate("/article/edit/")
 
     },
   ]

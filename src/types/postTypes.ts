@@ -10,7 +10,11 @@ export interface PostType {
   commentCount: number,
   createdAt: number,
   comments: CommentType[],
-  __v: number
+  __v: number,
+  mentions?: string[],
+  articleContent?: string,
+  isArticle: boolean,
+  title?: string
 }
 
 export interface CommentType {

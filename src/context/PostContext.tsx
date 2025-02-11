@@ -3,6 +3,7 @@ import { postService } from "@services";
 import { IUser, PostContextTypes, PostType } from "@types";
 import { createContext, ReactNode, useContext, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const PostContext = createContext<PostContextTypes | undefined>(undefined)
@@ -26,6 +27,11 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isEditingPost, setIsEditingPost] = useState<boolean>(false)
   const [imagesToRemove, setImagesToRemove] = useState<string[]>([])
   const [editPostID, setEditPostID] = useState<string>("")
+  const [title, setTitle] = useState<string>('');
+  const [editorContent, setEditorContent] = useState<string>('');
+  const [mentions, setMentions] = useState<IUser[]>([])
+  const [isArticleCreator, setIsArticleCreator] = useState<boolean>(false)
+  const navigate = useNavigate()
 
 
   const createPost = async () => {
@@ -441,6 +447,38 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }
 
+  const createArticle = async () => {
+    try {
+      setIsCreatingLoading(true)
+      const { data } = await postService.createArticle({ caption: captionValue, articleContent: editorContent, title, mentions })
+      console.log(data)
+      if (data.status === "Article Created Successfully") {
+        toast.success(data.status, {
+          action: {
+            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
+            onClick: () => null,
+          },
+        });
+      } else {
+        toast.error(data.status, {
+          action: {
+            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
+            onClick: () => null,
+          },
+        })
+      }
+      setIsCreatingLoading(false)
+      setIsPostCreatorOpen(false)
+      setTitle("")
+      setEditorContent("")
+      setMentions([])
+      setCaptionValue("")
+      navigate("/feed")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleSelectPost = (item: PostType) => {
     setAllPosts([item])
   }
@@ -458,7 +496,7 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }
 
-  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment, allPosts, setAllPosts, getAllPosts, isAllPostsLoading, setIsAllPostsLoading, handleSelectPost, getPost, firstPosts, setFirstPosts, isPostsLoading, getSixPosts, savePost, unSavePost, deletePost, handleOpenImageCreator, isSelectingImage, setIsSelectingImage, isEditingPost, setIsEditingPost, imagesToRemove, setImagesToRemove, editPost }}>{children}</PostContext.Provider>
+  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment, allPosts, setAllPosts, getAllPosts, isAllPostsLoading, setIsAllPostsLoading, handleSelectPost, getPost, firstPosts, setFirstPosts, isPostsLoading, getSixPosts, savePost, unSavePost, deletePost, handleOpenImageCreator, isSelectingImage, setIsSelectingImage, isEditingPost, setIsEditingPost, imagesToRemove, setImagesToRemove, editPost, title, setTitle, mentions, setMentions, editorContent, setEditorContent, isArticleCreator, setIsArticleCreator, createArticle }}>{children}</PostContext.Provider>
 }
 
 export const usePost = (): PostContextTypes => {
