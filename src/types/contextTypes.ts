@@ -61,6 +61,17 @@ export interface PostContextTypes {
     setFirstPosts: React.Dispatch<React.SetStateAction<PostType[]>>,
     isPostsLoading: boolean,
     getSixPosts: (userId: string) => void,
+    savePost: (postId: string) => void,
+    unSavePost: (postId: string) => void,
+    deletePost: (postId: string) => void,
+    handleOpenImageCreator: (data: string[], caption: string, id: string) => void,
+    isSelectingImage: boolean,
+    setIsSelectingImage: React.Dispatch<React.SetStateAction<boolean>>,
+    isEditingPost: boolean,
+    setIsEditingPost: React.Dispatch<React.SetStateAction<boolean>>,
+    imagesToRemove: string[],
+    setImagesToRemove: React.Dispatch<React.SetStateAction<string[]>>,
+    editPost: () => void,
 }
 
 export interface ProfileContextTypes {

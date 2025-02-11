@@ -35,7 +35,7 @@ export const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     if (userData !== null) {
-      titleChanger(`${userData?.firstName} ${userData?.lastName}`)
+      titleChanger(`${isCurrentProfile ? userData?.firstName : selectedProfile?.firstName} ${isCurrentProfile ? userData?.lastName : selectedProfile?.lastName}`)
     }
     const userId = isCurrentProfile ? userData?._id : selectedProfile?._id;
     if (!userId) return;
@@ -66,7 +66,7 @@ export const ProfilePage: React.FC = () => {
                     </CarouselItem>
                   ))
                 ) : (
-                  Array.from({ length: 5 }, (_, i) => (
+                  Array.from({ length: 2 }, (_, i) => (
                     <CarouselItem key={i} className="md:basis-1/2 mt-2 basis-full">
                       <ProfilePostLoader />
                     </CarouselItem>

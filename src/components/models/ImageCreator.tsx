@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { RxCross2 } from "react-icons/rx"
 import { CiCirclePlus } from "react-icons/ci"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@components"
@@ -8,8 +8,7 @@ import { usePost } from "@context"
 import { overFlowHidder } from "@helpers"
 
 export const ImageCreator: React.FC = () => {
-  const { setSelectedImage, selectedImage, currentIndex, setCurrentIndex, isImageCreatorOpen, setIsImageCreatorOpen, setIsPostCreatorOpen } = usePost()
-  const [isSelectingImage, setIsSelectingImage] = useState<boolean>(true)
+  const { setSelectedImage, selectedImage, currentIndex, setCurrentIndex, isImageCreatorOpen, setIsImageCreatorOpen, setIsPostCreatorOpen, isSelectingImage, setIsSelectingImage, setIsEditingPost, setImagesToRemove, setCaptionValue } = usePost()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
@@ -42,11 +41,19 @@ export const ImageCreator: React.FC = () => {
     setSelectedImage([])
     setIsSelectingImage(true)
     setCurrentIndex(0)
+    setIsEditingPost(false)
+    setImagesToRemove([])
+    setCaptionValue("")
   }
-  const handleDelete = () => {
+
+  const handleDelete = (item: string) => {
     setSelectedImage(selectedImage.filter((_, index) => index !== currentIndex))
+    setCurrentIndex(0)
     if (selectedImage.length === 1) {
       handleClose()
+    }
+    if (item.includes("https")) {
+      setImagesToRemove((prev) => [...prev, item])
     }
   }
 
@@ -69,7 +76,7 @@ export const ImageCreator: React.FC = () => {
       text: "Duplicate"
     },
     {
-      func: handleDelete,
+      func: (item: string) => handleDelete(item),
       icon: MdDelete,
       text: "Delete"
     },
@@ -91,7 +98,7 @@ export const ImageCreator: React.FC = () => {
       </div>
       {isSelectingImage ?
         <div className="bg-[#F8FAFD] flex flex-col items-center gap-2 justify-center h-full">
-          <img src="images/imageSelector.svg" alt="Image Post Selector" />
+          <img src="/images/imageSelector.svg" alt="Image Post Selector" />
           <h1 className="text-[23px] font-semibold">Select files to begin</h1>
           <p className="text-[#666]">Share images in your post.</p>
           <button onClick={handleFile} className="text-white p-2 rounded-lg hover:bg-opacity-70 transition-all duration-200 bg-[#0A66C2]">Upload from Computer</button>
@@ -124,7 +131,7 @@ export const ImageCreator: React.FC = () => {
 
             <div className="flex justify-evenly mt-5">
               {postFeatures.map((item, index) => (
-                <button key={index} onClick={item.func} className="hover:opacity-70 rounded-full transition-all text-[#666] duration-200 text-[35px]">
+                <button key={index} onClick={() => item.func(selectedImage[currentIndex])} className="hover:opacity-70 rounded-full transition-all text-[#666] duration-200 text-[35px]">
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger><item.icon /></TooltipTrigger>

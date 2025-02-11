@@ -50,5 +50,29 @@ export const postService = {
     method: "GET",
     url: `/post/get-post/${postId}`,
     isAuthIncluded: true
+  }),
+  savePost: (postId: string) => sendRequest({
+    method: "GET",
+    url: `/post/save-post/${postId}`,
+    isAuthIncluded: true
+  }),
+  unSavePost: (postId: string) => sendRequest({
+    method: "GET",
+    url: `/post/unsave-post/${postId}`,
+    isAuthIncluded: true
+  }),
+  deletePost: (postId: string) => sendRequest({
+    method: "DELETE",
+    url: `/post/delete-post/${postId}`,
+    isAuthIncluded: true
+  }),
+  updatePost: (postId: string, data: unknown) => sendRequest({
+    method: "PUT",
+    url: `/post/update-post/${postId}`,
+    isAuthIncluded: true,
+    data,
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
   })
 }

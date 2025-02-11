@@ -32,7 +32,7 @@ export const ProfilePost: React.FC<ProfliePostProps> = ({ isCurrentProfile, item
     }
   }
 
-  return <div className="bg-white border-[1px] w-full md:w-fit mt-3 border-gray-200 p-3 rounded-lg">
+  return <div className="bg-white border-[1px] w-full mt-3 border-gray-200 p-3 rounded-lg">
     <Link to={`/${isCurrentProfile ? userData?.userName : selectedProfile?.userName}`} className="flex gap-3">
       <img src={(isCurrentProfile ? userData?.profilePic : selectedProfile?.profilePic) || DEFAULT_PIC} alt={`${isCurrentProfile ? userData?.firstName : selectedProfile?.firstName} Profile Pic`} className="w-12 h-12 rounded-full" />
       <div className="space-y-0.5">
@@ -41,9 +41,11 @@ export const ProfilePost: React.FC<ProfliePostProps> = ({ isCurrentProfile, item
       </div>
     </Link>
     <p className="mx-[3.7rem] text-[13px] flex items-center gap-0.5 text-[#666]">{formatDate(item.createdAt)} • <IoEarth /> </p>
-    <p className="line-clamp-3 text-[14px] text-gray-700">{item.caption}</p>
     <Link onClick={() => handleSelectPost(item)} to={`/${isCurrentProfile ? userData?.userName : selectedProfile?.userName}/update/urn:li:activity/${item._id}`}>
-      <img src={item.imageUrls.length > 0 ? item.imageUrls[0] : ""} alt={`${item.postBy} Post`} className="md:w-96 mt-1 h-96 w-full object-contain" />
+      <p className="line-clamp-3 text-[14px] text-gray-700">{item.caption}</p>
+      {item.imageUrls.length > 0 &&
+        <img src={item.imageUrls.length > 0 ? item.imageUrls[0] : ""} alt={`${item.postBy} Post`} className="md:w-96 mt-1 h-96 w-full object-contain" />
+      }
     </Link>
     <div className="px-3 py-2">
       <div className="text-[#666] flex gap-2 text-[13px] border-b-[1px] px-2 py-1">

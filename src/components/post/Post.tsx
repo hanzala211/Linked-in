@@ -1,23 +1,25 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@components"
 import { useEffect, useRef, useState } from "react"
-import { FaCheck, FaPlus } from "react-icons/fa"
+import { FaBookmark, FaCheck, FaPlus, FaRegBookmark } from "react-icons/fa"
 import { BiLike, BiMessageRoundedMinus } from "react-icons/bi"
 import { IoEarth } from "react-icons/io5"
 import { Link, useParams } from "react-router-dom"
 import { RiSendPlaneFill } from "react-icons/ri"
-import { DEFAULT_PIC, EmojiIcon } from "@assets"
+import { DEFAULT_PIC, DotSVG, EmojiIcon } from "@assets"
 import { TbArrowsDiagonal2 } from "react-icons/tb"
 import EmojiPicker from "emoji-picker-react"
 import { CommentType, PostType } from "@types"
 import { formatDate } from "@helpers"
 import { useAuth, usePost, useProfile } from "@context"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
+import { MdDelete, MdOutlineEdit } from "react-icons/md"
 
 interface PostProps {
   item: PostType
 }
 
 export const Post: React.FC<PostProps> = ({ item }) => {
-  const { likePost, disLikePost, getComments, postComment } = usePost()
+  const { likePost, disLikePost, getComments, postComment, savePost, unSavePost, deletePost, handleOpenImageCreator } = usePost()
   const { userData } = useAuth()
   const { handleFollow, handleUnfollow, handleClick: handleProfile, } = useProfile()
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
@@ -33,6 +35,7 @@ export const Post: React.FC<PostProps> = ({ item }) => {
   const emojiPickerRef = useRef<HTMLDivElement | null>(null)
   const params = useParams()
   const isFollowing = userData?.following.includes(item.postBy?._id)
+  const isSaved = userData?.savedPosts.includes(item._id)
 
   useEffect(() => {
     if (textRef.current && textRef.current.scrollHeight > textRef.current.clientHeight) {
@@ -111,6 +114,14 @@ export const Post: React.FC<PostProps> = ({ item }) => {
     }
   }
 
+  const handleSaving = (id: string) => {
+    if (isSaved) {
+      unSavePost(id)
+    } else {
+      savePost(id)
+    }
+  }
+
   return <div className="bg-white rounded-lg overflow-hidden border border-gray-200">
     <div className="px-4 py-3 flex items-start gap-3">
       <img
@@ -125,11 +136,23 @@ export const Post: React.FC<PostProps> = ({ item }) => {
           {formatDate(item.createdAt)} • <IoEarth />
         </p>
       </div>
-      {params.username !== userData?.userName &&
-        <button onClick={() => handleFollowing(item.postBy._id)} className={`flex items-center gap-2 active:bg-transparent px-2 py-1 rounded-md transition-all duration-200 ${isFollowing ? "text-gray-600 hover:bg-gray-50" : "text-[#0A66C2] hover:bg-[#EBF4FD]"}`}>
-          {isFollowing ? <FaCheck /> : <FaPlus />} {isFollowing ? "Following" : "Follow"}
-        </button>
-      }
+      <div className="flex gap-2 items-center">
+        {params.username !== userData?.userName &&
+          <button onClick={() => handleFollowing(item.postBy._id)} className={`flex items-center gap-2 active:bg-transparent px-2 py-1 rounded-md transition-all duration-200 ${isFollowing ? "text-gray-600 hover:bg-gray-50" : "text-[#0A66C2] hover:bg-[#EBF4FD]"}`}>
+            {isFollowing ? <FaCheck /> : <FaPlus />} {isFollowing ? "Following" : "Follow"}
+          </button>
+        }
+        <DropdownMenu>
+          <DropdownMenuTrigger className="hover:bg-gray-100 p-2 rounded-full outline-none"><DotSVG /></DropdownMenuTrigger>
+          <DropdownMenuContent className="w-60 md:-translate-x-24 -translate-x-10 translate-y-2 rounded-lg border-[1px] bg-white outline-none z-50">
+            <DropdownMenuItem onClick={() => handleSaving(item._id)} className="flex items-center rounded-lg gap-2 text-[17px] text-gray-700 hover:text-black transition-all duration-200 hover:bg-gray-100 outline-none cursor-pointer p-2">{isSaved ? <FaBookmark /> : <FaRegBookmark />} {isSaved ? "Unsave" : "Save"}</DropdownMenuItem>
+            {item.postBy._id === userData?._id && <>
+              <DropdownMenuItem onClick={() => deletePost(item._id)} className="flex rounded-lg items-center gap-2 text-[17px] text-gray-700 hover:text-black transition-all duration-200 hover:bg-gray-100 outline-none cursor-pointer p-2"><MdDelete /> Delete</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleOpenImageCreator(item.imageUrls, item.caption, item._id)} className="flex rounded-lg items-center gap-2 text-[17px] text-gray-700 hover:text-black transition-all duration-200 hover:bg-gray-100 outline-none cursor-pointer p-2"><MdOutlineEdit />Edit</DropdownMenuItem>
+            </>}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
 
     <div className="p-4">

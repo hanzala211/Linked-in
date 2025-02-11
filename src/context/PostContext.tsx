@@ -1,6 +1,6 @@
 import { useAuth } from "@context";
 import { postService } from "@services";
-import { PostContextTypes, PostType } from "@types";
+import { IUser, PostContextTypes, PostType } from "@types";
 import { createContext, ReactNode, useContext, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { toast } from "sonner";
@@ -8,7 +8,7 @@ import { toast } from "sonner";
 const PostContext = createContext<PostContextTypes | undefined>(undefined)
 
 export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { userData } = useAuth()
+  const { userData, setUserData } = useAuth()
   const [isPostCreatorOpen, setIsPostCreatorOpen] = useState<boolean>(false)
   const [isImageCreatorOpen, setIsImageCreatorOpen] = useState<boolean>(false)
   const [selectedImage, setSelectedImage] = useState<string[]>([])
@@ -22,6 +22,11 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isAllPostsLoading, setIsAllPostsLoading] = useState<boolean>(true)
   const [firstPosts, setFirstPosts] = useState<PostType[]>([])
   const [isPostsLoading, setIsPostsLoading] = useState<boolean>(true)
+  const [isSelectingImage, setIsSelectingImage] = useState<boolean>(true)
+  const [isEditingPost, setIsEditingPost] = useState<boolean>(false)
+  const [imagesToRemove, setImagesToRemove] = useState<string[]>([])
+  const [editPostID, setEditPostID] = useState<string>("")
+
 
   const createPost = async () => {
     try {
@@ -307,11 +312,153 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }
 
+  const savePost = async (postId: string) => {
+    try {
+      const { data } = await postService.savePost(postId)
+      if (data.status === "Post Saved Successfully") {
+        setUserData((prev: IUser | null) => prev ? {
+          ...prev,
+          savedPosts: [...prev.savedPosts, postId],
+        } : null)
+        toast.success(data.status, {
+          action: {
+            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
+            onClick: () => null,
+          },
+        });
+      } else {
+        toast.error(data.status, {
+          action: {
+            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
+            onClick: () => null,
+          },
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const unSavePost = async (postId: string) => {
+    try {
+      const { data } = await postService.unSavePost(postId)
+      if (data.status === "Post Unsaved Successfully") {
+        setUserData((prev: IUser | null) => prev ? {
+          ...prev,
+          savedPosts: prev.savedPosts.filter((item) => item !== postId),
+        } : null)
+        toast.success(data.status, {
+          action: {
+            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
+            onClick: () => null,
+          },
+        });
+      } else {
+        toast.error(data.status, {
+          action: {
+            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
+            onClick: () => null,
+          },
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const deletePost = async (postId: string) => {
+    try {
+      const { data } = await postService.deletePost(postId)
+      if (data.status === "Post Deleted Successfully") {
+        setFirstPosts((prev) => prev.filter((item) => item._id !== postId))
+        setAllPosts((prev) => prev.filter((item) => item._id !== postId))
+        toast.success(data.status, {
+          action: {
+            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
+            onClick: () => null,
+          },
+        });
+        setUserData((prev: IUser | null) => prev ? {
+          ...prev,
+          posts: prev.posts.filter((item) => item !== postId),
+          postsCount: prev.postsCount - 1
+        } : null)
+      } else {
+        toast.error(data.status, {
+          action: {
+            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
+            onClick: () => null,
+          },
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const editPost = async () => {
+    try {
+      setIsCreatingLoading(true)
+      const formData = new FormData()
+      formData.append("caption", captionValue)
+      if (selectedImage.length > 0) {
+        await Promise.all(selectedImage.map(async (item, index) => {
+          const response = await fetch(item)
+          const blob = await response.blob()
+          formData.append("image", blob, `image${index}.jpg`)
+        }))
+      }
+      if (imagesToRemove.length > 0) {
+        imagesToRemove.forEach((item) => {
+          formData.append("imagesToRemove[]", item)
+        });
+      }
+      const { data } = await postService.updatePost(editPostID, formData)
+      console.log(data)
+      if (data.status === "Post Updated Successfully") {
+        toast.success(data.status, {
+          action: {
+            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
+            onClick: () => null,
+          },
+        });
+        setAllPosts((prev) => [...prev.filter((item) => item._id !== editPostID), data.post])
+        setFirstPosts((prev) => [...prev.filter((item) => item._id !== editPostID), data.post])
+      } else {
+        toast.error(data.status, {
+          action: {
+            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
+            onClick: () => null,
+          },
+        })
+      }
+      setIsCreatingLoading(false)
+      setIsPostCreatorOpen(false)
+      setSelectedImage([])
+      setImagesToRemove([])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleSelectPost = (item: PostType) => {
     setAllPosts([item])
   }
 
-  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment, allPosts, setAllPosts, getAllPosts, isAllPostsLoading, setIsAllPostsLoading, handleSelectPost, getPost, firstPosts, setFirstPosts, isPostsLoading, getSixPosts }}>{children}</PostContext.Provider>
+  const handleOpenImageCreator = (data: string[], caption: string, id: string) => {
+    setIsEditingPost(true)
+    setEditPostID(id)
+    setCaptionValue(caption)
+    if (data.length > 0) {
+      setIsImageCreatorOpen(true)
+      setSelectedImage(data)
+      setIsSelectingImage(false)
+    } else {
+      setIsPostCreatorOpen(true)
+    }
+  }
+
+  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment, allPosts, setAllPosts, getAllPosts, isAllPostsLoading, setIsAllPostsLoading, handleSelectPost, getPost, firstPosts, setFirstPosts, isPostsLoading, getSixPosts, savePost, unSavePost, deletePost, handleOpenImageCreator, isSelectingImage, setIsSelectingImage, isEditingPost, setIsEditingPost, imagesToRemove, setImagesToRemove, editPost }}>{children}</PostContext.Provider>
 }
 
 export const usePost = (): PostContextTypes => {

@@ -54,9 +54,9 @@ export const PostPage: React.FC = () => {
       <div className="space-y-2">
         {isAllPostsLoading ? Array.from({ length: 6 }, (_, i) => (
           <PostLoader key={i} />
-        )) : allPosts.map((item, index) => (
+        )) : allPosts.length > 0 ? allPosts.map((item, index) => (
           <Post item={item} key={index} />
-        ))}
+        )) : <div className="w-full flex justify-center py-10 md:py-0 md:mt-4 text-[20px] font-semibold"><h1>Post Not Found</h1></div>}
       </div>
     </div>
   </section>

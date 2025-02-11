@@ -10,7 +10,7 @@ import { SyncLoader } from "react-spinners";
 
 
 export const PostCreator: React.FC = () => {
-  const { isPostCreatorOpen, setIsPostCreatorOpen, selectedImage, setIsImageCreatorOpen, setSelectedImage, captionValue, setCaptionValue, createPost, isCreatingLoading } = usePost()
+  const { isPostCreatorOpen, setIsPostCreatorOpen, selectedImage, setIsImageCreatorOpen, setSelectedImage, captionValue, setCaptionValue, createPost, isCreatingLoading, isEditingPost, editPost } = usePost()
   const [isEmojiPicker, setIsEmojiPicker] = useState<boolean>(false)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const emojiIconRef = useRef<HTMLButtonElement | null>(null)
@@ -53,7 +53,11 @@ export const PostCreator: React.FC = () => {
   }
 
   const handleSubmit = () => {
-    createPost()
+    if (!isEditingPost) {
+      createPost()
+    } else {
+      editPost()
+    }
   }
 
   return (
@@ -106,7 +110,7 @@ export const PostCreator: React.FC = () => {
         }
 
         <div className="py-5 w-full relative border-gray-300 border-t-[1px]">
-          <button onClick={handleSubmit} disabled={!isCreatingLoading ? captionValue.length === 0 : isCreatingLoading} className={`px-4 py-1.5 absolute right-2 top-[20%] rounded-3xl ${captionValue.length > 0 ? "bg-[#0A66C2] text-white" : "bg-[#E8E8E8] opacity-70"}`}> {isCreatingLoading ? <SyncLoader color="white" size={10} /> : "Post"}</button>
+          <button onClick={handleSubmit} disabled={!isCreatingLoading ? captionValue.length === 0 : isCreatingLoading} className={`px-4 py-1.5 absolute right-2 top-[20%] rounded-3xl ${captionValue.length > 0 ? "bg-[#0A66C2] text-white" : "bg-[#E8E8E8] opacity-70"}`}> {isCreatingLoading ? <SyncLoader color="white" size={10} /> : isEditingPost ? "Update" : "Post"}</button>
         </div>
       </div>
 

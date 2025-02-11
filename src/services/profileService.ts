@@ -8,13 +8,13 @@ export const profileService = {
     isAuthIncluded: true
   }),
   updateProfilePic: (data: unknown) => sendRequest({
-    method: "POST",
+    method: "PATCH",
     url: "/profile/profile-pic",
     data,
     isAuthIncluded: true
   }),
   updateProfileBanner: (data: unknown) => sendRequest({
-    method: "POST",
+    method: "PATCH",
     url: "/profile/profile-banner",
     data,
     isAuthIncluded: true

@@ -14,7 +14,7 @@ export const authService = {
         isAuthIncluded: false
     }),
     updateName: (data: unknown) => sendRequest({
-        method: "POST",
+        method: "PATCH",
         url: "/auth/update-name",
         data,
         isAuthIncluded: true

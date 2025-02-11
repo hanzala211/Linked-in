@@ -20,6 +20,7 @@ export interface IUser {
   followerCount: number,
   following: string[],
   followingCount: number,
+  savedPosts: string[]
 }
 
 export interface IExperience {
