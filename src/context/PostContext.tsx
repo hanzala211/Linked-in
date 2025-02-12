@@ -16,7 +16,7 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isCreatingLoading, setIsCreatingLoading] = useState<boolean>(false)
   const [captionValue, setCaptionValue] = useState<string>("")
   const [currentIndex, setCurrentIndex] = useState<number>(0)
-  const [hasMore, setHasMore] = useState<boolean>(false)
+  const [hasMore, setHasMore] = useState<boolean>(true)
   const [feedPosts, setFeedPosts] = useState<PostType[]>([])
   const [isFeedPostsLoading, setIsFeedPostsLoading] = useState<boolean>(true)
   const [allPosts, setAllPosts] = useState<PostType[]>([])

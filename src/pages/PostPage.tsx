@@ -7,7 +7,7 @@ export const PostPage: React.FC = () => {
   const { userData } = useAuth()
   const { selectedProfile, setSelectedProfile } = useProfile()
   const { handleSearch } = useSearch()
-  const { isAllPostsLoading, getAllPosts, allPosts, setIsAllPostsLoading, getPost } = usePost()
+  const { isAllPostsLoading, getAllPosts, allPosts, getPost } = usePost()
   const params = useParams()
   const isCurrentProfile = params.username === userData?.userName;
 
@@ -34,14 +34,11 @@ export const PostPage: React.FC = () => {
     if (params.id && allPosts.length === 0) {
       getPost(params.id || "", false)
     }
-  }, [])
+  }, [selectedProfile?._id, params._id])
 
   useEffect(() => {
     const userId = isCurrentProfile ? userData?._id : selectedProfile?._id;
-    if (!userId || params.id) {
-      setIsAllPostsLoading(false)
-      return;
-    }
+    if (!userId || params.id) return;
     getAllPosts(userId)
   }, [selectedProfile?._id, userData?._id, params.username])
 
@@ -54,7 +51,7 @@ export const PostPage: React.FC = () => {
       <div className="space-y-2">
         {isAllPostsLoading ? Array.from({ length: 6 }, (_, i) => (
           <PostLoader key={i} />
-        )) : allPosts.length > 0 ? allPosts.map((item, index) => (
+        )) : allPosts.length > 0 && !isAllPostsLoading ? allPosts.map((item, index) => (
           <Post item={item} key={index} />
         )) : <div className="w-full flex justify-center py-10 md:py-0 md:mt-4 text-[20px] font-semibold"><h1>Post Not Found</h1></div>}
       </div>

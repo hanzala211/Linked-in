@@ -13,6 +13,35 @@ import { DEFAULT_PIC } from '@assets';
 import { IUser } from '@types';
 import { toast } from 'sonner';
 import { RxCross2 } from 'react-icons/rx';
+import Mention from "@tiptap/extension-mention";
+
+const CustomMention = Mention.extend({
+  addAttributes() {
+    return {
+      id: {},
+      label: {},
+      username: {},
+    };
+  },
+
+  renderHTML({ node }) {
+    return [
+      "a",
+      {
+        class: "mention bg-blue-100 text-blue-600 px-1 rounded",
+        href: `/${node.attrs.username}`,
+        target: "_blank",
+        rel: "noopener noreferrer",
+      },
+      `@${node.attrs.label}`,
+    ];
+  },
+}).configure({
+  HTMLAttributes: {
+    class: "mention",
+  },
+});
+
 
 
 const NestedHeading = Heading.extend({
@@ -45,41 +74,40 @@ export const ArticlePage: React.FC = () => {
 
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({
-        heading: false,
-        blockquote: false,
-      }),
+      StarterKit.configure({ heading: false, blockquote: false }),
       Bold,
       Italic,
       NestedHeading,
       NestedBlockquote,
-      TextAlign.configure({
-        types: ['paragraph', 'heading', 'blockquote', 'codeBlock', 'listItem'],
-      }),
-      Placeholder.configure({
-        placeholder: 'Write here. You can also include @mentions',
-      }),
+      TextAlign.configure({ types: ["paragraph", "heading", "blockquote", "codeBlock", "listItem"] }),
+      Placeholder.configure({ placeholder: "Write here. You can also include @mentions" }),
+      CustomMention,
     ],
     content: ``,
     onUpdate: ({ editor }) => {
       setEditorContent(editor.getHTML());
+
       const htmlText = editor.getHTML();
-      const atIndex = htmlText.indexOf("@")
+      const atIndex = htmlText.lastIndexOf("@");
       const afterText = htmlText.slice(atIndex + 1);
-      const firstSpace = afterText.indexOf(" ")
+      const firstSpace = afterText.indexOf(" ");
+
       if (firstSpace === -1 && atIndex !== -1) {
-        setIsMentionOpen(true)
+        setIsMentionOpen(true);
         if (followData.length === 0) {
-          getFollow()
+          getFollow();
         }
       } else {
-        setIsMentionOpen(false)
+        setIsMentionOpen(false);
       }
       setMentions((prev) =>
-        prev.filter((item: IUser) => htmlText.includes(item.firstName || item.lastName || ""))
+        prev.filter((item: IUser) =>
+          htmlText.includes(item.firstName || item.lastName || "")
+        )
       );
-    },
+    }
   });
+
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -98,23 +126,24 @@ export const ArticlePage: React.FC = () => {
       editor?.chain().setParagraph().run();
     }
   }
+
   const handleClick = (fullName: string, item: IUser) => {
-    setEditorContent((prev: string) => {
-      const atIndex = prev.lastIndexOf("@");
+    const { from } = editor!.state.selection;
+    const atIndex = editor?.getText().lastIndexOf("@", from);
 
-      if (atIndex === -1) return prev;
+    if (atIndex !== -1) {
+      editor?.commands.deleteRange({ from: atIndex || 0, to: from });
+    }
 
-      const beforeText = prev.slice(0, atIndex);
-      const afterText = prev.slice(atIndex).split(" ")[1] ?? "";
-
-      const updatedContent = `${beforeText} ${fullName} ${afterText}`.trim();
-
-      setTimeout(() => {
-        editor?.commands.setContent(updatedContent);
-      }, 0);
-
-      return updatedContent;
+    editor?.commands.insertContent({ // it inserts contnent to node for the custom mentions and the styling is in index.css
+      type: "mention",
+      attrs: {
+        id: item._id,
+        label: fullName,
+        username: item.userName
+      },
     });
+
     setIsMentionOpen(false);
     setMentions((prev: IUser[]) => [...prev, item]);
   };
@@ -183,7 +212,7 @@ export const ArticlePage: React.FC = () => {
 
       <div className="w-full max-w-3xl mx-auto">
 
-        <div className="bg-transparent p-4 mt-10">
+        <div className="bg-transparent p-3 mt-10">
           <input
             type="text"
             value={title}
@@ -200,7 +229,7 @@ export const ArticlePage: React.FC = () => {
             className="prose prose-sm outline-none [&_h1]:font-bold [&_h2]:font-bold [&_h3]:font-bold [&_p]:font-normal "
           />
           {isMentionOpen && followData.length > 0 &&
-            <div className='absolute h-52 w-96 top-14 left-0 overflow-auto bg-white z-20 border-[1px] rounded-lg'>
+            <div className='absolute h-fit w-96 top-14 left-0 overflow-auto bg-white z-20 border-[1px] rounded-lg'>
               {followData.map((item, index, arr) => (
                 <div onClick={() => handleClick(`${item.firstName} ${item.lastName}`, item)} key={index} className={`flex hover:bg-gray-100 transition-all duration-200 cursor-pointer items-center gap-4 py-4 px-4 ${index !== arr.length - 1 ? "border-b-[1px]" : ""}`}>
                   <img src={item.profilePic || DEFAULT_PIC} alt={`${item.firstName} Profile`} className='w-12 h-12 rounded-full' />

@@ -67,3 +67,11 @@ body::-webkit-scrollbar {
 .ProseMirror-focused {
 	outline: none;
 }
+
+.mention {
+	color: #0a66c2; /* LinkedIn blue */
+	font-weight: bold;
+	background-color: rgba(10, 102, 194, 0.1);
+	padding: 2px 4px;
+	border-radius: 4px;
+}

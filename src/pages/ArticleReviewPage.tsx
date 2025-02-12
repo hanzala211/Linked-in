@@ -11,7 +11,7 @@ import { Link, useParams } from "react-router-dom"
 
 export const ArtilceReviewPage: React.FC = () => {
   const { userData } = useAuth()
-  const { likePost, disLikePost, selectedArticle, postComment, getComments, getPost } = usePost()
+  const { likePost, disLikePost, selectedArticle, postComment, getComments, getPost, handleSelectPost } = usePost()
   const [comments, setComments] = useState<CommentType[]>([])
   const [commentValue, setCommentValue] = useState<string>("")
   const [page, setPage] = useState<number>(1)
@@ -22,7 +22,9 @@ export const ArtilceReviewPage: React.FC = () => {
     if (params.id && selectedArticle === null) {
       getPost(params.id || "", true)
     }
-    findComments()
+    if (selectedArticle !== null) {
+      findComments()
+    }
   }, [selectedArticle?._id])
 
   const findComments = async () => {
@@ -43,7 +45,7 @@ export const ArtilceReviewPage: React.FC = () => {
 
       return updatedContent.replace(
         mentionRegex,
-        `<a href="/${mention.userName}" class="text-[#0A66C2] bg-[#F8FAFD] p-1 rounded-md font-semibold hover:underline">${fullName}</a>`
+        `<a href="/${mention.userName}" target="_blank" class="text-[#0A66C2] bg-[#F8FAFD] p-1 rounded-md font-semibold hover:underline">${fullName}</a>`
       );
     }, content);
   };
@@ -90,10 +92,13 @@ export const ArtilceReviewPage: React.FC = () => {
         <Link to={`/${selectedArticle?.postBy.userName}/update/urn:li:activity/${selectedArticle?._id}`} className="flex gap-1.5 items-center hover:bg-[#E5F0FB] p-1 rounded-md transition-all duration-200 text-[#0A66C2] font-semibold text-[18px]"><IoIosEye className="text-[20px]" />View Post</Link>
       </div>
       <div className="w-full mt-4 px-4 flex md:justify-between md:gap-0 gap-10 flex-col md:flex-row">
-
         <div className="flex flex-col gap-4 w-[65%]">
-          <h1 className="md:text-[35px] text-[25px]">{selectedArticle?.title}</h1>
-          <Link to={`/${selectedArticle?.postBy.userName}`} className="flex gap-5 w-fit items-center">
+          <h1 className="md:text-[35px] text-[25pxn]">{selectedArticle?.title}</h1>
+          <Link to={`/${selectedArticle?.postBy.userName}`} onClick={() => {
+            if (selectedArticle !== null) {
+              handleSelectPost(selectedArticle)
+            }
+          }} className="flex gap-5 w-fit items-center">
             <img src={selectedArticle?.postBy.profilePic || DEFAULT_PIC} alt={`${selectedArticle?.postBy.firstName} Profile Pic`} className="w-10 h-10 rounded-full" />
             <div>
               <h1 className="text-[17px] hover:underline">{selectedArticle?.postBy.firstName} {selectedArticle?.postBy.lastName}</h1>

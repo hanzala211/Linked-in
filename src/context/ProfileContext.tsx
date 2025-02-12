@@ -48,7 +48,6 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   }, [userData?._id])
 
-
   const editProfile = async (sendData: unknown) => {
     try {
       setIsEditProfileLoading(true)
