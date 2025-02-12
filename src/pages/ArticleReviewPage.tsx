@@ -89,10 +89,10 @@ export const ArtilceReviewPage: React.FC = () => {
         <button className="flex gap-1.5 items-center hover:bg-[#E5F0FB] p-1 rounded-md transition-all duration-200 text-[#0A66C2] font-semibold text-[18px]"><MdOutlineModeEdit className="text-[20px]" />Edit Article</button>
         <Link to={`/${selectedArticle?.postBy.userName}/update/urn:li:activity/${selectedArticle?._id}`} className="flex gap-1.5 items-center hover:bg-[#E5F0FB] p-1 rounded-md transition-all duration-200 text-[#0A66C2] font-semibold text-[18px]"><IoIosEye className="text-[20px]" />View Post</Link>
       </div>
-      <div className="w-full mt-4 px-4 flex justify-between">
+      <div className="w-full mt-4 px-4 flex md:justify-between md:gap-0 gap-10 flex-col md:flex-row">
 
         <div className="flex flex-col gap-4 w-[65%]">
-          <h1 className="text-[35px]">{selectedArticle?.title}</h1>
+          <h1 className="md:text-[35px] text-[25px]">{selectedArticle?.title}</h1>
           <Link to={`/${selectedArticle?.postBy.userName}`} className="flex gap-5 w-fit items-center">
             <img src={selectedArticle?.postBy.profilePic || DEFAULT_PIC} alt={`${selectedArticle?.postBy.firstName} Profile Pic`} className="w-10 h-10 rounded-full" />
             <div>
