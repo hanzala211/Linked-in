@@ -80,5 +80,11 @@ export const postService = {
     url: `/post/create-article`,
     data,
     isAuthIncluded: true
+  }),
+  updateArticle: (data: unknown, postId: string) => sendRequest({
+    method: "PATCH",
+    url: `/post/update-article/${postId}`,
+    data,
+    isAuthIncluded: true
   })
 }

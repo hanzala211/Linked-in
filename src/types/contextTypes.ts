@@ -83,7 +83,10 @@ export interface PostContextTypes {
     createArticle: () => void,
     selectedArticle: PostType | null,
     setSelectedArticle: React.Dispatch<React.SetStateAction<PostType | null>>,
-    handleSelectArticle: (item: PostType) => void
+    handleSelectArticle: (item: PostType) => void,
+    isEditingArticle: boolean,
+    setIsEditingArticle: React.Dispatch<React.SetStateAction<boolean>>,
+    editArticle: () => void
 }
 
 export interface ProfileContextTypes {

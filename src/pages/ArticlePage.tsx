@@ -42,8 +42,6 @@ const CustomMention = Mention.extend({
   },
 });
 
-
-
 const NestedHeading = Heading.extend({
   renderHTML({ node, HTMLAttributes }) {
     const level = node.attrs.level;
@@ -63,14 +61,36 @@ const NestedBlockquote = Blockquote.extend({
 
 export const ArticlePage: React.FC = () => {
   const { getFollow, followData } = useProfile()
-  const { title, setTitle, editorContent, setEditorContent, setMentions, setIsPostCreatorOpen, setIsArticleCreator } = usePost()
+  const { title, setTitle, editorContent, setEditorContent, setMentions, setIsPostCreatorOpen, setIsArticleCreator, selectedArticle, setCaptionValue } = usePost()
   const [isMentionOpen, setIsMentionOpen] = useState<boolean>(false)
 
-
   useEffect(() => {
-    setTitle("")
-    setEditorContent("")
-  }, [])
+    setTitle(selectedArticle?.title || "")
+    setEditorContent(selectedArticle?.articleContent || "")
+    if (editor && selectedArticle?.mentions) {
+      setMentions(selectedArticle?.mentions || [])
+      selectedArticle?.mentions.forEach((item) => {
+        editor?.commands.insertContent({
+          type: "mention",
+          attrs: {
+            id: item._id,
+            label: `${item.firstName} ${item.lastName}`,
+            username: item.userName
+          },
+        });
+        if (selectedArticle.articleContent) {
+          const mentionedIndex = selectedArticle?.articleContent.indexOf("@")
+          const beforeText = selectedArticle?.articleContent.slice(0, mentionedIndex);
+          const afterText = selectedArticle?.articleContent.slice(mentionedIndex).replace(`@${item.firstName} ${item.lastName}`, "");
+          // console.log(beforeText, selectedArticle.articleContent?.slice(beforeText.length, selectedArticle.articleContent.lastIndexOf(afterText[0])), afterText)
+
+          editor.commands.setContent(`${beforeText}${afterText}`)
+        }
+      })
+    }
+  }, [selectedArticle])
+  console.log(selectedArticle)
+
 
   const editor = useEditor({
     extensions: [
@@ -108,7 +128,6 @@ export const ArticlePage: React.FC = () => {
     }
   });
 
-
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     editor?.chain().focus();
@@ -134,6 +153,7 @@ export const ArticlePage: React.FC = () => {
     if (atIndex !== -1) {
       editor?.commands.deleteRange({ from: atIndex || 0, to: from });
     }
+    setMentions((prev: IUser[]) => [...prev, item]);
 
     editor?.commands.insertContent({ // it inserts contnent to node for the custom mentions and the styling is in index.css
       type: "mention",
@@ -145,13 +165,15 @@ export const ArticlePage: React.FC = () => {
     });
 
     setIsMentionOpen(false);
-    setMentions((prev: IUser[]) => [...prev, item]);
   };
 
   const handlePostOpen = () => {
     if (title.length > 0 && editorContent.length > 0) {
       setIsPostCreatorOpen(true)
       setIsArticleCreator(true)
+      if (selectedArticle?.caption) {
+        setCaptionValue(selectedArticle.caption)
+      }
     } else {
       toast.error("Title And Body Can't be empty", {
         action: {

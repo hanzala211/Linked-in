@@ -10,7 +10,7 @@ import { SyncLoader } from "react-spinners";
 
 
 export const PostCreator: React.FC = () => {
-  const { isPostCreatorOpen, setIsPostCreatorOpen, selectedImage, setIsImageCreatorOpen, setSelectedImage, captionValue, setCaptionValue, createPost, isCreatingLoading, isEditingPost, editPost, isArticleCreator, setIsArticleCreator, title, createArticle } = usePost()
+  const { isPostCreatorOpen, setIsPostCreatorOpen, selectedImage, setIsImageCreatorOpen, setSelectedImage, captionValue, setCaptionValue, createPost, isCreatingLoading, isEditingPost, editPost, isArticleCreator, setIsArticleCreator, title, createArticle, isEditingArticle, editArticle, setIsEditingArticle } = usePost()
   const [isEmojiPicker, setIsEmojiPicker] = useState<boolean>(false)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const emojiIconRef = useRef<HTMLButtonElement | null>(null)
@@ -51,18 +51,24 @@ export const PostCreator: React.FC = () => {
     setCaptionValue("")
     setSelectedImage([])
     setIsArticleCreator(false)
+    setIsEditingArticle(false)
   }
 
   const handleSubmit = () => {
-    if (isArticleCreator && !isEditingPost) {
-      createArticle();
-    } else if (!isEditingPost) {
-      createPost();
+    if (isArticleCreator) {
+      if (isEditingArticle) {
+        editArticle();
+      } else {
+        createArticle();
+      }
     } else {
-      editPost();
+      if (isEditingPost) {
+        editPost();
+      } else {
+        createPost();
+      }
     }
-
-  }
+  };
 
   return (
     <>

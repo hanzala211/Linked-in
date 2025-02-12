@@ -1,10 +1,9 @@
 import { useAuth } from "@context";
+import { errorToast, successToast } from "@helpers";
 import { postService } from "@services";
 import { IUser, PostContextTypes, PostType } from "@types";
 import { createContext, ReactNode, useContext, useState } from "react";
-import { RxCross2 } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 const PostContext = createContext<PostContextTypes | undefined>(undefined)
 
@@ -32,6 +31,7 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [mentions, setMentions] = useState<IUser[]>([])
   const [isArticleCreator, setIsArticleCreator] = useState<boolean>(false)
   const [selectedArticle, setSelectedArticle] = useState<PostType | null>(null)
+  const [isEditingArticle, setIsEditingArticle] = useState<boolean>(false)
   const navigate = useNavigate()
 
 
@@ -50,19 +50,10 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const { data } = await postService.createPost(formData)
       console.log(data)
       if (data.status === "Post Created Successfully") {
-        toast.success(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        });
+        successToast(data.status)
+
       } else {
-        toast.error(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        })
+        errorToast(data.status)
       }
     } catch (error) {
       console.log(error)
@@ -160,19 +151,9 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       );
       const { data } = await postService.likePost(postId)
       if (data.status === "Post Liked Successfully") {
-        toast.success(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        });
+        successToast(data.status)
       } else {
-        toast.error(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        })
+        errorToast(data.status)
         setFeedPosts((prev) =>
           prev.map((item) =>
             item._id === postId
@@ -244,19 +225,9 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       );
       const { data } = await postService.disLikePost(postId)
       if (data.status === "Post DisLiked Successfully") {
-        toast.success(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        });
+        successToast(data.status)
       } else {
-        toast.error(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        })
+        errorToast(data.status)
         setFeedPosts((prev: PostType[]) =>
           prev.map((item) =>
             item._id === postId
@@ -366,19 +337,9 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           ...prev,
           savedPosts: [...prev.savedPosts, postId],
         } : null)
-        toast.success(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        });
+        successToast(data.status)
       } else {
-        toast.error(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        })
+        errorToast(data.status)
       }
     } catch (error) {
       console.log(error)
@@ -393,19 +354,9 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           ...prev,
           savedPosts: prev.savedPosts.filter((item) => item !== postId),
         } : null)
-        toast.success(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        });
+        successToast(data.status)
       } else {
-        toast.error(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        })
+        errorToast(data.status)
       }
     } catch (error) {
       console.log(error)
@@ -418,24 +369,14 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (data.status === "Post Deleted Successfully") {
         setFirstPosts((prev) => prev.filter((item) => item._id !== postId))
         setAllPosts((prev) => prev.filter((item) => item._id !== postId))
-        toast.success(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        });
+        successToast(data.status)
         setUserData((prev: IUser | null) => prev ? {
           ...prev,
           posts: prev.posts.filter((item) => item !== postId),
           postsCount: prev.postsCount - 1
         } : null)
       } else {
-        toast.error(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        })
+        errorToast(data.status)
       }
     } catch (error) {
       console.log(error)
@@ -462,21 +403,11 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const { data } = await postService.updatePost(editPostID, formData)
       console.log(data)
       if (data.status === "Post Updated Successfully") {
-        toast.success(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        });
+        successToast(data.status)
         setAllPosts((prev) => [...prev.filter((item) => item._id !== editPostID), data.post])
         setFirstPosts((prev) => [...prev.filter((item) => item._id !== editPostID), data.post])
       } else {
-        toast.error(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        })
+        errorToast(data.status)
       }
       setIsCreatingLoading(false)
       setIsPostCreatorOpen(false)
@@ -493,19 +424,9 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const { data } = await postService.createArticle({ caption: captionValue, articleContent: editorContent, title, mentions })
       console.log(data)
       if (data.status === "Article Created Successfully") {
-        toast.success(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        });
+        successToast(data.status)
       } else {
-        toast.error(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        })
+        errorToast(data.status)
       }
       setIsCreatingLoading(false)
       setIsPostCreatorOpen(false)
@@ -514,6 +435,26 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setMentions([])
       setCaptionValue("")
       navigate("/feed")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const editArticle = async () => {
+    try {
+      setIsCreatingLoading(true)
+      const { data } = await postService.updateArticle({ articleContent: editorContent, mentions, title, caption: captionValue }, selectedArticle?._id || "")
+      console.log(data)
+      if (data.status === "Article Updated Successfully") {
+        successToast(data.status)
+        setSelectedArticle(data.article)
+      } else {
+        errorToast(data.status)
+      }
+      setIsCreatingLoading(false)
+      setIsPostCreatorOpen(false)
+      setIsEditingArticle(false)
+      navigate(-1)
     } catch (error) {
       console.log(error)
     }
@@ -540,7 +481,7 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setSelectedArticle(item)
   }
 
-  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment, allPosts, setAllPosts, getAllPosts, isAllPostsLoading, setIsAllPostsLoading, handleSelectPost, getPost, firstPosts, setFirstPosts, isPostsLoading, getSixPosts, savePost, unSavePost, deletePost, handleOpenImageCreator, isSelectingImage, setIsSelectingImage, isEditingPost, setIsEditingPost, imagesToRemove, setImagesToRemove, editPost, title, setTitle, mentions, setMentions, editorContent, setEditorContent, isArticleCreator, setIsArticleCreator, createArticle, selectedArticle, setSelectedArticle, handleSelectArticle }}>{children}</PostContext.Provider>
+  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment, allPosts, setAllPosts, getAllPosts, isAllPostsLoading, setIsAllPostsLoading, handleSelectPost, getPost, firstPosts, setFirstPosts, isPostsLoading, getSixPosts, savePost, unSavePost, deletePost, handleOpenImageCreator, isSelectingImage, setIsSelectingImage, isEditingPost, setIsEditingPost, imagesToRemove, setImagesToRemove, editPost, title, setTitle, mentions, setMentions, editorContent, setEditorContent, isArticleCreator, setIsArticleCreator, createArticle, selectedArticle, setSelectedArticle, handleSelectArticle, isEditingArticle, setIsEditingArticle, editArticle }}>{children}</PostContext.Provider>
 }
 
 export const usePost = (): PostContextTypes => {

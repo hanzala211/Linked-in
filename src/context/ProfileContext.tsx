@@ -1,9 +1,8 @@
 import { useAuth } from "@context";
+import { errorToast, infoToast, successToast } from "@helpers";
 import { profileService, suggestionsService } from "@services";
 import { IEducation, IExperience, IUser, ProfileContextTypes } from "@types";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { RxCross2 } from "react-icons/rx";
-import { toast } from "sonner";
 
 const ProfileContext = createContext<ProfileContextTypes | undefined>(undefined)
 
@@ -54,20 +53,10 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       const { data } = await profileService.editProfile(sendData);
       console.log(data)
       if (data.status === "Profile Updated Successfully") {
-        toast.success(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        });
+        successToast(data.status)
         setUserData(data.data)
       } else {
-        toast.error(data.message, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        })
+        errorToast(data.status)
       }
       setIsEditProfileLoading(false)
       setIsEditingProfile(false)
@@ -89,20 +78,10 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       }
       const { data } = await profileService.updateProfilePic(formData)
       if (data.status === "Profile Picture Updated Successfully") {
-        toast.success(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        });
+        successToast(data.status)
         setUserData(data.updatedPic)
       } else {
-        toast.error(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        })
+        errorToast(data.status)
       }
       setIsUpdatingProfilePic(false)
       setSelectedProfilePic([])
@@ -125,20 +104,10 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       }
       const { data } = await profileService.updateProfileBanner(formData)
       if (data.status === "Profile Banner Updated Successfully") {
-        toast.success(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        });
+        successToast(data.status)
         setUserData(data.updatedPic)
       } else {
-        toast.error(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        })
+        errorToast(data.status)
       }
       setIsUpdatingProfileBanner(false)
       setSelectedBanner([])
@@ -152,20 +121,10 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     try {
       const { data } = await profileService.deleteProfilePic();
       if (data.status === "Profile Picture Removed Successfully") {
-        toast.success(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        });
+        successToast(data.status)
         setUserData(data.data)
       } else {
-        toast.error(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        })
+        errorToast(data.status)
       }
       setIsAddingProfile(false)
     } catch (error) {
@@ -177,20 +136,10 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     try {
       const { data } = await profileService.deleteProfileBanner();
       if (data.status === "Banner Removed Successfully") {
-        toast.success(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        });
+        successToast(data.status)
         setUserData(data.data)
       } else {
-        toast.error(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        })
+        errorToast(data.status)
       }
       setIsAddingBanner(false)
     } catch (error) {
@@ -202,12 +151,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     try {
       if (!id) return;
 
-      toast.info("Preparing Profile PDF", {
-        action: {
-          label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-          onClick: () => null,
-        },
-      });
+      infoToast("Preparing Profile PDF")
 
       const res = await profileService.downloadPDF(id);
 
@@ -222,7 +166,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       document.body.removeChild(a);
     } catch (error) {
       console.log(error);
-      toast.error("Failed to download PDF");
+      errorToast("Error in Downloading the PDF")
     }
   };
 
@@ -258,12 +202,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     try {
       const { data } = await profileService.followUser(id)
       if (data.status === "User Followed Successfully") {
-        toast.success(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        });
+        successToast(data.status)
         setSuggestions((prev) =>
           prev.map((item) =>
             item._id === id ? { ...item, followerCount: (item.followerCount || 0) + 1, followers: [...item.followers, userData?._id] } : item
@@ -294,12 +233,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     try {
       const { data } = await profileService.unFollowUser(id)
       if (data.status === "User Unfollowed Successfully") {
-        toast.success(data.status, {
-          action: {
-            label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-            onClick: () => null,
-          },
-        });
+        successToast(data.status)
         setSuggestions((prev) =>
           prev.map((item) =>
             item._id === id ? { ...item, followerCount: (item.followerCount || 0) - 1, followers: item.followers.filter((item) => item !== userData._id) } : item

@@ -7,7 +7,7 @@ export const PostPage: React.FC = () => {
   const { userData } = useAuth()
   const { selectedProfile, setSelectedProfile } = useProfile()
   const { handleSearch } = useSearch()
-  const { isAllPostsLoading, getAllPosts, allPosts, getPost } = usePost()
+  const { isAllPostsLoading, getAllPosts, allPosts, getPost, setIsAllPostsLoading } = usePost()
   const params = useParams()
   const isCurrentProfile = params.username === userData?.userName;
 
@@ -33,6 +33,8 @@ export const PostPage: React.FC = () => {
   useEffect(() => {
     if (params.id && allPosts.length === 0) {
       getPost(params.id || "", false)
+    } else {
+      setIsAllPostsLoading(false)
     }
   }, [selectedProfile?._id, params._id])
 

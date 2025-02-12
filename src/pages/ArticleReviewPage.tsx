@@ -7,16 +7,18 @@ import { useEffect, useState } from "react"
 import { IoIosEye } from "react-icons/io"
 import { MdOutlineModeEdit } from "react-icons/md"
 import { TbArrowsDiagonal2 } from "react-icons/tb"
-import { Link, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 
 export const ArtilceReviewPage: React.FC = () => {
   const { userData } = useAuth()
-  const { likePost, disLikePost, selectedArticle, postComment, getComments, getPost, handleSelectPost } = usePost()
+  const { likePost, disLikePost, selectedArticle, postComment, getComments, getPost, handleSelectPost, handleSelectArticle, setIsEditingArticle } = usePost()
   const [comments, setComments] = useState<CommentType[]>([])
   const [commentValue, setCommentValue] = useState<string>("")
   const [page, setPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
   const params = useParams()
+  const navigate = useNavigate()
+  const isCurrentProfile = userData?.posts.includes(params.id || "");
 
   useEffect(() => {
     if (params.id && selectedArticle === null) {
@@ -84,11 +86,18 @@ export const ArtilceReviewPage: React.FC = () => {
     }
   }
 
+  const handleEdit = () => {
+    if (selectedArticle !== null) {
+      handleSelectArticle(selectedArticle)
+      navigate(`/article/edit`)
+      setIsEditingArticle(true)
+    }
+  }
 
   return <div className="bg-white min-h-screen w-full pt-20">
     <div className="lg:max-w-[70%] md:max-w-[85%] max-w-full mx-auto">
       <div className="bg-[#F8FAFD] p-2 rounded-lg flex gap-4 border-[1px] items-center">
-        <button className="flex gap-1.5 items-center hover:bg-[#E5F0FB] p-1 rounded-md transition-all duration-200 text-[#0A66C2] font-semibold text-[18px]"><MdOutlineModeEdit className="text-[20px]" />Edit Article</button>
+        {isCurrentProfile && <button onClick={handleEdit} className="flex gap-1.5 items-center hover:bg-[#E5F0FB] p-1 rounded-md transition-all duration-200 text-[#0A66C2] font-semibold text-[18px]"><MdOutlineModeEdit className="text-[20px]" />Edit Article</button>}
         <Link to={`/${selectedArticle?.postBy.userName}/update/urn:li:activity/${selectedArticle?._id}`} className="flex gap-1.5 items-center hover:bg-[#E5F0FB] p-1 rounded-md transition-all duration-200 text-[#0A66C2] font-semibold text-[18px]"><IoIosEye className="text-[20px]" />View Post</Link>
       </div>
       <div className="w-full mt-4 px-4 flex md:justify-between md:gap-0 gap-10 flex-col md:flex-row">
