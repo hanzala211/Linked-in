@@ -61,13 +61,13 @@ const NestedBlockquote = Blockquote.extend({
 
 export const ArticlePage: React.FC = () => {
   const { getFollow, followData } = useProfile()
-  const { title, setTitle, editorContent, setEditorContent, setMentions, setIsPostCreatorOpen, setIsArticleCreator, selectedArticle, setCaptionValue } = usePost()
+  const { title, setTitle, editorContent, setEditorContent, setMentions, setIsPostCreatorOpen, setIsArticleCreator, selectedArticle, setCaptionValue, isEditingArticle } = usePost()
   const [isMentionOpen, setIsMentionOpen] = useState<boolean>(false)
 
   useEffect(() => {
-    setTitle(selectedArticle?.title || "")
-    setEditorContent(selectedArticle?.articleContent || "")
-    if (editor && selectedArticle?.mentions) {
+    if (editor && selectedArticle?.mentions && isEditingArticle) {
+      setTitle(selectedArticle?.title || "")
+      setEditorContent(selectedArticle?.articleContent || "")
       setMentions(selectedArticle?.mentions || [])
       selectedArticle?.mentions.forEach((item) => {
         editor?.commands.insertContent({
@@ -82,11 +82,13 @@ export const ArticlePage: React.FC = () => {
           const mentionedIndex = selectedArticle?.articleContent.indexOf("@")
           const beforeText = selectedArticle?.articleContent.slice(0, mentionedIndex);
           const afterText = selectedArticle?.articleContent.slice(mentionedIndex).replace(`@${item.firstName} ${item.lastName}`, "");
-          // console.log(beforeText, selectedArticle.articleContent?.slice(beforeText.length, selectedArticle.articleContent.lastIndexOf(afterText[0])), afterText)
-
           editor.commands.setContent(`${beforeText}${afterText}`)
         }
       })
+    } else {
+      setTitle("")
+      setEditorContent("")
+      setMentions([])
     }
   }, [selectedArticle])
   console.log(selectedArticle)
