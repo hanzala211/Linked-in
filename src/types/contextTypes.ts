@@ -56,7 +56,7 @@ export interface PostContextTypes {
     isAllPostsLoading: boolean,
     setIsAllPostsLoading: React.Dispatch<React.SetStateAction<boolean>>,
     handleSelectPost: (item: PostType) => void,
-    getPost: (postId: string) => void,
+    getPost: (postId: string, isArticle: boolean) => void,
     firstPosts: PostType[],
     setFirstPosts: React.Dispatch<React.SetStateAction<PostType[]>>,
     isPostsLoading: boolean,
@@ -80,7 +80,10 @@ export interface PostContextTypes {
     setEditorContent: React.Dispatch<React.SetStateAction<string>>,
     isArticleCreator: boolean,
     setIsArticleCreator: React.Dispatch<React.SetStateAction<boolean>>,
-    createArticle: () => void
+    createArticle: () => void,
+    selectedArticle: PostType | null,
+    setSelectedArticle: React.Dispatch<React.SetStateAction<PostType | null>>,
+    handleSelectArticle: (item: PostType) => void
 }
 
 export interface ProfileContextTypes {

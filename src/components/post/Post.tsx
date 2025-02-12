@@ -1,10 +1,8 @@
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@components"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, Comment, CommentInput, PostOptions } from "@components"
 import { useEffect, useRef, useState } from "react"
 import { FaBookmark, FaCheck, FaPlus, FaRegBookmark } from "react-icons/fa"
-import { BiLike, BiMessageRoundedMinus } from "react-icons/bi"
 import { IoEarth } from "react-icons/io5"
 import { Link, useParams } from "react-router-dom"
-import { RiSendPlaneFill } from "react-icons/ri"
 import { DEFAULT_PIC, DotSVG, EmojiIcon } from "@assets"
 import { TbArrowsDiagonal2 } from "react-icons/tb"
 import EmojiPicker from "emoji-picker-react"
@@ -19,9 +17,9 @@ interface PostProps {
 }
 
 export const Post: React.FC<PostProps> = ({ item }) => {
-  const { likePost, disLikePost, getComments, postComment, savePost, unSavePost, deletePost, handleOpenImageCreator } = usePost()
+  const { likePost, disLikePost, getComments, postComment, savePost, unSavePost, deletePost, handleOpenImageCreator, handleSelectArticle } = usePost()
   const { userData } = useAuth()
-  const { handleFollow, handleUnfollow, handleClick: handleProfile, } = useProfile()
+  const { handleFollow, handleUnfollow, handleClick: handleProfile } = useProfile()
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
   const [isTextOverflowing, setIsTextOverflowing] = useState<boolean>(false);
   const [isCommentExpanded, setIsCommentExpanded] = useState<boolean>(false)
@@ -186,7 +184,7 @@ export const Post: React.FC<PostProps> = ({ item }) => {
       {item.imageUrls.length > 1 &&
         <CarouselNext className="absolute top-1/2 -translate-y-1/2 right-3 group-hover:opacity-100 opacity-0 transition-all duration-200 ease-in-out bg-black p-2 bg-opacity-80 text-white rounded-full " />
       }
-    </Carousel> : <div className="w-full max-w-[95%] mx-auto relative">
+    </Carousel> : <Link to={`/pulse/${item.title?.split(" ").join("-").toLowerCase()}/${item.postBy.firstName?.toLowerCase()}-${item.postBy.lastName?.toLowerCase()}/${item._id}`} onClick={() => handleSelectArticle(item)} className="w-full max-w-[95%] mx-auto relative">
       <img src="/images/articleCreator.png" alt="Article Creator Image" className="w-full rounded-t-lg h-auto" />
       <div className="bg-[#0A66C3] text-white rounded-b-lg p-2">
         <h2 className="font-semibold text-[20px]">{item.title}</h2>
@@ -194,7 +192,7 @@ export const Post: React.FC<PostProps> = ({ item }) => {
           dangerouslySetInnerHTML={{ __html: item.articleContent || "" }}
         />
       </div>
-    </div>}
+    </Link>}
 
     <div className="mx-5 border-b-[1px] py-3 flex justify-between">
       <div className="flex gap-2">
@@ -205,10 +203,7 @@ export const Post: React.FC<PostProps> = ({ item }) => {
     </div>
 
     <div className="mx-5 py-2 flex gap-4 justify-between">
-      <button onClick={handleLikes} className={`flex gap-2 items-center text-[15px] justify-center hover:bg-slate-100 w-full max-w-lg rounded-lg px-4 py-2 ${item.likes.includes(userData?._id || "") ? "text-[#0A66C2]" : ""}`}>{!item.likes.includes(userData?._id || "") ? <BiLike className="text-[17px]" /> : <img src="/images/likeSVG.svg" alt="likes SVG" className="w-5" />
-      } Like</button>
-      <button className="flex gap-2 items-center text-[15px] justify-center hover:bg-slate-100 w-full max-w-lg rounded-lg px-4 py-2" onClick={() => handleComments(item._id)}><BiMessageRoundedMinus /> Comment</button>
-      <button className="flex gap-2 items-center text-[15px] justify-center hover:bg-slate-100 w-full max-w-lg rounded-lg px-4 py-2"><RiSendPlaneFill /> Send</button>
+      <PostOptions handleComments={handleComments} handleLikes={handleLikes} item={item} />
     </div>
 
     <div className={`h-full transition-all duration-300 ${isCommentExpanded ? "max-h-[99rem] opacity-100 p-4" : "max-h-[0rem] opacity-0 overflow-hidden"}`}>
@@ -218,8 +213,7 @@ export const Post: React.FC<PostProps> = ({ item }) => {
           alt="Test User"
           className="w-10 h-10 rounded-full"
         />
-        <input type="text" className="border-[1px] border-[#666] outline-none px-4 pr-[5.7rem] py-2 w-full rounded-full" value={commentValue} placeholder="Add a comment..." onChange={(e) => setCommentValue(e.target.value)} />
-        <button onClick={() => handlePostComment(item._id)} className={`text-white bg-[#0A66C2] px-2 text-[13px] py-1 rounded-full ${commentValue.length > 0 ? "opacity-100" : "opacity-0 pointer-events-none"} transition-all duration-100 hover:bg-opacity-70 absolute right-12`}>Comment</button>
+        <CommentInput className="right-14" handlePostComment={handlePostComment} item={item} commentValue={commentValue} setCommentValue={setCommentValue} />
         <button ref={emojiIconRef} className="hover:opacity-50 duration-200" onClick={() => setIsEmojiPicker(true)}><EmojiIcon /></button>
         {isEmojiPicker &&
           <div className="absolute md:-top-[22rem] -top-[18rem] md:left-5 left-0" ref={emojiPickerRef}>
@@ -229,24 +223,8 @@ export const Post: React.FC<PostProps> = ({ item }) => {
       </div>
       <div className="flex mt-5 flex-col gap-5">
         {comments.map((comment, index) => (
-          <div key={index}>
-            <div className="flex justify-between items-center">
-              <Link to="#" className="flex gap-2 items-center">
-                <img
-                  src={comment.user?.profilePic || DEFAULT_PIC}
-                  alt={`${comment.user?.firstName} profilePic`}
-                  className="w-8 h-8 rounded-full"
-                />
-                <p className="text-[#111] hover:underline transition-all duration-200 text-[15px]">{comment.user?.firstName} {comment.user?.lastName}</p>
-              </Link>
-              <p className="text-[#666] text-[14px]">{formatDate(comment?.createdAt)}</p>
-            </div>
-            <pre className={`whitespace-pre-wrap mx-10 max-w-md text-[14px] text-gray-900 `}>
-              {comment.comment}
-            </pre>
-          </div>
+          <Comment key={index} comment={comment} />
         ))}
-
       </div>
       {page <= totalPages &&
         <button onClick={() => handleMore(item._id)} className="flex gap-2 mt-5 items-center text-[14px]"><span className="bg-[#EAE6DF] p-2 rounded-full"><TbArrowsDiagonal2 className="text-[17px]" /></span> <span className="hover:bg-[#EAE6DF] p-1 rounded-md transition-all duration-200">Load more comments</span></button>

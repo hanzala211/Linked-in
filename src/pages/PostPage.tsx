@@ -32,7 +32,7 @@ export const PostPage: React.FC = () => {
 
   useEffect(() => {
     if (params.id && allPosts.length === 0) {
-      getPost(params.id || "")
+      getPost(params.id || "", false)
     }
   }, [])
 

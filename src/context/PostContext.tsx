@@ -31,6 +31,7 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [editorContent, setEditorContent] = useState<string>('');
   const [mentions, setMentions] = useState<IUser[]>([])
   const [isArticleCreator, setIsArticleCreator] = useState<boolean>(false)
+  const [selectedArticle, setSelectedArticle] = useState<PostType | null>(null)
   const navigate = useNavigate()
 
 
@@ -148,6 +149,15 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             : item
         )
       );
+      setSelectedArticle((prev: PostType | null) =>
+        prev
+          ? {
+            ...prev,
+            likeCount: prev.likeCount + 1,
+            likes: [...prev.likes, userData?._id].filter((id): id is string => Boolean(id))
+          }
+          : null
+      );
       const { data } = await postService.likePost(postId)
       if (data.status === "Post Liked Successfully") {
         toast.success(data.status, {
@@ -184,7 +194,15 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               : item
           )
         );
-
+        setSelectedArticle((prev: PostType | null) =>
+          prev
+            ? {
+              ...prev,
+              likeCount: prev.likeCount - 1,
+              likes: prev.likes.filter((id) => id !== userData?._id)
+            }
+            : null
+        );
       }
     } catch (error) {
       console.log(error)
@@ -214,6 +232,15 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             ? { ...item, likeCount: item.likeCount - 1, likes: item.likes.filter((like) => like !== userData?._id) }
             : item
         )
+      );
+      setSelectedArticle((prev: PostType | null) =>
+        prev
+          ? {
+            ...prev,
+            likeCount: prev.likeCount - 1,
+            likes: prev.likes.filter((id) => id !== userData?._id)
+          }
+          : null
       );
       const { data } = await postService.disLikePost(postId)
       if (data.status === "Post DisLiked Successfully") {
@@ -263,6 +290,15 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               : item
           )
         );
+        setSelectedArticle((prev: PostType | null) =>
+          prev
+            ? {
+              ...prev,
+              likeCount: prev.likeCount + 1,
+              likes: [...prev.likes, userData?._id].filter((id): id is string => Boolean(id))
+            }
+            : null
+        );
       }
     } catch (error) {
       console.log(error)
@@ -305,12 +341,16 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }
 
-  const getPost = async (postId: string) => {
+  const getPost = async (postId: string, isArticle: boolean) => {
     try {
       setIsAllPostsLoading(true)
       const { data } = await postService.getPost(postId)
       if (data.status === "Post Retrieved Successfully") {
-        setAllPosts([data.post])
+        if (!isArticle) {
+          setAllPosts([data.post])
+        } else {
+          setSelectedArticle(data.post)
+        }
       }
       setIsAllPostsLoading(false)
     } catch (error) {
@@ -496,7 +536,11 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }
 
-  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment, allPosts, setAllPosts, getAllPosts, isAllPostsLoading, setIsAllPostsLoading, handleSelectPost, getPost, firstPosts, setFirstPosts, isPostsLoading, getSixPosts, savePost, unSavePost, deletePost, handleOpenImageCreator, isSelectingImage, setIsSelectingImage, isEditingPost, setIsEditingPost, imagesToRemove, setImagesToRemove, editPost, title, setTitle, mentions, setMentions, editorContent, setEditorContent, isArticleCreator, setIsArticleCreator, createArticle }}>{children}</PostContext.Provider>
+  const handleSelectArticle = (item: PostType) => {
+    setSelectedArticle(item)
+  }
+
+  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment, allPosts, setAllPosts, getAllPosts, isAllPostsLoading, setIsAllPostsLoading, handleSelectPost, getPost, firstPosts, setFirstPosts, isPostsLoading, getSixPosts, savePost, unSavePost, deletePost, handleOpenImageCreator, isSelectingImage, setIsSelectingImage, isEditingPost, setIsEditingPost, imagesToRemove, setImagesToRemove, editPost, title, setTitle, mentions, setMentions, editorContent, setEditorContent, isArticleCreator, setIsArticleCreator, createArticle, selectedArticle, setSelectedArticle, handleSelectArticle }}>{children}</PostContext.Provider>
 }
 
 export const usePost = (): PostContextTypes => {

@@ -11,7 +11,7 @@ export interface PostType {
   createdAt: number,
   comments: CommentType[],
   __v: number,
-  mentions?: string[],
+  mentions?: IUser[],
   articleContent?: string,
   isArticle: boolean,
   title?: string
