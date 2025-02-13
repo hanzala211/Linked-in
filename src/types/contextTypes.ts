@@ -181,5 +181,6 @@ export interface JobContextTypes {
     setPage: React.Dispatch<React.SetStateAction<number>>,
     selectedJob: JobType | null,
     setSelectedJob: React.Dispatch<React.SetStateAction<JobType | null>>,
-    getJob: (jobId: string) => void
+    getJob: (jobId: string) => void,
+    getJobs: (page: number, limit: string) => void
 }

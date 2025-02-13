@@ -42,10 +42,7 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     if (firstJobs.length === 0) {
       getJobs("1", "8")
     }
-    if (page <= totalPages) {
-      getJobs(page, "7")
-    }
-  }, [page])
+  }, [])
 
   const createJob = async (sendData: unknown) => {
     try {
@@ -118,7 +115,7 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   }
 
-  return <JobContext.Provider value={{ jobContent, setJobContent, createJob, isCreatingJob, isJobsLoading, setIsJobsLoading, firstJobs, setFirstJobs, threeJobs, setThreeJobs, paginatedJobs, setPaginatedJobs, page, totalPages, setPage, selectedJob, setSelectedJob, getJob }}>{children}</JobContext.Provider>
+  return <JobContext.Provider value={{ jobContent, setJobContent, createJob, isCreatingJob, isJobsLoading, setIsJobsLoading, firstJobs, setFirstJobs, threeJobs, setThreeJobs, paginatedJobs, setPaginatedJobs, page, totalPages, setPage, selectedJob, setSelectedJob, getJob, getJobs }}>{children}</JobContext.Provider>
 }
 
 export const useJob = (): JobContextTypes => {

@@ -7,7 +7,7 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export const JobSearchPage: React.FC = () => {
-  const { paginatedJobs, totalPages, setPage, page, isJobsLoading, selectedJob, setSelectedJob, getJob } = useJob()
+  const { paginatedJobs, totalPages, setPage, page, isJobsLoading, selectedJob, setSelectedJob, getJob, getJobs } = useJob()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -26,6 +26,12 @@ export const JobSearchPage: React.FC = () => {
       document.body.style.overflow = "";
     };
   }, []);
+
+  useEffect(() => {
+    if (page <= totalPages) {
+      getJobs(page, "7")
+    }
+  }, [page])
 
   return (
     <section className="flex pt-20 mx-auto w-full xl:max-w-[55%] max-w-[98%] h-screen">
