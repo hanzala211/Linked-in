@@ -78,7 +78,7 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           setPaginatedJobs(data.jobs)
           setPage(data.page)
           setTotalPages(data.totalPages)
-          if (window.innerWidth > 768) {
+          if (window.innerWidth > 768 && location.search === "") {
             setSelectedJob(data.jobs[0])
             navigate(`/jobs/search?jobId=${data.jobs[0]._id}`)
           }
