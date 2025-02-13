@@ -12,9 +12,15 @@ export const jobService = {
     url: `/jobs/list?limit=${limit}&page=${page}`,
     isAuthIncluded: true
   }),
-  searchJobs: (searchQuery: string) => sendRequest({
+  searchJobs: (searchQuery: string, signal?: AbortSignal) => sendRequest({
     method: "GET",
     url: `/jobs?search=${searchQuery}`,
+    isAuthIncluded: true,
+    signal
+  }),
+  getJob: (jobId: string) => sendRequest({
+    method: "GET",
+    url: `/jobs/${jobId}`,
     isAuthIncluded: true
   })
 }

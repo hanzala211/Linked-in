@@ -1,4 +1,4 @@
-import { CompleteComment, PostType } from "@types";
+import { CompleteComment, JobType, PostType } from "@types";
 import { IEducation, IExperience, IUser } from "./userTypes";
 
 export interface AuthContextTypes {
@@ -20,8 +20,8 @@ export interface SearchContextTypes {
     setIsFocused: React.Dispatch<React.SetStateAction<boolean>>,
     searchValue: string,
     setSearchValue: React.Dispatch<React.SetStateAction<string>>,
-    searchData: IUser[],
-    setSearchData: React.Dispatch<React.SetStateAction<IUser[]>>,
+    searchData: IUser[] | JobType[],
+    setSearchData: React.Dispatch<React.SetStateAction<IUser[] | JobType[]>>,
     handleSearch: (signal: AbortSignal, value: string) => Promise<IUser[]>,
 }
 
@@ -167,5 +167,19 @@ export interface JobContextTypes {
     jobContent: string,
     setJobContent: React.Dispatch<React.SetStateAction<string>>,
     createJob: (sendData: unknown) => void,
-    isCreatingJob: boolean
+    isCreatingJob: boolean,
+    isJobsLoading: boolean,
+    setIsJobsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    firstJobs: JobType[],
+    setFirstJobs: React.Dispatch<React.SetStateAction<JobType[]>>,
+    threeJobs: JobType[],
+    setThreeJobs: React.Dispatch<React.SetStateAction<JobType[]>>,
+    paginatedJobs: JobType[],
+    setPaginatedJobs: React.Dispatch<React.SetStateAction<JobType[]>>,
+    page: number,
+    totalPages: number,
+    setPage: React.Dispatch<React.SetStateAction<number>>,
+    selectedJob: JobType | null,
+    setSelectedJob: React.Dispatch<React.SetStateAction<JobType | null>>,
+    getJob: (jobId: string) => void
 }

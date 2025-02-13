@@ -1,19 +1,21 @@
 import { authService } from "@services";
-import { IUser, SearchContextTypes } from "@types";
+import { IUser, JobType, SearchContextTypes } from "@types";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const SearchContext = createContext<SearchContextTypes | undefined>(undefined)
 
 export const SearchProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isFocused, setIsFocused] = useState<boolean>(false)
   const [searchValue, setSearchValue] = useState<string>("")
-  const [searchData, setSearchData] = useState<IUser[]>([])
+  const [searchData, setSearchData] = useState<IUser[] | JobType[]>([])
+  const location = useLocation()
 
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    if (searchValue.length > 3) {
+    if (searchValue.length > 3 && !location.pathname.includes("/jobs")) {
       handleSearch(signal, searchValue);
     } else {
       setSearchData([]);

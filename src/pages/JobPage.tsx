@@ -1,5 +1,7 @@
-import { FeedIdentityModule, JobModel } from "@components"
-import { useAuth } from "@context"
+import { FeedIdentityModule, JobModel, JobsLoader } from "@components"
+import { useAuth, useJob } from "@context"
+import { titleChanger } from "@helpers"
+import { useEffect } from "react"
 import { FaLongArrowAltRight } from "react-icons/fa"
 import { IoBookmark } from "react-icons/io5"
 import { MdModeEdit } from "react-icons/md"
@@ -7,6 +9,12 @@ import { Link } from "react-router-dom"
 
 export const JobPage: React.FC = () => {
   const { userData } = useAuth()
+  const { firstJobs, threeJobs, isJobsLoading } = useJob()
+
+  useEffect(() => {
+    titleChanger("Jobs")
+  }, [])
+
   return <section className="grid md:grid-cols-[0.7fr_2fr] gap-5 lg:gap-0 grid-cols-1 pt-20 mx-auto w-full xl:max-w-[70%] max-w-[98%]">
     {/* First Column */}
     <div className="flex flex-col gap-3">
@@ -31,8 +39,10 @@ export const JobPage: React.FC = () => {
           <p className="text-[#666] text-[13px]">Based on your profile, preferences, and activity like applies, searches, and saves</p>
         </div>
         <div className="flex flex-col gap-5 px-4">
-          {Array.from({ length: 3 }, (_, i) => (
-            <JobModel key={i} />
+          {!isJobsLoading ? threeJobs.map((item, i) => (
+            <JobModel item={item} key={i} />
+          )) : Array.from({ length: 5 }, (_, i) => (
+            <JobsLoader key={i} />
           ))}
         </div>
         <Link to="/jobs/search" className="w-full py-2.5 flex text-[#666] transition-all border-t-[1px] mt-4 duration-200 items-center justify-center gap-2 hover:bg-gray-50 rounded-b-lg">
@@ -45,8 +55,10 @@ export const JobPage: React.FC = () => {
           <h1 className="text-[20px]">Random Jobs</h1>
         </div>
         <div className="flex flex-col gap-5 px-4 py-2">
-          {Array.from({ length: 10 }, (_, i) => (
-            <JobModel key={i} />
+          {!isJobsLoading ? firstJobs.map((item, i) => (
+            <JobModel item={item} key={i} />
+          )) : Array.from({ length: 5 }, (_, i) => (
+            <JobsLoader key={i} />
           ))}
         </div>
       </div>

@@ -2,6 +2,7 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import { authService } from "@services";
 import { IUser, AuthContextTypes } from "@types";
 import { useNavigate } from "react-router-dom";
+import { getErrorMessage } from "@helpers";
 
 const AuthContext = createContext<AuthContextTypes | undefined>(undefined);
 
@@ -40,6 +41,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setIsLoading(false)
         } catch (error) {
             console.error(error)
+            const errorMessage = getErrorMessage(error);
+            setErrorMessage(errorMessage);
         } finally {
             setIsMainPageLoading(false)
         }
@@ -63,6 +66,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setIsLoading(false)
         } catch (error) {
             console.error(error)
+            const errorMessage = getErrorMessage(error);
+            setErrorMessage(errorMessage);
         }
     }
 
@@ -84,6 +89,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setIsLoading(false)
         } catch (error) {
             console.error(error)
+            const errorMessage = getErrorMessage(error);
+            setErrorMessage(errorMessage);
         } finally {
             setIsMainPageLoading(false)
         }

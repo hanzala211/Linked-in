@@ -1,16 +1,26 @@
-import { JobModel, Pagination, PaginationContent, PaginationItem } from "@components"
-import { useEffect, useState } from "react"
-import { Link } from "react-router-dom";
+import { DEFAULT_EXPERIENCE_PIC, DEFAULT_PIC } from "@assets";
+import { JobModel, JobsLoader, Pagination, PaginationContent, PaginationItem } from "@components"
+import { useJob } from "@context";
+import { formatDate, titleChanger } from "@helpers";
+import { useEffect } from "react"
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export const JobSearchPage: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<number>(1)
-  const itemsPerPage = 10; // Number of items per page
-  const totalItems = 100; // Total number of items (can be dynamic)
-  const totalPages = Math.ceil(totalItems / itemsPerPage); // Calculate total pages dynamically
+  const { paginatedJobs, totalPages, setPage, page, isJobsLoading, selectedJob, setSelectedJob, getJob } = useJob()
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    titleChanger(`${selectedJob?.title || ""} Job`)
+  }, [selectedJob?.title])
 
   useEffect(() => {
     if (typeof document !== "undefined") {
       document.body.style.overflow = "hidden";
+    }
+    if (location.search) {
+      getJob(location.search.slice(location.search.indexOf("=") + 1) || "")
     }
     return () => {
       document.body.style.overflow = "";
@@ -19,21 +29,30 @@ export const JobSearchPage: React.FC = () => {
 
   return (
     <section className="flex pt-20 mx-auto w-full xl:max-w-[55%] max-w-[98%] h-screen">
-      <div className="border-[1px] border-r-[0] border-gray-200 py-1 bg-white w-full h-full overflow-y-auto">
-        <div className="flex flex-col">
-          {Array.from({ length: itemsPerPage }, (_, i) => (
-            <div className="border-l-[1px] border-black px-4 bg-gray-50 p-3">
-              <JobModel key={i} />
+      <div className={`border-[1px] border-r-[0] border-gray-200 bg-white h-full ${selectedJob !== null ? "md:w-full w-0" : "w-full"} overflow-y-auto`}>
+        <div className={`flex flex-col`}>
+          {!isJobsLoading ? paginatedJobs.map((item, i) => (
+            <div onClick={() => {
+              setSelectedJob(item)
+              navigate(`/jobs/search?jobId=${item?._id}`)
+            }}
+              className={`px-4 ${selectedJob?._id === item?._id ? "bg-gray-50 border-l-[1px] border-black" : ""} p-3`}>
+              <JobModel item={item} key={i} />
+            </div>
+          )) : Array.from({ length: 9 }, (_, i) => (
+            <div className="px-4 p-3">
+              <JobsLoader key={i} />
             </div>
           ))}
         </div>
 
+
         <Pagination>
           <PaginationContent className="space-x-4 mt-5">
-            {currentPage > 3 && (
+            {page > 3 && (
               <PaginationItem
                 key="left-ellipsis"
-                onClick={() => setCurrentPage(Math.max(1, currentPage - 5))}
+                onClick={() => setPage(Math.max(1, page - 5))}
                 className="text-[14px] cursor-pointer"
               >
                 ...
@@ -41,21 +60,21 @@ export const JobSearchPage: React.FC = () => {
             )}
             {Array.from({ length: totalPages }, (_, i) => {
               const pageNumber = i + 1;
-              const showFirstPages = currentPage <= 3 && pageNumber <= 5;
+              const showFirstPages = page <= 3 && pageNumber <= 5;
               const showMiddlePages =
-                currentPage > 3 &&
-                currentPage < totalPages - 2 &&
-                pageNumber >= currentPage - 2 &&
-                pageNumber <= currentPage + 2;
+                page > 3 &&
+                page < totalPages - 2 &&
+                pageNumber >= page - 2 &&
+                pageNumber <= page + 2;
               const showLastPages =
-                currentPage >= totalPages - 2 && pageNumber >= totalPages - 4;
+                page >= totalPages - 2 && pageNumber >= totalPages - 4;
 
               if (showFirstPages || showMiddlePages || showLastPages) {
                 return (
                   <PaginationItem
                     key={i}
-                    onClick={() => setCurrentPage(pageNumber)}
-                    className={`${currentPage === pageNumber
+                    onClick={() => setPage(pageNumber)}
+                    className={`${page === pageNumber
                       ? "text-white bg-black px-2 py-0.5 rounded-full"
                       : ""
                       } text-[14px] cursor-pointer`}
@@ -67,10 +86,10 @@ export const JobSearchPage: React.FC = () => {
               return null;
             })}
 
-            {currentPage < totalPages - 2 && (
+            {page < totalPages - 2 && (
               <PaginationItem
                 key="right-ellipsis"
-                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 5))}
+                onClick={() => setPage(Math.min(totalPages, page + 5))}
                 className="text-[14px] cursor-pointer"
               >
                 ...
@@ -81,22 +100,23 @@ export const JobSearchPage: React.FC = () => {
       </div>
 
 
-      <div className="border-[1px] flex flex-col gap-3 border-l-[0] border-gray-200 w-full bg-white p-4 h-full overflow-y-auto">
-        <h2 className="flex gap-2 items-center text-[15px]"><img src="/images/userTest.jpeg" alt="Test Company Img" className="w-8" /> Company Name</h2>
-        <h1 className="text-[30px]">Title</h1>
-        <p className="text-[13px] text-[#666]">Lahore, Punjab, Pakistan · <span className="text-[#01754F] font-semibold">44 minutes ago</span> · 1 applicant</p>
-        <p className="bg-gray-200 w-fit p-1 rounded-md text-[14px]">On-site</p>
+      <div className={`border-[1px] flex flex-col gap-3 border-l-[0] border-gray-200 bg-white h-full ${selectedJob === null ? " md:w-full md:p-4 w-0 p-0" : "w-full p-4"} overflow-y-auto`}>
+        {window.innerWidth < 768 && <Link to="/jobs/search" className="text-white bg-[#0A66C2] w-fit p-1.5 rounded-full mb-2" onClick={() => setSelectedJob(null)}><FaArrowLeftLong /></Link>}
+        <h2 className="flex gap-2 items-center text-[15px]"><img src={selectedJob?.company.companyImg || DEFAULT_EXPERIENCE_PIC} alt={`${selectedJob?.company.companyName} image`} className="w-8" /> {selectedJob?.company.companyName}</h2>
+        <h1 className="text-[30px]">{selectedJob?.title}</h1>
+        <p className="text-[13px] text-[#666]">{selectedJob?.region}, {selectedJob?.country} · <span className="text-[#01754F] font-semibold">{formatDate(selectedJob?.createdAt || 0)}</span> · {(selectedJob?.appliedCount || 0) > 0 && `${selectedJob?.appliedCount} applicants`} </p>
+        <p className="bg-gray-200 w-fit p-1 rounded-md text-[14px]">{selectedJob?.employmentType}</p>
         <div className="space-x-2">
           <button className="bg-[#0A66C2] text-white rounded-full px-6 py-2 text-[18px] hover:bg-opacity-70 transition-all duration-200">Easy Apply</button>
           <button className="bg-transparent text-[#0A66C2] hover:bg-gray-200 hover:text-gray-500 hover:border-gray-500 border-[1px] border-[#0A66C2] rounded-full px-6 py-2 text-[18px] hover:bg-opacity-70 transition-all duration-200">Save</button>
         </div>
         <div className="p-3 border-[1px] border-gray-300 rounded-lg">
           <h1 className="font-semibold">Meet the hiring team</h1>
-          <Link to="#" className="flex gap-3 py-4 items-center">
-            <img src="/images/userTest.jpeg" alt="Test User Img" className="w-12 rounded-full" />
+          <Link to={`/${selectedJob?.jobBy.userName}`} className="flex gap-3 py-4 items-center">
+            <img src={selectedJob?.jobBy.profilePic || DEFAULT_PIC} alt={`${selectedJob?.jobBy.firstName} Image`} className="w-12 rounded-full" />
             <div>
-              <h1 className="hover:underline">Name</h1>
-              <p className="text-[#666] text-[13px]">Talent Acquisition Specialist | Payroll Management | Human Resource Management | Employee Engagement & Performance | Effective Policy Maker | People Manager |</p>
+              <h1 className="hover:underline">{selectedJob?.jobBy.firstName} {selectedJob?.jobBy.lastName}</h1>
+              <p className="text-[#666] text-[13px]">{selectedJob?.jobBy.headline}</p>
               <p className="text-[#666] text-[12px]">Job Poster</p>
             </div>
           </Link>
@@ -104,7 +124,7 @@ export const JobSearchPage: React.FC = () => {
         <h1 className="text-[18px] font-semibold">About the job:</h1>
         <div
           className="text-[17px]"
-          dangerouslySetInnerHTML={{ __html: "<h1>You will write everything in this </h1>" }}
+          dangerouslySetInnerHTML={{ __html: selectedJob?.jobContent || "" }}
         />
       </div>
     </section>

@@ -1,6 +1,7 @@
 import { companies, DEFAULT_EXPERIENCE_PIC } from "@assets"
 import { EditInput, JobContentEditor } from "@components"
 import { useJob } from "@context"
+import { titleChanger } from "@helpers"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { JobForm, jobFormSchema } from "@types"
 import { useEffect, useState } from "react"
@@ -14,6 +15,10 @@ export const JobPostingPage: React.FC = () => {
   })
   const { jobContent, isCreatingJob, createJob } = useJob()
   const [foundValue, setFoundValue] = useState<{ name: string, image: string } | null>(null)
+
+  useEffect(() => {
+    titleChanger(`Create Job`)
+  }, [])
 
   useEffect(() => {
     handleSearch()
@@ -32,7 +37,7 @@ export const JobPostingPage: React.FC = () => {
       title: e.title,
       company: {
         companyName: e.companyName,
-        companyImg: e.companyImg === DEFAULT_EXPERIENCE_PIC ? "" : e.companyImg,
+        companyImg: e.companyImg === DEFAULT_EXPERIENCE_PIC ? null : e.companyImg,
       },
       industry: e.industry,
       jobContent,
