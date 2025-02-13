@@ -3,12 +3,12 @@ import { sendRequest } from "@helpers";
 export const suggestionsService = {
   randomUsers: (limit: string) => sendRequest({
     method: "GET",
-    url: `/suggestions/get-users?limit=${limit}`,
+    url: `/suggestions/users?limit=${limit}`,
     isAuthIncluded: true
   }),
   randomIndustryUsers: (limit: string) => sendRequest({
     method: "GET",
-    url: `/suggestions/get-suggestions?limit=${limit}`,
+    url: `/suggestions/industry?limit=${limit}`,
     isAuthIncluded: true
   })
 }

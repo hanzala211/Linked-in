@@ -11,9 +11,8 @@ import { FaArrowRight } from 'react-icons/fa';
 import { usePost, useProfile } from '@context';
 import { DEFAULT_PIC } from '@assets';
 import { IUser } from '@types';
-import { toast } from 'sonner';
-import { RxCross2 } from 'react-icons/rx';
 import Mention from "@tiptap/extension-mention";
+import { errorToast } from '@helpers';
 
 const CustomMention = Mention.extend({
   addAttributes() {
@@ -91,7 +90,6 @@ export const ArticlePage: React.FC = () => {
       setMentions([])
     }
   }, [selectedArticle])
-  console.log(selectedArticle)
 
 
   const editor = useEditor({
@@ -177,12 +175,7 @@ export const ArticlePage: React.FC = () => {
         setCaptionValue(selectedArticle.caption)
       }
     } else {
-      toast.error("Title And Body Can't be empty", {
-        action: {
-          label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><RxCross2 className="w-4 h-4" /></button>,
-          onClick: () => null,
-        },
-      })
+      errorToast("Title And Body Can't be empty")
     }
   }
 
