@@ -28,7 +28,7 @@ export const JobSearchPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (page <= totalPages && paginatedJobs.length === 0) {
+    if (page <= totalPages) {
       getJobs(page, "7")
     }
   }, [page])
