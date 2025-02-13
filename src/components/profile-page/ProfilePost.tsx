@@ -46,7 +46,7 @@ export const ProfilePost: React.FC<ProfliePostProps> = ({ isCurrentProfile, item
       {!item.isArticle ? item.imageUrls.length > 0 &&
         <img src={item.imageUrls.length > 0 ? item.imageUrls[0] : ""} alt={`${item.postBy} Post`} className="md:w-96 mt-1 h-96 w-full object-contain" />
         : <div className="w-full relative">
-          <img src="/images/articleCreator.png" alt="Article Creator Image" className="w-full h-auto" />
+          <img src="/images/articleCreator.png" alt="Article Creator Image" className="w-full" />
           <div className="bg-[#0A66C3] text-white rounded-b-lg p-2">
             <h2 className="font-semibold text-[20px]">{item.title}</h2>
             <div className="text-[9px] line-clamp-1"

@@ -162,3 +162,10 @@ export interface NetworkContextTypes {
     isIndustryModalOpen: boolean,
     setIsIndustryModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
 }
+
+export interface JobContextTypes {
+    jobContent: string,
+    setJobContent: React.Dispatch<React.SetStateAction<string>>,
+    createJob: (sendData: unknown) => void,
+    isCreatingJob: boolean
+}

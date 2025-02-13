@@ -20,7 +20,7 @@ export const errorToast = (status: string) => {
 }
 
 export const infoToast = (status: string) => {
-  toast.error(status, {
+  toast.info(status, {
     action: {
       label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"> <RxCross2 className="w-4 h-4" /></button >,
       onClick: () => null,

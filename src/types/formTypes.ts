@@ -49,3 +49,15 @@ export const editFormSchema = z.object({
 });
 
 export type EditForm = z.infer<typeof editFormSchema>;
+
+export const jobFormSchema = z.object({
+  title: z.string().min(1, "Job Title is Required"),
+  companyName: z.string().min(1, "Company Name is Required"),
+  employmentType: z.string().min(1, "Employment Type is Required"),
+  industry: z.string().min(1, "Industry is Required"),
+  country: z.string().min(1, "Country is Required"),
+  region: z.string().min(1, "Region is Required"),
+  companyImg: z.any().optional()
+})
+
+export type JobForm = z.infer<typeof jobFormSchema>;
