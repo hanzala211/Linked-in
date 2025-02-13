@@ -48,7 +48,7 @@ export const JobSearchPage: React.FC = () => {
 
 
         <Pagination>
-          <PaginationContent className="space-x-4 mt-5">
+          <PaginationContent className="space-x-4 my-5">
             {page > 3 && (
               <PaginationItem
                 key="left-ellipsis"
