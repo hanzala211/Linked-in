@@ -46,7 +46,7 @@ export const JobSearchPage: React.FC = () => {
               <JobModel item={item} />
             </div>
           )) : Array.from({ length: 9 }, (_, i) => (
-            <div className="px-4 p-3">
+            <div className="px-4 p-3" key={i}>
               <JobsLoader key={i} />
             </div>
           ))}
