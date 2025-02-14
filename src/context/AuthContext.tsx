@@ -38,12 +38,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             } else {
                 setErrorMessage("Server Error")
             }
-            setIsLoading(false)
         } catch (error) {
             console.error(error)
             const errorMessage = getErrorMessage(error);
             setErrorMessage(errorMessage);
         } finally {
+            setIsLoading(false)
             setIsMainPageLoading(false)
         }
     }
@@ -63,11 +63,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             } else {
                 setErrorMessage("Server Error")
             }
-            setIsLoading(false)
         } catch (error) {
             console.error(error)
             const errorMessage = getErrorMessage(error);
             setErrorMessage(errorMessage);
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -86,12 +87,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             } else {
                 setErrorMessage("Server Error")
             }
-            setIsLoading(false)
         } catch (error) {
             console.error(error)
             const errorMessage = getErrorMessage(error);
             setErrorMessage(errorMessage);
         } finally {
+            setIsLoading(false)
             setIsMainPageLoading(false)
         }
     }

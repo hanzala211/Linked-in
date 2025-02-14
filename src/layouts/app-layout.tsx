@@ -1,4 +1,4 @@
-import { AddBanner, AddImage, EditEducation, EditPosition, EditProfile, ImageCreator, Nav, NetworkModel, PostCreator } from "@components"
+import { AddBanner, AddImage, EditEducation, EditPosition, EditProfile, ImageCreator, JobApplyForm, Nav, NetworkModel, PostCreator } from "@components"
 import { useSearch } from "@context"
 import { Outlet } from "react-router-dom"
 
@@ -17,5 +17,6 @@ export const AppLayout: React.FC = () => {
     <EditPosition />
     <EditEducation />
     <NetworkModel />
+    <JobApplyForm />
   </>
 }

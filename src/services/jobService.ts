@@ -22,5 +22,11 @@ export const jobService = {
     method: "GET",
     url: `/jobs/${jobId}`,
     isAuthIncluded: true
+  }),
+  applyToJob: (data: unknown, jobId: string) => sendRequest({
+    method: "POST",
+    url: `/jobs/apply/${jobId}`,
+    isAuthIncluded: true,
+    data
   })
 }

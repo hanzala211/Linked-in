@@ -136,7 +136,7 @@ export const JobPostingPage: React.FC = () => {
           <JobContentEditor />
         </div>
         <div className="border-t-[1px] flex p-2 pt-4 justify-end px-10 mt-4">
-          <button type="submit" disabled={isCreatingJob} className={`text-white bg-[#0A66C2] py-2 px-4 hover:bg-blue-700 transition-all duration-200 rounded-full ${jobContent.length > 0 ? "bg-[#0A66C2] text-white" : "bg-[#E8E8E8] opacity-70"}`}> {isCreatingJob ? <SyncLoader color="white" size={10} /> : "Upload"}</button>
+          <button type="submit" disabled={isCreatingJob || jobContent.length > 0} className={`text-white bg-[#0A66C2] py-2 px-4 hover:bg-blue-700 transition-all duration-200 rounded-full ${jobContent.length > 0 ? "bg-[#0A66C2] text-white" : "bg-[#E8E8E8] opacity-70"}`}> {isCreatingJob ? <SyncLoader color="white" size={10} /> : "Upload"}</button>
         </div>
       </form>
     </div>

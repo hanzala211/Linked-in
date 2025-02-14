@@ -94,3 +94,16 @@ body::-webkit-scrollbar {
 .tiptap-editor strong {
 	font-weight: bold !important;
 }
+
+.react-tel-input .form-control {
+	width: 100%;
+	font-size: 14px;
+	padding-top: 7px;
+	padding-bottom: 7px;
+}
+.form-control:focus {
+	border-color: black !important;
+	box-shadow: none !important;
+	outline: 2px;
+	outline-color: black;
+}

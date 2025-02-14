@@ -20,7 +20,11 @@ export interface IUser {
   followerCount: number,
   following: string[],
   followingCount: number,
-  savedPosts: string[]
+  savedPosts: string[],
+  resume: {
+    resumeLink: string,
+    resumeName: string
+  } | null,
 }
 
 export interface IExperience {

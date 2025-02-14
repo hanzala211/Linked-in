@@ -182,5 +182,19 @@ export interface JobContextTypes {
     selectedJob: JobType | null,
     setSelectedJob: React.Dispatch<React.SetStateAction<JobType | null>>,
     getJob: (jobId: string) => void,
-    getJobs: (page: number, limit: string) => void
+    getJobs: (page: number, limit: string) => void,
+    email: string,
+    setEmail: React.Dispatch<React.SetStateAction<string>>,
+    phone: string,
+    setPhone: React.Dispatch<React.SetStateAction<string>>,
+    isApplicationModelOpen: boolean,
+    setIsApplicationModelOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    selectedFile: string[],
+    setSelectedFile: React.Dispatch<React.SetStateAction<string[]>>,
+    fileName: string,
+    setFileName: React.Dispatch<React.SetStateAction<string>>,
+    applyToJob: () => void
+    isApplying: boolean,
+    isAddingPDF: boolean,
+    setIsAddingPDF: React.Dispatch<React.SetStateAction<boolean>>,
 }

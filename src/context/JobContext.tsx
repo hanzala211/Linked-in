@@ -18,6 +18,13 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [page, setPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(2)
   const [selectedJob, setSelectedJob] = useState<JobType | null>(null)
+  const [email, setEmail] = useState<string>('')
+  const [phone, setPhone] = useState<string>("")
+  const [isApplicationModelOpen, setIsApplicationModelOpen] = useState<boolean>(false)
+  const [selectedFile, setSelectedFile] = useState<string[]>([])
+  const [fileName, setFileName] = useState<string>("")
+  const [isApplying, setIsApplying] = useState<boolean>(false)
+  const [isAddingPDF, setIsAddingPDF] = useState<boolean>(false)
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -115,7 +122,40 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   }
 
-  return <JobContext.Provider value={{ jobContent, setJobContent, createJob, isCreatingJob, isJobsLoading, setIsJobsLoading, firstJobs, setFirstJobs, threeJobs, setThreeJobs, paginatedJobs, setPaginatedJobs, page, totalPages, setPage, selectedJob, setSelectedJob, getJob, getJobs }}>{children}</JobContext.Provider>
+
+  const applyToJob = async () => {
+    try {
+      setIsApplying(true)
+      const formData = new FormData()
+      if (selectedFile.length !== 0) {
+        const response = await fetch(selectedFile[0]);
+        const blob = await response.blob();
+        formData.append("file", blob, `${fileName}`);
+      }
+      formData.append("number", phone)
+      formData.append("recieverEmail", selectedJob?.jobBy.email || "")
+      formData.append("email", email)
+      formData.append("title", selectedJob?.title || "")
+      const { data } = await jobService.applyToJob(formData, selectedJob?._id || "")
+      if (data.status === "Applied Successfully") {
+        successToast(data.status)
+      }
+    } catch (error) {
+      console.log(error)
+      const errorMessage = getErrorMessage(error);
+      errorToast(errorMessage);
+    } finally {
+      setIsApplying(false)
+      setIsApplicationModelOpen(false)
+      setEmail("")
+      setPhone("")
+      setSelectedFile([])
+      setFileName("")
+      setIsAddingPDF(false)
+    }
+  }
+
+  return <JobContext.Provider value={{ jobContent, setJobContent, createJob, isCreatingJob, isJobsLoading, setIsJobsLoading, firstJobs, setFirstJobs, threeJobs, setThreeJobs, paginatedJobs, setPaginatedJobs, page, totalPages, setPage, selectedJob, setSelectedJob, getJob, getJobs, email, setEmail, phone, setPhone, isApplicationModelOpen, setIsApplicationModelOpen, selectedFile, setSelectedFile, fileName, setFileName, applyToJob, isApplying, isAddingPDF, setIsAddingPDF }}>{children}</JobContext.Provider>
 }
 
 export const useJob = (): JobContextTypes => {

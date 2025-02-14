@@ -7,7 +7,7 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export const JobSearchPage: React.FC = () => {
-  const { paginatedJobs, totalPages, setPage, page, isJobsLoading, selectedJob, setSelectedJob, getJob, getJobs } = useJob()
+  const { paginatedJobs, totalPages, setPage, page, isJobsLoading, selectedJob, setSelectedJob, getJob, getJobs, setIsApplicationModelOpen } = useJob()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -113,7 +113,7 @@ export const JobSearchPage: React.FC = () => {
         <p className="text-[13px] text-[#666]">{selectedJob?.region}, {selectedJob?.country} · <span className="text-[#01754F] font-semibold">{formatDate(selectedJob?.createdAt || 0)}</span> · {(selectedJob?.appliedCount || 0) > 0 && `${selectedJob?.appliedCount} applicants`} </p>
         <p className="bg-gray-200 w-fit p-1 rounded-md text-[14px]">{selectedJob?.employmentType}</p>
         <div className="space-x-2">
-          <button className="bg-[#0A66C2] text-white rounded-full px-6 py-2 text-[18px] hover:bg-opacity-70 transition-all duration-200">Easy Apply</button>
+          <button onClick={() => setIsApplicationModelOpen(true)} className="bg-[#0A66C2] text-white rounded-full px-6 py-2 text-[18px] hover:bg-opacity-70 transition-all duration-200">Easy Apply</button>
           <button className="bg-transparent text-[#0A66C2] hover:bg-gray-200 hover:text-gray-500 hover:border-gray-500 border-[1px] border-[#0A66C2] rounded-full px-6 py-2 text-[18px] hover:bg-opacity-70 transition-all duration-200">Save</button>
         </div>
         <div className="p-3 border-[1px] border-gray-300 rounded-lg">
