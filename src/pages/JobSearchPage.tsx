@@ -34,7 +34,7 @@ export const JobSearchPage: React.FC = () => {
   }, [page])
 
   return (
-    <section className="flex pt-20 mx-auto w-full xl:max-w-[55%] max-w-[98%] h-screen">
+    <section className="flex pt-20 mx-auto w-full xl:max-w-[55%] max-w-[98%] h-[100dvh]">
       <div className={`border-[1px] border-r-[0] border-gray-200 bg-white h-full ${selectedJob !== null ? "md:w-full w-0" : "w-full"} overflow-y-auto`}>
         <div className={`flex flex-col`}>
           {!isJobsLoading ? paginatedJobs.map((item, i) => (
