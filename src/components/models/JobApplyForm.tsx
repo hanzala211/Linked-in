@@ -83,12 +83,14 @@ export const JobApplyForm: React.FC = () => {
         <div className="p-5 overflow-y-auto flex-grow">
           <h1 className="text-lg font-semibold">Resume</h1>
           <p className="text-[14px] text-[#666]">Be sure to include an updated resume *</p>
-          <div className="rounded-lg flex gap-2 border-[1px] border-black">
-            <div className="bg-[#CB112D] font-semibold rounded-l-lg text-white flex items-center justify-center p-5">
-              PDF
+          {(selectedFile.length !== 0 || userData?.resume !== null) &&
+            <div className="rounded-lg flex gap-2 border-[1px] border-black">
+              <div className="bg-[#CB112D] font-semibold rounded-l-lg text-white flex items-center justify-center p-5">
+                PDF
+              </div>
+              <h1 className="flex items-center">{selectedFile.length === 0 ? userData?.resume?.resumeName : fileName}</h1>
             </div>
-            <h1 className="flex items-center">{selectedFile.length === 0 ? userData?.resume?.resumeName : fileName}</h1>
-          </div>
+          }
           <button onClick={handleFile} className="p-2 border-[#0A66C2] border-[1px] rounded-lg hover:bg-[#0A66C2] hover:text-white mt-5 transition-all duration-200 bg-transparent text-[#0A66C2]">Upload from Computer</button>
           <input type="file" ref={fileInputRef}
             onChange={handleFileChange}

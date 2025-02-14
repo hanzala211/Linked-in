@@ -1,5 +1,5 @@
 import { DEFAULT_EXPERIENCE_PIC, DEFAULT_PIC } from "@assets";
-import { JobModel, JobsLoader, Pagination, PaginationContent, PaginationItem } from "@components"
+import { JobModel, JobsLoader, Pagination, PaginationContent, PaginationItem, Skeleton } from "@components"
 import { useJob } from "@context";
 import { formatDate, titleChanger } from "@helpers";
 import { useEffect } from "react"
@@ -107,31 +107,33 @@ export const JobSearchPage: React.FC = () => {
 
 
       <div className={`border-[1px] flex flex-col gap-3 border-l-[0] border-gray-200 bg-white h-full ${selectedJob === null ? " md:w-full md:p-4 w-0 p-0" : "w-full p-4"} overflow-y-auto`}>
-        {window.innerWidth < 768 && <Link to="/jobs/search" className="text-white bg-[#0A66C2] w-fit p-1.5 rounded-full mb-2" onClick={() => setSelectedJob(null)}><FaArrowLeftLong /></Link>}
-        <h2 className="flex gap-2 items-center text-[15px]"><img src={selectedJob?.company.companyImg || DEFAULT_EXPERIENCE_PIC} alt={`${selectedJob?.company.companyName} image`} className="w-8" /> {selectedJob?.company.companyName}</h2>
-        <h1 className="text-[30px]">{selectedJob?.title}</h1>
-        <p className="text-[13px] text-[#666]">{selectedJob?.region}, {selectedJob?.country} · <span className="text-[#01754F] font-semibold">{formatDate(selectedJob?.createdAt || 0)}</span> · {(selectedJob?.appliedCount || 0) > 0 && `${selectedJob?.appliedCount} applicants`} </p>
-        <p className="bg-gray-200 w-fit p-1 rounded-md text-[14px]">{selectedJob?.employmentType}</p>
-        <div className="space-x-2">
-          <button onClick={() => setIsApplicationModelOpen(true)} className="bg-[#0A66C2] text-white rounded-full px-6 py-2 text-[18px] hover:bg-opacity-70 transition-all duration-200">Easy Apply</button>
-          <button className="bg-transparent text-[#0A66C2] hover:bg-gray-200 hover:text-gray-500 hover:border-gray-500 border-[1px] border-[#0A66C2] rounded-full px-6 py-2 text-[18px] hover:bg-opacity-70 transition-all duration-200">Save</button>
-        </div>
-        <div className="p-3 border-[1px] border-gray-300 rounded-lg">
-          <h1 className="font-semibold">Meet the hiring team</h1>
-          <Link to={`/${selectedJob?.jobBy.userName}`} className="flex gap-3 py-4 items-center">
-            <img src={selectedJob?.jobBy.profilePic || DEFAULT_PIC} alt={`${selectedJob?.jobBy.firstName} Image`} className="w-12 rounded-full" />
-            <div>
-              <h1 className="hover:underline">{selectedJob?.jobBy.firstName} {selectedJob?.jobBy.lastName}</h1>
-              <p className="text-[#666] text-[13px]">{selectedJob?.jobBy.headline}</p>
-              <p className="text-[#666] text-[12px]">Job Poster</p>
-            </div>
-          </Link>
-        </div>
-        <h1 className="text-[18px] font-semibold">About the job:</h1>
-        <div
-          className="text-[17px]"
-          dangerouslySetInnerHTML={{ __html: selectedJob?.jobContent || "" }}
-        />
+        {!isJobsLoading ? <>
+          {window.innerWidth < 768 && <Link to="/jobs/search" className="text-white bg-[#0A66C2] w-fit p-1.5 rounded-full mb-2" onClick={() => setSelectedJob(null)}><FaArrowLeftLong /></Link>}
+          <h2 className="flex gap-2 items-center text-[15px]"><img src={selectedJob?.company.companyImg || DEFAULT_EXPERIENCE_PIC} alt={`${selectedJob?.company.companyName} image`} className="w-8" /> {selectedJob?.company.companyName}</h2>
+          <h1 className="text-[30px]">{selectedJob?.title}</h1>
+          <p className="text-[13px] text-[#666]">{selectedJob?.region}, {selectedJob?.country} · <span className="text-[#01754F] font-semibold">{formatDate(selectedJob?.createdAt || 0)}</span> · {(selectedJob?.appliedCount || 0) > 0 && `${selectedJob?.appliedCount} applicants`} </p>
+          <p className="bg-gray-200 w-fit p-1 rounded-md text-[14px]">{selectedJob?.employmentType}</p>
+          <div className="space-x-2">
+            <button onClick={() => setIsApplicationModelOpen(true)} className="bg-[#0A66C2] text-white rounded-full px-6 py-2 text-[18px] hover:bg-opacity-70 transition-all duration-200">Easy Apply</button>
+            <button className="bg-transparent text-[#0A66C2] hover:bg-gray-200 hover:text-gray-500 hover:border-gray-500 border-[1px] border-[#0A66C2] rounded-full px-6 py-2 text-[18px] hover:bg-opacity-70 transition-all duration-200">Save</button>
+          </div>
+          <div className="p-3 border-[1px] border-gray-300 rounded-lg">
+            <h1 className="font-semibold">Meet the hiring team</h1>
+            <Link to={`/${selectedJob?.jobBy.userName}`} className="flex gap-3 py-4 items-center">
+              <img src={selectedJob?.jobBy.profilePic || DEFAULT_PIC} alt={`${selectedJob?.jobBy.firstName} Image`} className="w-12 rounded-full" />
+              <div>
+                <h1 className="hover:underline">{selectedJob?.jobBy.firstName} {selectedJob?.jobBy.lastName}</h1>
+                <p className="text-[#666] text-[13px]">{selectedJob?.jobBy.headline}</p>
+                <p className="text-[#666] text-[12px]">Job Poster</p>
+              </div>
+            </Link>
+          </div>
+          <h1 className="text-[18px] font-semibold">About the job:</h1>
+          <div
+            className="text-[17px]"
+            dangerouslySetInnerHTML={{ __html: selectedJob?.jobContent || "" }}
+          />
+        </> : <Skeleton className="w-full h-full rounded-lg" />}
       </div>
     </section>
   );

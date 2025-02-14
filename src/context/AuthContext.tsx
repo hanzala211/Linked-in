@@ -15,7 +15,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     useEffect(() => {
         const token = localStorage.getItem("token")
-        if (token && userData === null) {
+        if (token !== null && userData === null) {
             me()
         } else {
             setIsMainPageLoading(false)
