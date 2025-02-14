@@ -98,7 +98,10 @@ export const ArtilceReviewPage: React.FC = () => {
     <div className="lg:max-w-[70%] md:max-w-[85%] max-w-full mx-auto">
       <div className="bg-[#F8FAFD] p-2 rounded-lg flex gap-4 border-[1px] items-center">
         {isCurrentProfile && <button onClick={handleEdit} className="flex gap-1.5 items-center hover:bg-[#E5F0FB] p-1 rounded-md transition-all duration-200 text-[#0A66C2] font-semibold text-[18px]"><MdOutlineModeEdit className="text-[20px]" />Edit Article</button>}
-        <Link to={`/${selectedArticle?.postBy.userName}/update/urn:li:activity/${selectedArticle?._id}`} className="flex gap-1.5 items-center hover:bg-[#E5F0FB] p-1 rounded-md transition-all duration-200 text-[#0A66C2] font-semibold text-[18px]"><IoIosEye className="text-[20px]" />View Post</Link>
+        <Link to={`/${selectedArticle?.postBy.userName}/update/urn:li:activity/${selectedArticle?._id}`} onClick={() => {
+          if (selectedArticle !== null)
+            handleSelectPost(selectedArticle)
+        }} className="flex gap-1.5 items-center hover:bg-[#E5F0FB] p-1 rounded-md transition-all duration-200 text-[#0A66C2] font-semibold text-[18px]"><IoIosEye className="text-[20px]" />View Post</Link>
       </div>
       <div className="w-full mt-4 px-4 flex md:justify-between md:gap-0 gap-10 flex-col md:flex-row">
         <div className="flex flex-col gap-4 w-[65%]">
