@@ -1,5 +1,5 @@
 import { DEFAULT_EXPERIENCE_PIC, DEFAULT_PIC } from "@assets";
-import { JobModel, JobsLoader, Pagination, PaginationContent, PaginationItem, Skeleton } from "@components"
+import { JobListingSkeleton, JobModel, JobsLoader, Pagination, PaginationContent, PaginationItem } from "@components"
 import { useJob } from "@context";
 import { formatDate, titleChanger } from "@helpers";
 import { useEffect } from "react"
@@ -133,7 +133,7 @@ export const JobSearchPage: React.FC = () => {
             className="text-[17px]"
             dangerouslySetInnerHTML={{ __html: selectedJob?.jobContent || "" }}
           />
-        </> : <Skeleton className="w-full h-full rounded-lg" />}
+        </> : <JobListingSkeleton />}
       </div>
     </section>
   );

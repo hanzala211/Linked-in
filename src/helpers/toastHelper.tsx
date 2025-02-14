@@ -4,7 +4,7 @@ import { toast } from "sonner";
 export const successToast = (status: string) => {
   toast.success(status, {
     action: {
-      label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"> <div> <RxCross2 className="w-4 h-4" /></div></button >,
+      label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><div><RxCross2 className="w-4 h-4" /></div></button >,
       onClick: () => null,
     },
   });
@@ -13,7 +13,7 @@ export const successToast = (status: string) => {
 export const errorToast = (status: string) => {
   toast.error(status, {
     action: {
-      label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><div> <RxCross2 className="w-4 h-4" /></div></button >,
+      label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><div><RxCross2 className="w-4 h-4" /></div></button >,
       onClick: () => null,
     },
   });
@@ -22,7 +22,7 @@ export const errorToast = (status: string) => {
 export const infoToast = (status: string) => {
   toast.info(status, {
     action: {
-      label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"> <div> <RxCross2 className="w-4 h-4" /></div></button >,
+      label: <button className="p-1 rounded text-black bg-white hover:bg-gray-200"><div><RxCross2 className="w-4 h-4" /></div></button >,
       onClick: () => null,
     },
   });
