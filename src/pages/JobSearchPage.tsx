@@ -38,12 +38,12 @@ export const JobSearchPage: React.FC = () => {
       <div className={`border-[1px] border-r-[0] border-gray-200 bg-white h-full ${selectedJob !== null ? "md:w-full w-0" : "w-full"} overflow-y-auto`}>
         <div className={`flex flex-col`}>
           {!isJobsLoading ? paginatedJobs.map((item, i) => (
-            <div onClick={() => {
+            <div key={i} onClick={() => {
               setSelectedJob(item)
               navigate(`/jobs/search?jobId=${item?._id}`)
             }}
               className={`px-4 ${selectedJob?._id === item?._id ? "bg-gray-50 border-l-[1px] border-black" : ""} p-3`}>
-              <JobModel item={item} key={i} />
+              <JobModel item={item} />
             </div>
           )) : Array.from({ length: 9 }, (_, i) => (
             <div className="px-4 p-3">

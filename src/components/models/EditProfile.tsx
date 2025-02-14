@@ -103,7 +103,7 @@ export const EditProfile: React.FC = () => {
             <Controller
               name="country"
               control={control}
-              render={({ field }) => (
+              render={({ field: { ref, ...field } }) => (
                 <CountryDropdown
                   {...field}
                   value={field.value}
@@ -124,7 +124,7 @@ export const EditProfile: React.FC = () => {
             <Controller
               name="region"
               control={control}
-              render={({ field }) => (
+              render={({ field: { ref, ...field } }) => (
                 <RegionDropdown
                   {...field}
                   country={watch("country")}

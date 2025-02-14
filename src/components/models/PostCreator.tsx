@@ -90,7 +90,7 @@ export const PostCreator: React.FC = () => {
             className="resize-none w-full mt-5 outline-none px-8 text-[20px] overflow-hidden max-h-[350px]"
             onInput={adjustHeight}
           ></textarea>
-          <button ref={emojiIconRef} className="hover:opacity-50 duration-200 px-8" onClick={() => setIsEmojiPicker(true)}><EmojiIcon /></button>
+          <button ref={emojiIconRef} className="hover:opacity-50 duration-200 px-8" onClick={() => setIsEmojiPicker(true)}><span><EmojiIcon /></span></button>
           {isArticleCreator &&
             <div className="w-[75%] mt-2 mx-auto">
               <img src="/images/articleCreator.png" alt="Article Creator" className="w-full rounded-t-lg" />
@@ -108,7 +108,9 @@ export const PostCreator: React.FC = () => {
         {selectedImage.length > 0 &&
           <div className="w-full border-[1px] rounded-lg overflow-y-auto flex h-full justify-center relative">
             <button onClick={() => setSelectedImage([])} className="absolute right-2 text-white bg-black rounded-full p-1 top-1">
-              <RxCross2 />
+              <span>
+                <RxCross2 />
+              </span>
             </button>
             <img src={selectedImage[0]} alt="SelectedImage" />
           </div>
@@ -118,7 +120,7 @@ export const PostCreator: React.FC = () => {
           <button onClick={() => setIsImageCreatorOpen(true)} className="px-8 w-fit mb-5 text-left">
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger><FaImage className="text-[#666] text-[22px] cursor-pointer" /></TooltipTrigger>
+                <TooltipTrigger asChild><div><FaImage className="text-[#666] text-[22px] cursor-pointer" /></div></TooltipTrigger>
                 <TooltipContent className="bg-white border-[1px] shadow-sm shadow-slate-400 text-black">
                   <p>Add a photo</p>
                 </TooltipContent>

@@ -93,7 +93,9 @@ export const ImageCreator: React.FC = () => {
       <div className="flex justify-between py-2 border-b-[1px] items-center px-4">
         <h1 className="text-[18px] font-semibold">Editor</h1>
         <button onClick={handleClose} className="hover:bg-slate-100 p-3 rounded-full text-[25px]">
-          <RxCross2 />
+          <span>
+            <RxCross2 />
+          </span>
         </button>
       </div>
       {isSelectingImage ?
@@ -134,7 +136,7 @@ export const ImageCreator: React.FC = () => {
                 <button key={index} onClick={() => item.func(selectedImage[currentIndex])} className="hover:opacity-70 rounded-full transition-all text-[#666] duration-200 text-[35px]">
                   <TooltipProvider>
                     <Tooltip>
-                      <TooltipTrigger><item.icon /></TooltipTrigger>
+                      <TooltipTrigger asChild><div><item.icon /></div></TooltipTrigger>
                       <TooltipContent className="bg-white border-[1px] shadow-sm shadow-slate-400 text-black">
                         <p className="text-black">{item.text}</p>
                       </TooltipContent>
