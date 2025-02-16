@@ -25,6 +25,7 @@ export interface IUser {
     resumeLink: string,
     resumeName: string
   } | null,
+  jobs: string[]
 }
 
 export interface IExperience {

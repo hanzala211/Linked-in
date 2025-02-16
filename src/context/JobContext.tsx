@@ -1,7 +1,7 @@
-import { useSearch } from "@context";
+import { useAuth, useSearch } from "@context";
 import { errorToast, getErrorMessage, successToast } from "@helpers";
 import { jobService } from "@services";
-import { JobContextTypes, JobType } from "@types";
+import { IUser, JobContextTypes, JobType } from "@types";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -9,6 +9,7 @@ const JobContext = createContext<JobContextTypes | undefined>(undefined)
 
 export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { searchValue, setSearchData } = useSearch()
+  const { setUserData } = useAuth()
   const [jobContent, setJobContent] = useState<string>("")
   const [firstJobs, setFirstJobs] = useState<JobType[]>([])
   const [threeJobs, setThreeJobs] = useState<JobType[]>([])
@@ -25,6 +26,8 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [fileName, setFileName] = useState<string>("")
   const [isApplying, setIsApplying] = useState<boolean>(false)
   const [isAddingPDF, setIsAddingPDF] = useState<boolean>(false)
+  const [savedJobs, setSavedJobs] = useState<JobType[]>([])
+  const [postedJobs, setPostedJobs] = useState<JobType[]>([])
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -48,6 +51,12 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
     if (firstJobs.length === 0) {
       getJobs("1", "8")
+    }
+    if (savedJobs.length === 0) {
+      getSavedJobs()
+    }
+    if (postedJobs.length === 0) {
+      getPostedJobs()
     }
   }, [])
 
@@ -155,7 +164,65 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   }
 
-  return <JobContext.Provider value={{ jobContent, setJobContent, createJob, isCreatingJob, isJobsLoading, setIsJobsLoading, firstJobs, setFirstJobs, threeJobs, setThreeJobs, paginatedJobs, setPaginatedJobs, page, totalPages, setPage, selectedJob, setSelectedJob, getJob, getJobs, email, setEmail, phone, setPhone, isApplicationModelOpen, setIsApplicationModelOpen, selectedFile, setSelectedFile, fileName, setFileName, applyToJob, isApplying, isAddingPDF, setIsAddingPDF }}>{children}</JobContext.Provider>
+  const saveJob = async (id: string) => {
+    try {
+      const { data } = await jobService.saveJob(id || "")
+      console.log(data)
+      if (data.status === "Job Saved Successfully") {
+        successToast(data.status)
+        setUserData((prev: IUser | null) => prev ? {
+          ...prev,
+          jobs: [...prev.jobs, id],
+        } : null)
+      } else {
+        errorToast(data.status)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const unSaveJob = async (id: string) => {
+    try {
+      const { data } = await jobService.unSaveJob(id || "")
+      if (data.status === "Job Unsaved Successfully") {
+        successToast(data.status)
+        setUserData((prev: IUser | null) => prev ? {
+          ...prev,
+          jobs: prev.jobs.filter((item) => item !== id),
+        } : null)
+      } else {
+        errorToast(data.status)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getSavedJobs = async () => {
+    try {
+      const { data } = await jobService.getSavedJobs()
+      if (data.status === "Saved Jobs Found") {
+        console.log(data)
+        setSavedJobs(data.jobs)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getPostedJobs = async () => {
+    try {
+      const { data } = await jobService.getPostedJobs()
+      if (data.status === "Jobs Found") {
+        setPostedJobs(data.jobs)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return <JobContext.Provider value={{ jobContent, setJobContent, createJob, isCreatingJob, isJobsLoading, setIsJobsLoading, firstJobs, setFirstJobs, threeJobs, setThreeJobs, paginatedJobs, setPaginatedJobs, page, totalPages, setPage, selectedJob, setSelectedJob, getJob, getJobs, email, setEmail, phone, setPhone, isApplicationModelOpen, setIsApplicationModelOpen, selectedFile, setSelectedFile, fileName, setFileName, applyToJob, isApplying, isAddingPDF, setIsAddingPDF, saveJob, unSaveJob, savedJobs, getSavedJobs, postedJobs }}>{children}</JobContext.Provider>
 }
 
 export const useJob = (): JobContextTypes => {

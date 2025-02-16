@@ -1,15 +1,17 @@
 import { DEFAULT_EXPERIENCE_PIC, DEFAULT_PIC } from "@assets";
 import { JobListingSkeleton, JobModel, JobsLoader, Pagination, PaginationContent, PaginationItem } from "@components"
-import { useJob } from "@context";
+import { useAuth, useJob } from "@context";
 import { formatDate, titleChanger } from "@helpers";
 import { useEffect } from "react"
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export const JobSearchPage: React.FC = () => {
-  const { paginatedJobs, totalPages, setPage, page, isJobsLoading, selectedJob, setSelectedJob, getJob, getJobs, setIsApplicationModelOpen } = useJob()
+  const { userData } = useAuth()
+  const { paginatedJobs, totalPages, setPage, page, isJobsLoading, selectedJob, setSelectedJob, getJob, getJobs, setIsApplicationModelOpen, saveJob, unSaveJob } = useJob()
   const navigate = useNavigate()
   const location = useLocation()
+  const isSaved = userData?.jobs.includes(selectedJob?._id || '')
 
   useEffect(() => {
     titleChanger(`${selectedJob?.title || ""} Job`)
@@ -32,6 +34,14 @@ export const JobSearchPage: React.FC = () => {
       getJobs(page, "7")
     }
   }, [page])
+
+  const handleSave = () => {
+    if (isSaved) {
+      unSaveJob(selectedJob?._id || '')
+    } else {
+      saveJob(selectedJob?._id || '')
+    }
+  }
 
   return (
     <section className="flex pt-20 mx-auto w-full xl:max-w-[55%] max-w-[98%] h-[100dvh]">
@@ -115,7 +125,7 @@ export const JobSearchPage: React.FC = () => {
           <p className="bg-gray-200 w-fit p-1 rounded-md text-[14px]">{selectedJob?.employmentType}</p>
           <div className="space-x-2">
             <button onClick={() => setIsApplicationModelOpen(true)} className="bg-[#0A66C2] text-white rounded-full px-6 py-2 text-[18px] hover:bg-opacity-70 transition-all duration-200">Easy Apply</button>
-            <button className="bg-transparent text-[#0A66C2] hover:bg-gray-200 hover:text-gray-500 hover:border-gray-500 border-[1px] border-[#0A66C2] rounded-full px-6 py-2 text-[18px] hover:bg-opacity-70 transition-all duration-200">Save</button>
+            <button onClick={handleSave} className={`bg-transparent hover:bg-gray-200 border-[1px] rounded-full px-6 py-2 text-[18px] hover:bg-opacity-70 transition-all duration-200 ${isSaved ? "hover:text-[#0A66C2] hover:border-[#0A66C2] text-gray-500 border-gray-500" : "text-[#0A66C2] border-[#0A66C2] hover:text-gray-500 hover:border-gray-500"}`}>{isSaved ? "Unsave" : "Save"}</button>
           </div>
           <div className="p-3 border-[1px] border-gray-300 rounded-lg">
             <h1 className="font-semibold">Meet the hiring team</h1>

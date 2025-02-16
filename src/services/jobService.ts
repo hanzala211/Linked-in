@@ -28,5 +28,25 @@ export const jobService = {
     url: `/jobs/apply/${jobId}`,
     isAuthIncluded: true,
     data
-  })
+  }),
+  saveJob: (jobId: string) => sendRequest({
+    method: "PATCH",
+    url: `/jobs/save/${jobId}`,
+    isAuthIncluded: true,
+  }),
+  unSaveJob: (jobId: string) => sendRequest({
+    method: "PATCH",
+    url: `/jobs/unsave/${jobId}`,
+    isAuthIncluded: true,
+  }),
+  getSavedJobs: () => sendRequest({
+    method: "GET",
+    url: `/jobs/saved-jobs`,
+    isAuthIncluded: true
+  }),
+  getPostedJobs: () => sendRequest({
+    method: "GET",
+    url: `/jobs/posted-jobs`,
+    isAuthIncluded: true
+  }),
 }

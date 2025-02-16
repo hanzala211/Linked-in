@@ -32,7 +32,7 @@ export const FeedIdentityModule: React.FC<{ data: IUser | null, isNetwork?: bool
     {isNetwork && <button onClick={() => handleRemoveSuggestions(data?._id || "", isIndustry || false)} className="absolute top-2 right-2 text-white bg-black p-1 rounded-full"><IoMdClose /></button>}
 
     {isCurrentProfile ?
-      <Link to="#" className="flex items-center gap-3 p-3 border-t group border-gray-300 hover:bg-gray-100 rounded-b-lg transition-all duration-200">
+      <Link to="/my-items/posted-jobs" className="flex items-center gap-3 p-3 border-t group border-gray-300 hover:bg-gray-100 rounded-b-lg transition-all duration-200">
         <IoIosBookmark className="text-gray-500" />
         <span className="text-sm font-semibold text-gray-500 underline group-hover:no-underline transition-all duration-200">Saved Items</span>
       </Link>

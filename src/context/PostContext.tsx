@@ -2,7 +2,7 @@ import { useAuth } from "@context";
 import { errorToast, successToast } from "@helpers";
 import { postService } from "@services";
 import { IUser, PostContextTypes, PostType } from "@types";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const PostContext = createContext<PostContextTypes | undefined>(undefined)
@@ -32,7 +32,14 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isArticleCreator, setIsArticleCreator] = useState<boolean>(false)
   const [selectedArticle, setSelectedArticle] = useState<PostType | null>(null)
   const [isEditingArticle, setIsEditingArticle] = useState<boolean>(false)
+  const [savedPosts, setSavedPosts] = useState<PostType[]>([])
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (savedPosts.length === 0) {
+      getSavedPosts()
+    }
+  }, [])
 
 
   const createPost = async () => {
@@ -460,6 +467,18 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }
 
+  const getSavedPosts = async () => {
+    try {
+      const { data } = await postService.getSavedPosts()
+      console.log(data)
+      if (data.status === "Posts Found") {
+        setSavedPosts(data.posts)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleSelectPost = (item: PostType) => {
     setAllPosts([item])
   }
@@ -481,7 +500,7 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setSelectedArticle(item)
   }
 
-  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment, allPosts, setAllPosts, getAllPosts, isAllPostsLoading, setIsAllPostsLoading, handleSelectPost, getPost, firstPosts, setFirstPosts, isPostsLoading, getSixPosts, savePost, unSavePost, deletePost, handleOpenImageCreator, isSelectingImage, setIsSelectingImage, isEditingPost, setIsEditingPost, imagesToRemove, setImagesToRemove, editPost, title, setTitle, mentions, setMentions, editorContent, setEditorContent, isArticleCreator, setIsArticleCreator, createArticle, selectedArticle, setSelectedArticle, handleSelectArticle, isEditingArticle, setIsEditingArticle, editArticle }}>{children}</PostContext.Provider>
+  return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment, allPosts, setAllPosts, getAllPosts, isAllPostsLoading, setIsAllPostsLoading, handleSelectPost, getPost, firstPosts, setFirstPosts, isPostsLoading, getSixPosts, savePost, unSavePost, deletePost, handleOpenImageCreator, isSelectingImage, setIsSelectingImage, isEditingPost, setIsEditingPost, imagesToRemove, setImagesToRemove, editPost, title, setTitle, mentions, setMentions, editorContent, setEditorContent, isArticleCreator, setIsArticleCreator, createArticle, selectedArticle, setSelectedArticle, handleSelectArticle, isEditingArticle, setIsEditingArticle, editArticle, savedPosts }}>{children}</PostContext.Provider>
 }
 
 export const usePost = (): PostContextTypes => {

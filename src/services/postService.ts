@@ -86,5 +86,10 @@ export const postService = {
     url: `/post/update-article/${postId}`,
     data,
     isAuthIncluded: true
+  }),
+  getSavedPosts: () => sendRequest({
+    method: "GET",
+    url: `/post/saved-posts`,
+    isAuthIncluded: true
   })
 }

@@ -86,7 +86,8 @@ export interface PostContextTypes {
     handleSelectArticle: (item: PostType) => void,
     isEditingArticle: boolean,
     setIsEditingArticle: React.Dispatch<React.SetStateAction<boolean>>,
-    editArticle: () => void
+    editArticle: () => void,
+    savedPosts: PostType[]
 }
 
 export interface ProfileContextTypes {
@@ -197,4 +198,9 @@ export interface JobContextTypes {
     isApplying: boolean,
     isAddingPDF: boolean,
     setIsAddingPDF: React.Dispatch<React.SetStateAction<boolean>>,
+    saveJob: (id: string) => void,
+    unSaveJob: (id: string) => void,
+    savedJobs: JobType[],
+    getSavedJobs: () => void,
+    postedJobs: JobType[]
 }

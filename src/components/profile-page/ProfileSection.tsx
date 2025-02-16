@@ -4,6 +4,7 @@ import { FaCamera, FaCheck } from "react-icons/fa"
 import { HiPlus } from "react-icons/hi"
 import { LuPlus } from "react-icons/lu"
 import { MdOutlineFileDownload, MdOutlineModeEdit } from "react-icons/md"
+import { Link } from "react-router-dom"
 
 export const ProfileSection: React.FC<{ isCurrentProfile: boolean }> = ({ isCurrentProfile }) => {
   const { setIsEditingProfile, setIsAddingProfile, setIsAddingBanner, handleDownloadPDF, selectedProfile, handleFollow, handleUnfollow } = useProfile()
@@ -66,9 +67,9 @@ export const ProfileSection: React.FC<{ isCurrentProfile: boolean }> = ({ isCurr
         </p>
         <div className="flex gap-2 items-center justify-end mt-4">
           {isCurrentProfile &&
-            <button className="w-fit p-2 border hover:bg-[#f3f3f3] border-black rounded-full">
+            <Link to="/my-items/saved-posts" className="w-fit p-2 border hover:bg-[#f3f3f3] border-black rounded-full">
               Saved Items
-            </button>
+            </Link>
           }
           {!isCurrentProfile &&
             <button onClick={handleFollowing} className={`${isFollowing ? "border-[1px] border-black hover:bg-gray-100" : "bg-[#0A66C2] text-white hover:bg-blue-900"} flex p-2 items-center rounded-full px-4 gap-2 transition-all duration-200`}>{isFollowing ? <FaCheck className="text-[18px]" /> : <LuPlus className="text-[20px]" />}{isFollowing ? "Following" : "Follow"}</button>

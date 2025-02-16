@@ -22,7 +22,7 @@ export const JobPage: React.FC = () => {
 
       <div className="bg-white rounded-lg border-[1px] border-gray-300 py-2 w-full md:max-w-[95%] max-w-full">
         <div className="hover:bg-gray-100 p-3 ">
-          <button className="flex gap-2 w-full items-center font-semibold"><IoBookmark className="text-[22px]" /> My jobs</button>
+          <Link to="/my-items/posted-jobs" className="flex gap-2 w-full items-center font-semibold"><IoBookmark className="text-[22px]" /> My jobs</Link>
         </div>
         <div className="border-b-[1px] mx-4 my-2"></div>
         <div className="hover:bg-gray-100 p-3">
