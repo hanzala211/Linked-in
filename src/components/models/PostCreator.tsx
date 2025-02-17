@@ -55,6 +55,7 @@ export const PostCreator: React.FC = () => {
   }
 
   const handleSubmit = () => {
+
     if (isArticleCreator) {
       if (isEditingArticle) {
         editArticle();

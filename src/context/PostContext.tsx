@@ -395,8 +395,11 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setIsCreatingLoading(true)
       const formData = new FormData()
       formData.append("caption", captionValue)
-      if (selectedImage.length > 0) {
-        await Promise.all(selectedImage.map(async (item, index) => {
+      const filteredImages = selectedImage.filter(
+        (item) => !item.startsWith("https://res.cloudinary.com/")
+      );
+      if (filteredImages.length > 0) {
+        await Promise.all(filteredImages.map(async (item, index) => {
           const response = await fetch(item)
           const blob = await response.blob()
           formData.append("image", blob, `image${index}.jpg`)
@@ -499,6 +502,8 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const handleSelectArticle = (item: PostType) => {
     setSelectedArticle(item)
   }
+
+  console.log(selectedImage)
 
   return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment, allPosts, setAllPosts, getAllPosts, isAllPostsLoading, setIsAllPostsLoading, handleSelectPost, getPost, firstPosts, setFirstPosts, isPostsLoading, getSixPosts, savePost, unSavePost, deletePost, handleOpenImageCreator, isSelectingImage, setIsSelectingImage, isEditingPost, setIsEditingPost, imagesToRemove, setImagesToRemove, editPost, title, setTitle, mentions, setMentions, editorContent, setEditorContent, isArticleCreator, setIsArticleCreator, createArticle, selectedArticle, setSelectedArticle, handleSelectArticle, isEditingArticle, setIsEditingArticle, editArticle, savedPosts }}>{children}</PostContext.Provider>
 }
