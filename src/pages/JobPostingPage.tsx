@@ -32,7 +32,6 @@ export const JobPostingPage: React.FC = () => {
 
 
   const onSubmit: SubmitHandler<JobForm> = (e) => {
-    console.log(e, jobContent)
     const formData = {
       title: e.title,
       company: {

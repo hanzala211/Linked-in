@@ -46,7 +46,10 @@ export const SavedPosts: React.FC = () => {
             <div className="p-5">
               {item.isArticle ? <Link to={`/${item.postBy.userName}/update/urn:li:activity/${item._id}`} className="bg-[#EDF3F8] block px-4 py-5 rounded-lg w-52">
                 <h1 className="text-[14px]">{item.title}</h1>
-                <p className="text-[12px] text-[#666]">{item.articleContent}</p>
+                <div
+                  className="text-[12px] text-[#666]"
+                  dangerouslySetInnerHTML={{ __html: item.articleContent || "" }}
+                />
               </Link> :
                 <Link to={`/${item.postBy.userName}/update/urn:li:activity/${item._id}`} className="flex gap-3">
                   <img src={item.imageUrls[0]} alt="Test Img" className="w-24 h-24 rounded-md object-cover" />

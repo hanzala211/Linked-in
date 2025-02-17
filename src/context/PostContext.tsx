@@ -81,8 +81,6 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const newPosts: PostType[] = data.data.filter((post: PostType) =>
           !prev.some((existingPost: PostType) => existingPost._id === post._id)
         );
-        console.log(newPosts)
-
         if (newPosts.length === 0) {
           setHasMore(false);
         }
@@ -114,53 +112,65 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const likePost = async (postId: string) => {
     try {
-      setFeedPosts((prev: PostType[]) =>
-        prev.map((item) =>
-          item._id === postId
-            ? {
-              ...item,
-              likeCount: item.likeCount + 1,
-              likes: [...item.likes, userData?._id].filter((id): id is string => Boolean(id))
-            }
-            : item
-        )
-      );
-      setAllPosts((prev: PostType[]) =>
-        prev.map((item) =>
-          item._id === postId
-            ? {
-              ...item,
-              likeCount: item.likeCount + 1,
-              likes: [...item.likes, userData?._id].filter((id): id is string => Boolean(id))
-            }
-            : item
-        )
-      );
-      setFirstPosts((prev: PostType[]) =>
-        prev.map((item) =>
-          item._id === postId
-            ? {
-              ...item,
-              likeCount: item.likeCount + 1,
-              likes: [...item.likes, userData?._id].filter((id): id is string => Boolean(id))
-            }
-            : item
-        )
-      );
-      setSelectedArticle((prev: PostType | null) =>
-        prev
-          ? {
-            ...prev,
-            likeCount: prev.likeCount + 1,
-            likes: [...prev.likes, userData?._id].filter((id): id is string => Boolean(id))
-          }
-          : null
-      );
       const { data } = await postService.likePost(postId)
       if (data.status === "Post Liked Successfully") {
         successToast(data.status)
+        setFeedPosts((prev: PostType[]) =>
+          prev.map((item) =>
+            item._id === postId
+              ? {
+                ...item,
+                likeCount: item.likeCount + 1,
+                likes: [...item.likes, userData?._id].filter((id): id is string => Boolean(id))
+              }
+              : item
+          )
+        );
+        setAllPosts((prev: PostType[]) =>
+          prev.map((item) =>
+            item._id === postId
+              ? {
+                ...item,
+                likeCount: item.likeCount + 1,
+                likes: [...item.likes, userData?._id].filter((id): id is string => Boolean(id))
+              }
+              : item
+          )
+        );
+        setFirstPosts((prev: PostType[]) =>
+          prev.map((item) =>
+            item._id === postId
+              ? {
+                ...item,
+                likeCount: item.likeCount + 1,
+                likes: [...item.likes, userData?._id].filter((id): id is string => Boolean(id))
+              }
+              : item
+          )
+        );
+        setSelectedArticle((prev: PostType | null) =>
+          prev
+            ? {
+              ...prev,
+              likeCount: prev.likeCount + 1,
+              likes: [...prev.likes, userData?._id].filter((id): id is string => Boolean(id))
+            }
+            : null
+        );
       } else {
         errorToast(data.status)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  const disLikePost = async (postId: string) => {
+    try {
+      const { data } = await postService.disLikePost(postId)
+      if (data.status === "Post DisLiked Successfully") {
+        successToast(data.status)
         setFeedPosts((prev) =>
           prev.map((item) =>
             item._id === postId
@@ -168,14 +178,14 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               : item
           )
         );
-        setAllPosts((prev) =>
+        setFirstPosts((prev) =>
           prev.map((item) =>
             item._id === postId
               ? { ...item, likeCount: item.likeCount - 1, likes: item.likes.filter((like) => like !== userData?._id) }
               : item
           )
         );
-        setFirstPosts((prev) =>
+        setAllPosts((prev) =>
           prev.map((item) =>
             item._id === postId
               ? { ...item, likeCount: item.likeCount - 1, likes: item.likes.filter((like) => like !== userData?._id) }
@@ -191,92 +201,8 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             }
             : null
         );
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-
-  const disLikePost = async (postId: string) => {
-    try {
-      setFeedPosts((prev) =>
-        prev.map((item) =>
-          item._id === postId
-            ? { ...item, likeCount: item.likeCount - 1, likes: item.likes.filter((like) => like !== userData?._id) }
-            : item
-        )
-      );
-      setFirstPosts((prev) =>
-        prev.map((item) =>
-          item._id === postId
-            ? { ...item, likeCount: item.likeCount - 1, likes: item.likes.filter((like) => like !== userData?._id) }
-            : item
-        )
-      );
-      setAllPosts((prev) =>
-        prev.map((item) =>
-          item._id === postId
-            ? { ...item, likeCount: item.likeCount - 1, likes: item.likes.filter((like) => like !== userData?._id) }
-            : item
-        )
-      );
-      setSelectedArticle((prev: PostType | null) =>
-        prev
-          ? {
-            ...prev,
-            likeCount: prev.likeCount - 1,
-            likes: prev.likes.filter((id) => id !== userData?._id)
-          }
-          : null
-      );
-      const { data } = await postService.disLikePost(postId)
-      if (data.status === "Post DisLiked Successfully") {
-        successToast(data.status)
       } else {
         errorToast(data.status)
-        setFeedPosts((prev: PostType[]) =>
-          prev.map((item) =>
-            item._id === postId
-              ? {
-                ...item,
-                likeCount: item.likeCount + 1,
-                likes: [...item.likes, userData?._id].filter(Boolean) as string[]
-              }
-              : item
-          )
-        );
-        setAllPosts((prev: PostType[]) =>
-          prev.map((item) =>
-            item._id === postId
-              ? {
-                ...item,
-                likeCount: item.likeCount + 1,
-                likes: [...item.likes, userData?._id].filter(Boolean) as string[]
-              }
-              : item
-          )
-        );
-        setFirstPosts((prev: PostType[]) =>
-          prev.map((item) =>
-            item._id === postId
-              ? {
-                ...item,
-                likeCount: item.likeCount + 1,
-                likes: [...item.likes, userData?._id].filter(Boolean) as string[]
-              }
-              : item
-          )
-        );
-        setSelectedArticle((prev: PostType | null) =>
-          prev
-            ? {
-              ...prev,
-              likeCount: prev.likeCount + 1,
-              likes: [...prev.likes, userData?._id].filter((id): id is string => Boolean(id))
-            }
-            : null
-        );
       }
     } catch (error) {
       console.log(error)
@@ -502,8 +428,6 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const handleSelectArticle = (item: PostType) => {
     setSelectedArticle(item)
   }
-
-  console.log(selectedImage)
 
   return <PostContext.Provider value={{ isPostCreatorOpen, setIsPostCreatorOpen, currentIndex, setCurrentIndex, selectedImage, setSelectedImage, isImageCreatorOpen, setIsImageCreatorOpen, captionValue, setCaptionValue, createPost, isCreatingLoading, setIsCreatingLoading, feedPosts, setFeedPosts, getFeedPosts, likePost, disLikePost, hasMore, setHasMore, isFeedPostsLoading, setIsFeedPostsLoading, getComments, postComment, allPosts, setAllPosts, getAllPosts, isAllPostsLoading, setIsAllPostsLoading, handleSelectPost, getPost, firstPosts, setFirstPosts, isPostsLoading, getSixPosts, savePost, unSavePost, deletePost, handleOpenImageCreator, isSelectingImage, setIsSelectingImage, isEditingPost, setIsEditingPost, imagesToRemove, setImagesToRemove, editPost, title, setTitle, mentions, setMentions, editorContent, setEditorContent, isArticleCreator, setIsArticleCreator, createArticle, selectedArticle, setSelectedArticle, handleSelectArticle, isEditingArticle, setIsEditingArticle, editArticle, savedPosts }}>{children}</PostContext.Provider>
 }
