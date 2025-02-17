@@ -198,9 +198,10 @@ export interface JobContextTypes {
     isApplying: boolean,
     isAddingPDF: boolean,
     setIsAddingPDF: React.Dispatch<React.SetStateAction<boolean>>,
-    saveJob: (id: string) => void,
+    saveJob: (id: string, item: JobType | null) => void,
     unSaveJob: (id: string) => void,
     savedJobs: JobType[],
     getSavedJobs: () => void,
-    postedJobs: JobType[]
+    postedJobs: JobType[],
+    deleteJob: (id: string) => void
 }

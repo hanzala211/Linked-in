@@ -39,7 +39,7 @@ export const JobSearchPage: React.FC = () => {
     if (isSaved) {
       unSaveJob(selectedJob?._id || '')
     } else {
-      saveJob(selectedJob?._id || '')
+      saveJob(selectedJob?._id || '', selectedJob)
     }
   }
 

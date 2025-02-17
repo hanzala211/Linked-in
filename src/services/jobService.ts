@@ -49,4 +49,9 @@ export const jobService = {
     url: `/jobs/posted-jobs`,
     isAuthIncluded: true
   }),
+  deleteJob: (id: string) => sendRequest({
+    method: "DELETE",
+    url: `/jobs/${id}`,
+    isAuthIncluded: true
+  })
 }

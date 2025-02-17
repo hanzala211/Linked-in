@@ -8,13 +8,13 @@ import { Link } from "react-router-dom"
 
 interface SavePageJobModelProps {
   isSaves?: boolean,
-  item?: JobType,
+  item: JobType,
   index?: number,
   arr: JobType[]
 }
 
 export const SavePageJobModel: React.FC<SavePageJobModelProps> = ({ isSaves, item, index, arr }) => {
-  const { saveJob, unSaveJob } = useJob()
+  const { saveJob, unSaveJob, deleteJob } = useJob()
   const { userData } = useAuth()
   const isSaved = userData?.jobs.includes(item?._id || '')
 
@@ -22,7 +22,7 @@ export const SavePageJobModel: React.FC<SavePageJobModelProps> = ({ isSaves, ite
     if (isSaved) {
       unSaveJob(item?._id || "")
     } else {
-      saveJob(item?._id || "")
+      saveJob(item?._id || "", item)
     }
   }
 
@@ -44,6 +44,8 @@ export const SavePageJobModel: React.FC<SavePageJobModelProps> = ({ isSaves, ite
           <DropdownMenuItem onClick={() => {
             if (isSaves) {
               handleSave()
+            } else {
+              deleteJob(item?._id || "")
             }
           }} className="cursor-pointer flex items-center gap-2 p-2 rounded-md outline-none">
             <span>{isSaves ? (isSaved ? <IoBookmark /> : <IoBookmarkOutline />) : <MdDelete />}</span> {isSaves ? (isSaved ? "Unsave Job" : "Save Job") : "Delete Job"}

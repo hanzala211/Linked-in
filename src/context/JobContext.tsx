@@ -67,6 +67,7 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       if (data.status === "Job Created Successfully") {
         successToast(data.status)
         console.log(data)
+        setPostedJobs((prev) => [...prev, data.job])
       } else {
         errorToast(data.status)
       }
@@ -164,7 +165,7 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   }
 
-  const saveJob = async (id: string) => {
+  const saveJob = async (id: string, item: JobType | null) => {
     try {
       const { data } = await jobService.saveJob(id || "")
       console.log(data)
@@ -174,6 +175,9 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           ...prev,
           jobs: [...prev.jobs, id],
         } : null)
+        if (item !== null) {
+          setSavedJobs((prev) => [...prev, item])
+        }
       } else {
         errorToast(data.status)
       }
@@ -191,6 +195,7 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           ...prev,
           jobs: prev.jobs.filter((item) => item !== id),
         } : null)
+        setSavedJobs((prev) => prev.filter((item) => item._id !== id))
       } else {
         errorToast(data.status)
       }
@@ -222,7 +227,21 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   }
 
-  return <JobContext.Provider value={{ jobContent, setJobContent, createJob, isCreatingJob, isJobsLoading, setIsJobsLoading, firstJobs, setFirstJobs, threeJobs, setThreeJobs, paginatedJobs, setPaginatedJobs, page, totalPages, setPage, selectedJob, setSelectedJob, getJob, getJobs, email, setEmail, phone, setPhone, isApplicationModelOpen, setIsApplicationModelOpen, selectedFile, setSelectedFile, fileName, setFileName, applyToJob, isApplying, isAddingPDF, setIsAddingPDF, saveJob, unSaveJob, savedJobs, getSavedJobs, postedJobs }}>{children}</JobContext.Provider>
+  const deleteJob = async (id: string) => {
+    try {
+      const { data } = await jobService.deleteJob(id);
+      if (data.status === "Job Deleted Successfully") {
+        successToast(data.status)
+        setPostedJobs((prev) => prev.filter((item) => item._id !== id))
+      } else {
+        errorToast(data.status || "Failed")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return <JobContext.Provider value={{ jobContent, setJobContent, createJob, isCreatingJob, isJobsLoading, setIsJobsLoading, firstJobs, setFirstJobs, threeJobs, setThreeJobs, paginatedJobs, setPaginatedJobs, page, totalPages, setPage, selectedJob, setSelectedJob, getJob, getJobs, email, setEmail, phone, setPhone, isApplicationModelOpen, setIsApplicationModelOpen, selectedFile, setSelectedFile, fileName, setFileName, applyToJob, isApplying, isAddingPDF, setIsAddingPDF, saveJob, unSaveJob, savedJobs, getSavedJobs, postedJobs, deleteJob }}>{children}</JobContext.Provider>
 }
 
 export const useJob = (): JobContextTypes => {
