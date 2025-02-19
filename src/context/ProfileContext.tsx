@@ -37,14 +37,6 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     if (suggestions.length === 0 && window.innerWidth > 768) {
       randomUsers("3")
     }
-    if (networkSuggestions.length === 0) {
-      randomUsers("8")
-    }
-    if (industrySuggestions.length === 0 && userData?.industry) {
-      randomIndustryUsers("8")
-    } else {
-      setIsIndustryLoading(false)
-    }
   }, [userData?._id])
 
   const editProfile = async (sendData: unknown) => {

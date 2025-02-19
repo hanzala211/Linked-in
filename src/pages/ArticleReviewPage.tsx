@@ -95,7 +95,7 @@ export const ArtilceReviewPage: React.FC = () => {
   }
 
   return <div className="bg-white min-h-screen w-full pt-20">
-    <div className="lg:max-w-[70%] md:max-w-[85%] max-w-full mx-auto">
+    <div className="lg:max-w-[65%] md:max-w-[85%] max-w-full mx-auto">
       <div className="bg-[#F8FAFD] p-2 rounded-lg flex gap-4 border-[1px] items-center">
         {isCurrentProfile && <button onClick={handleEdit} className="flex gap-1.5 items-center hover:bg-[#E5F0FB] p-1 rounded-md transition-all duration-200 text-[#0A66C2] font-semibold text-[18px]"><MdOutlineModeEdit className="text-[20px]" />Edit Article</button>}
         <Link to={`/${selectedArticle?.postBy.userName}/update/urn:li:activity/${selectedArticle?._id}`} onClick={() => {

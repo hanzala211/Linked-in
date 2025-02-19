@@ -43,7 +43,7 @@ export const ProfilePage: React.FC = () => {
     getSixPosts(userId)
   }, [userData?._id, selectedProfile?._id, params.username])
 
-  return <><section className="grid md:grid-cols-[2fr_1fr] grid-cols-1 pt-20 w-full xl:max-w-[70%] lg:gap-6 md:max-w-full max-w-[98%] mx-auto">
+  return <><section className="grid md:grid-cols-[2fr_1fr] grid-cols-1 pt-20 w-full xl:max-w-[78%] lg:gap-6 md:max-w-full max-w-[98%] mx-auto">
     {/* First Column */}
     <div className="w-full flex flex-col gap-4">
       <ProfileSection isCurrentProfile={isCurrentProfile} />
@@ -56,7 +56,7 @@ export const ProfilePage: React.FC = () => {
       {(isCurrentProfile ? (userData?.postsCount ?? 0) > 0 : (selectedProfile?.postsCount ?? 0) > 0) && (
         <div className="w-full px-3 rounded-lg relative bg-white pt-4">
           <h1 className="md:text-[22px] text-[18px]">Activity</h1>
-          <div className="w-full max-w-[100vw] sm:max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] xl:max-w-[850px] mx-auto overflow-hidden">
+          <div className="w-full max-w-[100vw] sm:max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] xl:max-w-[900px] mx-auto overflow-hidden">
             <Carousel className="relative w-full">
               <CarouselContent className="flex w-full">
                 {!isPostsLoading ? (

@@ -15,7 +15,7 @@ export const JobPage: React.FC = () => {
     titleChanger("Jobs")
   }, [])
 
-  return <section className="grid md:grid-cols-[0.7fr_2fr] gap-5 lg:gap-0 grid-cols-1 pt-20 mx-auto w-full xl:max-w-[70%] max-w-[98%]">
+  return <section className="grid md:grid-cols-[0.7fr_2fr] gap-5 lg:gap-0 grid-cols-1 pt-20 mx-auto w-full xl:max-w-[78%] max-w-[98%]">
     {/* First Column */}
     <div className="flex flex-col gap-3">
       <FeedIdentityModule data={userData} />
@@ -33,7 +33,7 @@ export const JobPage: React.FC = () => {
     </div>
 
     <div className="flex flex-col gap-3">
-      <div className="bg-white rounded-lg border-[1px] border-gray-300 w-full lg:max-w-[92%] max-w-full">
+      <div className="bg-white rounded-lg border-[1px] border-gray-300 w-full lg:max-w-[88%] max-w-full">
         <div className="p-4">
           <h1 className="text-[20px]">Job picks for you</h1>
           <p className="text-[#666] text-[13px]">Based on your profile, preferences, and activity like applies, searches, and saves</p>
@@ -50,7 +50,7 @@ export const JobPage: React.FC = () => {
         </Link>
       </div>
 
-      <div className="bg-white rounded-lg border-[1px] border-gray-300 w-full lg:max-w-[92%] max-w-full">
+      <div className="bg-white rounded-lg border-[1px] border-gray-300 w-full lg:max-w-[88%] max-w-full">
         <div className="p-4">
           <h1 className="text-[20px]">Random Jobs</h1>
         </div>

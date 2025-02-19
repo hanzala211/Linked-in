@@ -3,7 +3,7 @@ import { FaBookmark } from "react-icons/fa"
 import { NavLink, Outlet } from "react-router-dom"
 
 export const SavedItemsPage: React.FC = () => {
-  return <><section className="grid lg:grid-cols-[1fr_2fr_1fr] md:grid-cols-[1fr_2fr] gap-4 lg:gap-8 grid-cols-1 pt-20 mx-auto w-full xl:max-w-[70%] max-w-[98%]">
+  return <><section className="grid lg:grid-cols-[1fr_2fr_1fr] md:grid-cols-[1fr_2fr] gap-4 lg:gap-6 grid-cols-1 pt-20 mx-auto w-full xl:max-w-[65%] max-w-[98%]">
     <div className="bg-white border-[1px] h-[10.3rem] text-[#666] rounded-lg">
       <div className="flex gap-2 items-center px-3 border-b-[1px] py-2">
         <FaBookmark />

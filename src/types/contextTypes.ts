@@ -12,7 +12,7 @@ export interface AuthContextTypes {
     setErrorMessage: React.Dispatch<React.SetStateAction<string>>,
     updateName: (sendData: unknown) => Promise<void>,
     isMainPageLoading: boolean,
-    setIsMainPageLoading: React.Dispatch<React.SetStateAction<boolean>>
+    setIsMainPageLoading: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 export interface SearchContextTypes {

@@ -14,13 +14,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const navigate = useNavigate()
 
     useEffect(() => {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("token");
         if (token !== null && userData === null) {
-            me()
+            me();
         } else {
-            setIsMainPageLoading(false)
+            setIsMainPageLoading(false);
         }
-    }, [])
+    }, [userData]);
 
     const login = async (sendData: unknown) => {
         try {

@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ArticlePage, ArtilceReviewPage, FeedPage, JobPage, JobPostingPage, JobSearchPage, LoginPage, NetworkPage, PostPage, ProfilePage, SavedItemsPage, SignupPage, UpdateNamePage } from "@pages";
+import { ArticlePage, ArtilceReviewPage, FeedPage, JobPage, JobPostingPage, JobSearchPage, LoginPage, NetworkPage, NotificationPage, PostPage, ProfilePage, SavedItemsPage, SignupPage, UpdateNamePage } from "@pages";
 import { AuthProvider, SearchProvider, PostProvider, ProfileProvider, NetworkProvider, JobProvider } from "@context";
 import { ProtectedLayout, RootRedirect, AppLayout } from "@layouts";
 import { PostedJobs, SavedJobs, SavedPosts } from "@components";
@@ -34,6 +34,7 @@ const App: React.FC = () => {
                         <Route path="/jobs" element={<JobPage />} />
                         <Route path="/jobs/search" element={<JobSearchPage />} />
                         <Route path="/job-posting/form" element={<JobPostingPage />} />
+                        <Route path="/notifications" element={<NotificationPage />} />
                         <Route path="/my-items" element={<SavedItemsPage />}>
                           <Route path="posted-jobs" element={<PostedJobs />} />
                           <Route path="saved-jobs" element={<SavedJobs />} />

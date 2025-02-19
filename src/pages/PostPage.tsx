@@ -44,7 +44,7 @@ export const PostPage: React.FC = () => {
     getAllPosts(userId)
   }, [selectedProfile?._id, userData?._id, params.username])
 
-  return <section className="grid lg:grid-cols-[0.7fr_2fr] gap-5 lg:gap-0 grid-cols-1 pt-20 mx-auto w-full xl:max-w-[55%] max-w-[98%]">
+  return <section className="grid lg:grid-cols-[0.7fr_2fr] gap-5 lg:gap-0 grid-cols-1 pt-20 mx-auto w-full xl:max-w-[70%] max-w-[98%]">
     <div className="lg:block hidden">
       <FeedIdentityModule data={isCurrentProfile ? userData : selectedProfile} />
     </div>
