@@ -122,8 +122,8 @@ export interface ProfileContextTypes {
     setEducationFormData: React.Dispatch<React.SetStateAction<IEducation[]>>,
     handleDeleteEducation: (i: number) => void,
     handleDeleteExperience: (i: number) => void,
-    handleEducation: () => void,
-    handlePosition: () => void,
+    handleEducation: (index: number) => void,
+    handlePosition: (index: number) => void,
     startYearEducation: string,
     setStartYearEducation: React.Dispatch<React.SetStateAction<string>>,
     startYearExperience: string,
@@ -154,7 +154,9 @@ export interface ProfileContextTypes {
     setHasMore: React.Dispatch<React.SetStateAction<boolean>>,
     handleRemoveSuggestions: (id: string, isIndustry: boolean) => void,
     getFollow: () => void,
-    followData: IUser[]
+    followData: IUser[],
+    selectedForm: IEducation | IExperience | null,
+    setSelectedForm: React.Dispatch<React.SetStateAction<IEducation | IExperience | null>>,
 }
 
 export interface NetworkContextTypes {

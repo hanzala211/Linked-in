@@ -53,6 +53,8 @@ export const EditProfile: React.FC = () => {
 
   const handleClose = () => {
     setIsEditingProfile(false)
+    setExperienceFormData(userData?.experience || [])
+    setEducationFormData(userData?.education || [])
     reset()
   }
 
@@ -77,25 +79,25 @@ export const EditProfile: React.FC = () => {
           </div>
           {experienceFormData?.map((item, index) => (
             <span key={index} className="border-[1px] border-black p-2 rounded-lg flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
+              <div onClick={() => handlePosition(index)} className="flex cursor-pointer items-center gap-2">
                 <img src={item.companyImg || DEFAULT_EXPERIENCE_PIC} alt="Company Img" className="w-5" />
                 <p>{item.companyName}</p>
               </div>
-              <button onClick={() => handleDeleteExperience(index)} className="text-[22px]"><IoClose /></button>
+              <button type="button" onClick={() => handleDeleteExperience(index)} className="text-[22px]"><IoClose /></button>
             </span>
           ))}
-          <EditButton heading="Current position" btnText="Add new position" onClick={handlePosition} type="button" />
+          <EditButton heading="Current position" btnText="Add new position" onClick={() => handlePosition(-1)} type="button" />
           <EditInput errors={errors} label="Industry*" register={register} name="industry" type="text" />
           {educationFormData?.map((item, index) => (
             <span key={index} className="border-[1px] border-black p-2 rounded-lg flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
+              <div onClick={() => handleEducation(index)} className="flex items-center cursor-pointer gap-2">
                 <img src={item.schoolImg || DEFAULT_EXPERIENCE_PIC} alt="School Img" className="w-5" />
                 <p>{item.schoolName}</p>
               </div>
-              <button onClick={() => handleDeleteEducation(index)} className="text-[22px]"><IoClose /></button>
+              <button type="button" onClick={() => handleDeleteEducation(index)} className="text-[22px]"><IoClose /></button>
             </span>
           ))}
-          <EditButton heading="Education" btnText="Add new education" onClick={handleEducation} type="button" />
+          <EditButton heading="Education" btnText="Add new education" onClick={() => handleEducation(-1)} type="button" />
 
           <h2 className="text-[18px]">Location</h2>
           <div className="flex flex-col gap-1">

@@ -30,6 +30,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [isIndustryLoading, setIsIndustryLoading] = useState<boolean>(true)
   const [isSuggestionLoading, setIsSuggestionsLoading] = useState<boolean>(true)
   const [selectedProfile, setSelectedProfile] = useState<IUser | null>(null)
+  const [selectedForm, setSelectedForm] = useState<IExperience | IEducation | null>(null)
   const [hasMore, setHasMore] = useState<boolean>(true)
   const [followData, setFollowData] = useState<IUser[]>([])
 
@@ -293,18 +294,29 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     setExperienceFormData((prev) => prev.filter((_, index) => index !== i))
   }
 
-  const handlePosition = () => {
+  const handlePosition = (index: number) => {
     setIsEditingProfile(false)
     setTimeout(() => {
       setIsAddingExperience(true)
     }, 300)
+    console.log(index)
+    if (index !== -1) {
+      setSelectedForm(experienceFormData[index])
+      setStartYearExperience(experienceFormData[index].startDate)
+      setEndYearExperience(experienceFormData[index].endDate)
+    }
   }
 
-  const handleEducation = () => {
+  const handleEducation = (index: number) => {
     setIsEditingProfile(false)
     setTimeout(() => {
       setIsAddingEducation(true)
     }, 300)
+    if (index !== -1) {
+      setSelectedForm(educationFormData[index])
+      setStartYearEducation(educationFormData[index].startDate)
+      setEndYearEducation(educationFormData[index].endDate)
+    }
   }
 
   const handleClick = (item: IUser) => {
@@ -320,7 +332,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   }
 
 
-  return <ProfileContext.Provider value={{ isEditingProfile, setIsEditingProfile, isAddingExperience, setIsAddingExperience, isAddingEducation, setIsAddingEducation, isAddingProfile, setIsAddingProfile, isAddingBanner, setIsAddingBanner, selectedBanner, setSelectedBanner, selectedProfilePic, setSelectedProfilePic, editProfile, isEditProfileLoading, setIsEditProfileLoading, updateProfilePic, isUpdatingProfilePic, setIsUpdatingProfilePic, isUpdatingProfileBanner, setIsUpdatingProfileBanner, uploadBanner, deleteProfilePic, deleteProfileBanner, experienceFormData, setExperienceFormData, educationFormData, setEducationFormData, handleDeleteEducation, handleDeleteExperience, handleEducation, handlePosition, startYearEducation, setStartYearEducation, startYearExperience, setStartYearExperience, endYearEducation, setEndYearEducation, endYearExperience, setEndYearExperience, handleDownloadPDF, suggestions, setSuggestions, networkSuggestions, setNetworkSuggestions, industrySuggestions, setIndustrySuggestions, isSuggestionLoading, setIsSuggestionsLoading, isIndustryLoading, setIsIndustryLoading, handleFollow, handleUnfollow, handleClick, selectedProfile, setSelectedProfile, randomUsers, randomIndustryUsers, hasMore, setHasMore, handleRemoveSuggestions, getFollow, followData }}>{children}</ProfileContext.Provider>
+  return <ProfileContext.Provider value={{ isEditingProfile, setIsEditingProfile, isAddingExperience, setIsAddingExperience, isAddingEducation, setIsAddingEducation, isAddingProfile, setIsAddingProfile, isAddingBanner, setIsAddingBanner, selectedBanner, setSelectedBanner, selectedProfilePic, setSelectedProfilePic, editProfile, isEditProfileLoading, setIsEditProfileLoading, updateProfilePic, isUpdatingProfilePic, setIsUpdatingProfilePic, isUpdatingProfileBanner, setIsUpdatingProfileBanner, uploadBanner, deleteProfilePic, deleteProfileBanner, experienceFormData, setExperienceFormData, educationFormData, setEducationFormData, handleDeleteEducation, handleDeleteExperience, handleEducation, handlePosition, startYearEducation, setStartYearEducation, startYearExperience, setStartYearExperience, endYearEducation, setEndYearEducation, endYearExperience, setEndYearExperience, handleDownloadPDF, suggestions, setSuggestions, networkSuggestions, setNetworkSuggestions, industrySuggestions, setIndustrySuggestions, isSuggestionLoading, setIsSuggestionsLoading, isIndustryLoading, setIsIndustryLoading, handleFollow, handleUnfollow, handleClick, selectedProfile, setSelectedProfile, randomUsers, randomIndustryUsers, hasMore, setHasMore, handleRemoveSuggestions, getFollow, followData, selectedForm, setSelectedForm }}>{children}</ProfileContext.Provider>
 }
 
 export const useProfile = (): ProfileContextTypes => {

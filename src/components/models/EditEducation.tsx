@@ -9,10 +9,36 @@ import { z } from "zod"
 type EducationFormScheema = z.infer<typeof educationSchema>
 
 export const EditEducation: React.FC = () => {
-  const { isAddingEducation, setIsAddingEducation, setIsEditingProfile, setEducationFormData, startYearEducation, setStartYearEducation, endYearEducation, setEndYearEducation } = useProfile();
+  const { isAddingEducation, setSelectedForm, setIsAddingEducation, setIsEditingProfile, setEducationFormData, startYearEducation, selectedForm, setStartYearEducation, endYearEducation, setEndYearEducation } = useProfile();
   const { handleSubmit, register, formState: { errors }, watch, setValue, reset } = useForm<EducationFormScheema>();
   const [foundValue, setFoundValue] = useState<{ name: string, image: string } | null>(null)
   const [isPresent, setIsPresent] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (selectedForm) {
+      reset({
+        schoolName: "schoolName" in selectedForm ? selectedForm.schoolName : "",
+        schoolImg: "schoolImg" in selectedForm ? selectedForm.schoolImg : DEFAULT_EXPERIENCE_PIC,
+        description: selectedForm.description ?? "",
+        grade: "grade" in selectedForm ? selectedForm.grade : "",
+        degree: "degree" in selectedForm ? selectedForm.degree : "",
+        startDate: selectedForm.startDate ?? "",
+        endDate: selectedForm.endDate ?? "",
+        location: selectedForm.location ?? "",
+      });
+    } else {
+      reset({
+        schoolName: "",
+        schoolImg: null,
+        description: "",
+        grade: "",
+        degree: "",
+        startDate: "",
+        endDate: "",
+        location: "",
+      });
+    }
+  }, [selectedForm, reset]);
 
 
   useEffect(() => {
@@ -38,7 +64,7 @@ export const EditEducation: React.FC = () => {
   const onSubmit: SubmitHandler<EducationFormScheema> = (data) => {
     const formData = {
       schoolName: data.schoolName,
-      companyImg: data.schoolImg,
+      schoolImg: data.schoolImg,
       description: data.description,
       grade: data.grade,
       degree: data.degree,
@@ -46,11 +72,24 @@ export const EditEducation: React.FC = () => {
       endDate: isPresent ? "Present" : endYearEducation,
       location: data.location,
     };
-    setEducationFormData((prev) => [...prev, formData]);
+
+    setEducationFormData((prev) => {
+      if (selectedForm && "schoolName" in selectedForm) {
+        return prev.map((item) =>
+          item.schoolName === selectedForm.schoolName ? formData : item
+        );
+      } else {
+        return [...prev, formData];
+      }
+    });
+
     handleClose();
-    setStartYearEducation("")
-    setEndYearEducation("")
+    setStartYearEducation("");
+    setEndYearEducation("");
+    setSelectedForm(null)
+    reset()
   };
+
 
   function handleSearch() {
     const foundCompany = universities.find((item) => item.name.toLowerCase() === watch("schoolName").toLowerCase())

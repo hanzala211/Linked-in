@@ -9,10 +9,35 @@ import { z } from "zod"
 type ExperienceFormScheema = z.infer<typeof experienceSchema>
 
 export const EditPosition: React.FC = () => {
-  const { isAddingExperience, setIsAddingExperience, setIsEditingProfile, setExperienceFormData, startYearExperience, setStartYearExperience, endYearExperience, setEndYearExperience } = useProfile();
+  const { isAddingExperience, selectedForm, setIsAddingExperience, setIsEditingProfile, setExperienceFormData, startYearExperience, setStartYearExperience, endYearExperience, setEndYearExperience } = useProfile();
   const { handleSubmit, register, formState: { errors }, watch, setValue, reset } = useForm<ExperienceFormScheema>();
   const [foundValue, setFoundValue] = useState<{ name: string, image: string } | null>(null)
   const [isPresent, setIsPresent] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (selectedForm) {
+
+      reset((prevData) => ({
+        companyName: "companyName" in selectedForm ? selectedForm?.companyName : prevData.companyName ?? "",
+        companyImg: "companyImg" in selectedForm ? selectedForm?.companyImg : prevData.companyImg ?? "",
+        description: selectedForm?.description ?? prevData.description ?? "",
+        employmentType: "employmentType" in selectedForm ? selectedForm?.employmentType : prevData.employmentType ?? "",
+        startDate: selectedForm?.startDate ?? prevData.startDate ?? "",
+        endDate: selectedForm?.endDate ?? prevData.endDate ?? "",
+        location: selectedForm?.location ?? prevData.location ?? "",
+      }))
+    } else {
+      reset({
+        companyName: "",
+        companyImg: null,
+        description: "",
+        employmentType: "",
+        startDate: "",
+        endDate: "",
+        location: "",
+      })
+    }
+  }, [selectedForm, reset])
 
   useEffect(() => {
     handleSearch()
