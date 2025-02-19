@@ -24,7 +24,7 @@ export const NotificationPage: React.FC = () => {
           <DropdownMenu>
             <DropdownMenuTrigger className="hover:bg-gray-100 p-2 rounded-full outline-none"><DotSVG /></DropdownMenuTrigger>
             <DropdownMenuContent className="w-60 md:-translate-x-24 -translate-x-10 translate-y-2 rounded-lg border-[1px] bg-white outline-none z-50">
-              <DropdownMenuItem className="flex rounded-lg items-center gap-2 text-[17px] text-gray-700 hover:text-black transition-all duration-200 hover:bg-gray-100 outline-none cursor-pointer p-2"><MdDelete /> Delete</DropdownMenuItem>
+              <DropdownMenuItem className="flex rounded-lg items-center gap-2 text-[17px] text-gray-700 hover:text-black transition-all duration-200 hover:bg-gray-100 outline-none cursor-pointer p-2"><MdDelete /> Delete Notification</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
