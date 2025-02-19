@@ -85,7 +85,7 @@ export const Nav: React.FC = () => {
       </div>
     </div>
 
-    <div className="flex gap-5 xl:space-x-4 lg:space-x-1 space-x-1.5 justify-center sm:space-x-3 sm:w-[40%] w-full xl:w-[30%]">
+    <div className="flex gap-5 xl:space-x-4 lg:space-x-1 space-x-1 justify-center sm:space-x-3 sm:w-[40%] w-full xl:w-[30%]">
       {navLinks.map((item, index) => (
         <NavLink
           key={index} className={({ isActive }) =>
