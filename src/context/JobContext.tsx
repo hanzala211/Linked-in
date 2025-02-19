@@ -247,7 +247,7 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 export const useJob = (): JobContextTypes => {
   const context = useContext(JobContext);
   if (!context) {
-    throw new Error("use useAuth in it's Provider")
+    throw new Error("use useJob in it's Provider")
   }
   return context;
 }

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom"
 export const Comment: React.FC<{ comment: CommentType }> = ({ comment }) => {
   return <div>
     <div className="flex justify-between items-center">
-      <Link to="#" className="flex gap-2 items-center">
+      <Link to={`/${comment.user?.userName}`} className="flex gap-2 items-center">
         <img
           src={comment.user?.profilePic || DEFAULT_PIC}
           alt={`${comment.user?.firstName} profilePic`}

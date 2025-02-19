@@ -1,6 +1,6 @@
 import { DEFAULT_PIC, HomeSVG, JobSVG, MessageSVG, NetworkSVG } from "@assets"
 import { IoLogoLinkedin } from "react-icons/io"
-import { IoSearchOutline } from "react-icons/io5"
+import { IoNotifications, IoSearchOutline } from "react-icons/io5"
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom"
 import { useAuth, useSearch } from "@context"
 import { useEffect, useRef, useState } from "react"
@@ -39,6 +39,11 @@ export const Nav: React.FC = () => {
       navLink: "/messaging",
       text: "Messaging"
     },
+    {
+      NavIcon: IoNotifications,
+      navLink: "/notifications",
+      text: "Notifications"
+    },
   ]
 
   useEffect(() => {
@@ -69,7 +74,7 @@ export const Nav: React.FC = () => {
 
   return <nav className="flex bg-white items-center w-full justify-evenly fixed z-20 lg:pt-2 pt-1 lg:pb-[2px] border-b-[1px]">
 
-    <div className="flex items-center sm:w-[40%] w-[40%] xl:w-[27%]">
+    <div className="flex items-center sm:w-[40%] w-[30%] xl:w-[27%]">
       <IoLogoLinkedin className="text-[50px] text-[#0A66C2]" />
       <div className="relative lg:w-full w-full">
         <span ref={searchIconRef} onClick={handleExpansion}>
@@ -90,7 +95,7 @@ export const Nav: React.FC = () => {
           {({ isActive }) => (<>
             <item.NavIcon
               className={`${isActive ? "text-black" : "text-gray-500"
-                } group-hover:text-black transition-all duration-200`}
+                } group-hover:text-black text-[25px] transition-all duration-200`}
             />
             <p className={`${isActive ? "text-black" : "text-gray-500"
               } group-hover:text-black text-[13px] lg:block hidden transition-all duration-200`}>
