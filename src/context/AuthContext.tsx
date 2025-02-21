@@ -110,6 +110,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             }
         } catch (error) {
             console.error(error)
+            navigate("/login")
+            localStorage.removeItem("token")
         } finally {
             setIsMainPageLoading(false)
         }

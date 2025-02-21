@@ -117,7 +117,7 @@ export const JobSearchPage: React.FC = () => {
 
 
       <div className={`border-[1px] flex flex-col gap-3 border-l-[0] border-gray-200 bg-white h-full ${selectedJob === null ? " md:w-full md:p-4 w-0 p-0" : "w-full p-4"} overflow-y-auto`}>
-        {!isJobsLoading ? <>
+        {selectedJob !== null ? <>
           {window.innerWidth < 768 && <Link to="/jobs/search" className="text-white bg-[#0A66C2] w-fit p-1.5 rounded-full mb-2" onClick={() => setSelectedJob(null)}><FaArrowLeftLong /></Link>}
           <h2 className="flex gap-2 items-center text-[15px]"><img src={selectedJob?.company.companyImg || DEFAULT_EXPERIENCE_PIC} alt={`${selectedJob?.company.companyName} image`} className="w-8" /> {selectedJob?.company.companyName}</h2>
           <h1 className="text-[30px]">{selectedJob?.title}</h1>
